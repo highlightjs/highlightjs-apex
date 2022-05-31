@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>TEST APEX CODE</title>
+		<meta charset="UTF-8" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+		<script charset="UTF-8" src="../dist/apex.min.js"></script>
+		<link rel="stylesheet" href="./highlight.css" />
+		<script>
+			//hljs.configure({ ignoreUnescapedHTML: true, ignoreIllegals: false });
+			hljs.debugMode();
+			hljs.highlightAll();
+		</script>
+		<style>
+			pre code {
+				white-space: pre-wrap;
+				font-size: 120%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<pre><code class="">
+    /*
+    Action Plans v3
+    Force.com Labs 2011
+    https://appexchange.salesforce.com/listingDetail?listingId=a0N30000003HcINEA0
+    
+    Copyright (c) 2022, salesforce.com, inc.
+    All rights reserved.
+    SPDX-License-Identifier: BSD-3-Clause
+    For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+    */
+
+    /**
+     * @author {@link [Rodrigo Birriel](https://www.linkedin.com/in/rbirriel)}
+     * @author {@link [David Schach](https://github.com/dschach)}
+     * @group Visualforce
+     * @since 2022
+     */
+    public with sharing class ActionPlanDetailController {
+
+      public enum Season {WINTER, SPRING, SUMMER, FALL}
+     
+      /**
+       * Extension Constructor
+       * @param stdController `ActionPlan__c` Standard Controller
+       */
+      public ActionPlanDetailController(ApexPages.StandardController stdController, Integer x, Double y) {
+        Map&ltId, Map&ltString, Wrapper&gt&gt renew = new Map&ltId, Map&ltString, SObject&gt&gt();
+        if (!Test.isRunningTest()) {
+          stdController.addFields(ActionPlansUtilities.getCustomRelationshipFields());
+        }
+        for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){}
+        actionPlan = (ActionPlan__c) stdController.getRecord();
+        truestory = ActionPlansUtilities.getCanDisplayReminder();
+      }
+    
+      /**
+       * Action on page load to ensure custom setting is created
+       * @return   `PageReference` null (required for page actions method)
+       */
+      public PageReference onLoad() {
+        ActionPlansUtilities.onPageLoad();
+        return null;
+      }
+    
+      /**
+       * Deletes the current Action Plan loaded and redirects to the AP List
+       * @return `PageReference` Page to go to after deleting `ActionPlan__c`
+       */
+      public PageReference deletePlan() {
+        //delete ap, which will also delete apts via master-detail relationship
+        try {
+          delete actionPlan;
+        } catch (DMLException e) {
+          ApexPages.addMessages(e);
+          return null;
+        }
+    
+        String retURL = '/' + ActionPlansUtilities.getObjectKeyPrefix(ActionPlansUtilities.namespacePrefix + 'ActionPlan__c') + '/o';
+    
+        String hasTemplateIdParam = ApexPages.currentPage().getParameters().containsKey('templateId');
+        Boolean hasRetURLParam = ApexPages.currentPage().getParameters().containsKey('retURL');
+    
+        if (hasTemplateIdParam) {
+          retURL = '/' + ActionPlansUtilities.getEscapedPageParameter('templateId');
+        } else if (hasRetURLParam && !ActionPlansUtilities.getIsLex()) {
+          retURL = '' + ActionPlansUtilities.getEscapedPageParameter('retURL');
+        }
+        Pagereference newPage = new PageReference('' + retURL);
+        newPage.setRedirect(true);
+    
+        return newPage;
+      }
+    
+      /**
+       * Display ControllingTasks column only if there are controlling tasks
+       * @author {@link [David Schach](https://github.com/dschach)}
+       * @return   `Boolean` is the Controller__c field populated for any Action Plan Tasks?
+       */
+      public Custom__c hasControllingTasks {
+        get {
+          hasControllingTasks = false;
+          for (TaskWrapper tw : getActionPlanTasks()) {
+            if (tw.apt.Controller__c != null) {
+              hasControllingTasks = true;
+              break;
+            }
+          }
+          return hasControllingTasks;
+        }
+        set;
+      }
+    
+      /**
+       * Memoized TaskWrappers for display on the page
+       */
+      private List&lt;TaskWrapper&gt; apTaskWrapperList;
+      /**
+       * Collect and return all TaskWrappers
+       * @return `List&lt;TaskWrapper&gt;` List of `TaskWrapper` for this Action Plan
+       */
+      public List&lt;TaskWrapper&gt; getActionPlanTasks() {
+        if (apTaskWrapperList == null) {
+          apTaskWrapperList = new List&lt;TaskWrapper&gt;();
+          Map&lt;Id, APTask__c&gt; apTaskMap = new Map&lt;Id, APTask__c&gt;(
+            [
+              SELECT
+                Action_Plan__c,
+                ActivityDate__c,
+                Controller__c,
+                Controller__r.Subject__c,
+                DaysFromStart__c,
+                Dependent__c,
+                Id,
+                IsClosed__c,
+                Minutes_Reminder__c,
+                User__c,
+                User__r.Name
+              FROM APTask__c
+              WHERE Action_Plan__c = :actionPlan.Id
+              ORDER BY TaskIndex__c ASC
+            ]
+          );
+          Map&lt;Id, Id&gt; taskTaskMap = new Map&lt;Id, Id&gt;();
+          for (Task t : [SELECT 
+            Id, 
+            TaskAPTask__c 
+            FROM Task WHERE TaskAPTask__c IN :apTaskMap.keyset()]) {
+            taskTaskMap.put(t.TaskAPTask__c, t.Id);
+          }
+          for (APTask__c a : apTaskMap.values()) {
+            TaskWrapper tw;
+            Id relatedTaskId = taskTaskMap.get(a.Id);
+            tw = new TaskWrapper(a, relatedTaskId);
+            apTaskWrapperList.add(tw);
+          }
+        }
+        return apTaskWrapperList;
+      }
+    
+      /**
+       * Wrapper for Action Plan Task
+       * &lt;br&gt;It contains the `Action Plan Task` and the `Task` Id
+       */
+      public class TaskWrapper {
+        /**
+         * The (standard) `Task` Id
+         */
+        public Id taskId { get; private set; }
+    
+        /**
+         * Constructor for the task wrapper
+         * @param aptParam  Action Plan Task Template
+         * @param taskIdParam TaskId (for the standard object `Task`)
+         */
+        public TaskWrapper(APTask__c aptParam, Id taskIdParam) {
+          this.apt = aptParam;
+          this.taskId = taskIdParam;
+        }
+      }
+    
+      /**
+       * Checks if Action Plan Template has been changed since the creation of the Action Plan.
+       * @return `Boolean` Was the AP's template modified after the Action Plan was created?
+       */
+      public Boolean getVersion() {
+        if (actionPlan.Action_Plan_Template__c != null) {
+          ActionPlanTemplate__c tempApt = [SELECT LastModifiedDate FROM ActionPlanTemplate__c WHERE Id = :actionPlan.Action_Plan_Template__c];
+          if (tempApt.LastModifiedDate &gt; actionPlan.createdDate) {
+            return true;
+          }
+        }
+        return false;
+      }
+    
+      /**
+       * The label of the Action Plan's parent record SObject
+       * @return  `String` Label of the object related to this Action Plan
+       */
+      public String getRelatedObjectLabel() {
+        String objLabel = '';
+    
+        for (String f : ActionPlansUtilities.getCustomRelationshipFields()) {
+          if (actionPlan.get(f) != null) {
+            Id objId = (Id) actionPlan.get(f);
+            Schema.DescribeSObjectResult dsr = objId.getSObjectType().getDescribe();
+            objLabel = dsr.getLabel();
+            break;
+          }
+        }
+        return objLabel;
+      }
+    
+      /**
+       * The name of the parent record - show a different field based on SObject Type
+       * @return  `String` name of the object related to this Action Plan
+       */
+      public String getrelatedRecordName() {
+        String objName = '';
+        Id objId;
+    
+        for (String f : ActionPlansUtilities.getCustomRelationshipFields()) {
+          if (actionPlan.get(f) != null) {
+            objId = (Id) actionPlan.get(f);
+            Schema.DescribeSObjectResult dsr = objId.getSObjectType().getDescribe();
+            objName = dsr.getName();
+            break;
+          }
+        }
+    
+        switch on objName {
+          when 'Case' {
+            Case c = [SELECT Id, Subject, CaseNumber FROM Case WHERE Id = :objId LIMIT 1];
+            return c.CaseNumber + ': ' + c.Subject;
+          }
+          when 'Contract' {
+            Contract c = [SELECT Id, ContractNumber FROM Contract WHERE Id = :objId LIMIT 1];
+            return c.ContractNumber;
+          }
+          when else {
+            String relNameQuery = 'SELECT Id, Name FROM ' + objName + ' WHERE Id = \'' + objId + '\'';
+            SObject so = Database.query(relNameQuery)[0];
+            return (String) so.get('Name');
+          }
+        }
+      }
+    
+      /**
+       * Convert AP Task Record Type Id to Record Type Name
+       * @return Record Type Name
+       */
+      public String getRecordTypeName() {
+        String toReturn = '';
+        if (ActionPlansUtilities.taskUsesRecordTypes) {
+          Map&lt;Id, Schema.RecordTypeInfo&gt; rtMapById = Task.SObjectType.getDescribe().getRecordTypeInfosById();
+          if (!rtMapById.isEmpty() && rtMapById.containsKey(actionPlan.TaskRecordTypeID__c)) {
+            return rtMapById.get(actionPlan.TaskRecordTypeID__c).getName();
+          }
+        }
+        return toReturn;
+      }
+    
+      /**
+       * If we have no share object, we don't need to show a Share button
+       * @author {@link [David Schach](https://github.com/dschach)}
+       * @return  `Boolean` Does the user have permission to share this Action Plan?
+       */
+      public Boolean getCanShare() {
+        return ActionPlansUtilities.canShareRecord(actionPlan.Id, actionPlan.OwnerId);
+      }
+    
+      /**
+       * Does the user have permission to transfer? We query `UserRecordAccess` to find out.
+       * @author {@link [David Schach](https://github.com/dschach)}
+       * @return   `Boolean` yes/no
+       */
+      public Boolean getCanTransfer() {
+        return ActionPlansUtilities.getCanTransfer(actionPlan.Id);
+      }
+    }
+
+  @SuppressWarnings('PMD.AvoidGlobalModifier')
+  /**
+  * @group Invocable
+  * @author {@link [David Schach](https://github.com/dschach)}
+  * @since 2022
+  */
+  global without sharing class ActionPlanCreateInvocable {
+    @InvocableMethod
+    (label='Create Action Plan From Template' description='Takes a Template Name/Id and Record Id and makes an Action Plan for that record.' category=77)
+    global static List&lt;Id&gt; makeActionPlanFromTemplate(List&lt;CreateActionPlanRequest&gt; requests) {
+      List&lt;Id&gt; resultIDs = new List&lt;Id&gt;();
+
+      Set&lt;String&gt; templateNamesOrIDs = new Set&lt;String&gt;();
+      for (CreateActionPlanRequest r : requests) {
+        templateNamesOrIDs.add(r.templateNameOrID);
+      }
+
+      Map&lt;String, ActionPlanTemplate__c&gt; templateNameOrIdToTemplate = new Map&lt;String, ActionPlanTemplate__c&gt;();
+
+      List&lt;ActionPlanTemplate__c&gt; possibleTemplates = [
+        SELECT
+          Id,
+          Description__c,
+          Name,
+          OwnerId,
+          SkipDay__c,
+          SkipWeekends__c,
+          TaskRecordTypeID__c,
+          (
+            SELECT
+              Type__c,
+              Name,
+              User__c,
+              User__r.Name,
+              Id,
+              DaysFromStart__c,
+              Action_Plan_Template__c,
+              TController__r.Subject__c,
+              Minutes_Reminder__c,
+              TaskIndex__c,
+              Action_Plan_Template__r.TaskRecordTypeID__c
+            FROM aptTasks__r
+            ORDER BY TaskIndex__c ASC
+          )
+        FROM ActionPlanTemplate__c
+        WHERE Name IN :templateNamesOrIDs OR Id IN :templateNamesOrIDs
+      ];
+
+      if (possibleTemplates.isEmpty()) {
+        return resultIDs;
+      }
+
+      for (ActionPlanTemplate__c apt : possibleTemplates) {
+        templateNameOrIdToTemplate.put(apt.Id, apt);
+        templateNameOrIdToTemplate.put(apt.Name, apt);
+      }
+
+      Set&lt;Id&gt; relatedIDs = new Set&lt;Id&gt;();
+
+      for (CreateActionPlanRequest r : requests) {
+        relatedIDs.add(r.relatedRecordID);
+      }
+
+      Map&lt;Id, ActionPlan__c&gt; actionPlansToInsert = new Map&lt;Id, ActionPlan__c&gt;();
+
+    
+      if (actionPlansToInsert.isEmpty()) {
+        return resultIDs;
+      }
+
+      insert actionPlansToInsert.values();
+
+      Map&lt;String, APTask__c&gt; planTaskIndexToTask = new Map&lt;String, APTask__c&gt;();
+
+      for (CreateActionPlanRequest r : requests) {
+        if (!actionPlansToInsert.containsKey(r.relatedRecordID)) {
+          continue;
+        }
+
+        ActionPlan__c ap = actionPlansToInsert.get(r.relatedRecordID);
+
+        ActionPlanTemplate__c actionPlanTemplate = templateNameOrIdToTemplate.get(r.templateNameOrID);
+
+        for (APTemplateTask__c aptTask : actionPlanTemplate.aptTasks__r) {
+          APTask__c apTask = new APTask__c();
+          apTask.User__c = ActionPlansBuilderUtilities.getAPTaskTemplateUser(ap, relObjectOwners, aptTask.User__c);
+          apTask.DaysFromStart__c = aptTask.DaysFromStart__c;
+          apTask.Comments__c = aptTask.Comments__c;
+          apTask.Minutes_Reminder__c = aptTask.Minutes_Reminder__c;
+          apTask.SendEmail__c = aptTask.SendEmail__c;
+
+          apTask.Action_Plan__c = ap.Id;
+
+          apTask.Status__c = ActionPlansUtilities.getTaskRecordTypeStatusDefaultValues().get(ActionPlansUtilities.getDefaultTaskRecordTypeId());
+
+          if (apTask.Dependent__c != null && apTask.Dependent__c != 'None') {
+            apTask.ActivityDate__c = null;
+          } else {
+            apTask.Controller__c = null;
+
+            //set dependency taskId to none if none was selected
+            if (apTask.Dependent__c == null) {
+              apTask.Dependent__c = 'None';
+            }
+
+            // create due date, calculate the due date of the tasks for skip weekends feature
+            if (ap.SkipWeekends__c == true && ap.SkipDay__c != null) {
+              apTask.ActivityDate__c = ActionPlansUtilities.adjustTaskDueDate(ap.StartDate__c, apTask.DaysFromStart__c.intValue(), ap.SkipDay__c);
+            } else {
+              apTask.ActivityDate__c = ap.StartDate__c.addDays(apTask.DaysFromStart__c.intValue());
+            }
+          }
+          planTaskIndexToTask.put(ap.Id + '' + apTask.TaskIndex__c, apTask);
+        }
+      }
+
+      Database.insert(planTaskIndexToTask.values());
+
+      // Now we have to update with the controlling/dependent task IDs
+
+      List&lt;APTask__c&gt; dependentTasksToUpdate = new List&lt;APTask__c&gt;();
+
+      for (APTask__c apTask : planTaskIndexToTask.values()) {
+        String actionPlanPlusIndex = apTask.Action_Plan__c + '' + apTask.Dependent__c;
+
+        if (planTaskIndexToTask.containsKey(actionPlanPlusIndex)) {
+          apTask.Controller__c = planTaskIndexToTask.get(actionPlanPlusIndex).Id;
+          dependentTasksToUpdate.add(apTask);
+        }
+      }
+
+      Database.update(dependentTasksToUpdate);
+
+      List&lt;Task&gt; myTasksWithOutEmail = new List&lt;Task&gt;();
+
+      Map&lt;Id, APTask__c&gt; mapAP = new Map&lt;Id, APTask__c&gt;();
+      for (APTask__c a : planTaskIndexToTask.values()) {
+        mapAP.put(a.Id, a);
+      }
+
+      Map&lt;Id, ActionPlan__c&gt; insertedActionPlans = new Map&lt;Id, ActionPlan__c&gt;();
+      for (ActionPlan__c ap : actionPlansToInsert.values()) {
+        insertedActionPlans.put(ap.Id, ap);
+      }
+
+      for (APTask__c apTask : planTaskIndexToTask.values()) {
+        ActionPlan__c insertedAP;
+        // check if task exists already
+        Task t = new Task();
+        t.Subject = apTask.Subject__c;
+        t.Priority = apTask.Priority__c;
+        t.OwnerId = apTask.User__c;
+        t.TaskAPTask__c = apTask.Id;
+
+        if (apTask.Comments__c != null) {
+          t.Description = apTask.Comments__c;
+        }
+
+        //set reminder based on user's default reminder setting
+        if (apTask.Reminder__c == true && apTask.ActivityDate__c != null) {
+          t.isReminderSet = true;
+          t.ReminderDateTime = Datetime.newInstance(apTask.ActivityDate__c.year(), apTask.ActivityDate__c.month(), apTask.ActivityDate__c.day(), 0, 0, 0);
+          t.ReminderDateTime = t.ReminderDateTime.addMinutes(Integer.valueOf(apTask.Minutes_Reminder__c));
+        } else {
+          t.isReminderSet = false;
+        }
+
+        APTask__c apt = mapAP.get(apTask.Id);
+
+        if (apt != null) {
+          insertedAP = insertedActionPlans.get(apt.Action_Plan__c);
+        }
+
+        //link to Action Plan's Related To Object
+        for (String s : ActionPlansUtilities.getCustomRelationshipFields()) {
+          String f = s;
+          if (
+            !f.equalsIgnoreCase(ActionPlansUtilities.namespacePrefix + 'Contact__c') &&
+            !f.equalsIgnoreCase(ActionPlansUtilities.namespacePrefix + 'Lead__c') &&
+            insertedAP.get(f) != null
+          ) {
+            t.WhatId = (Id) insertedAP.get(f);
+            break;
+          }
+        }
+
+        if (t.Id == null) {
+          t.Status = apTask.Status__c;
+        }
+        t.ActivityDate = apTask.ActivityDate__c;
+
+        if (apTask.Dependent__c == 'None') {
+          if (apTask.SendEmail__c == true) {
+            myNewTasksWithEmail.add(t);
+          } else {
+            myTasksWithOutEmail.add(t);
+          }
+        }
+      }
+
+      Database.DMLOptions dmlo1 = new Database.DMLOptions();
+      dmlo1.EmailHeader.triggerUserEmail = true;
+
+      if (myTasksWithOutEmail.size() &gt; 0) {
+        Database.insert(myTasksWithOutEmail, dmlo2);
+      }
+
+      Set&lt;Id&gt; relObjectIDs = new Set&lt;Id&gt;();
+      for (ActionPlan__c ap : actionPlansToInsert.values()) {
+        relObjectIDs.add(ap.Id);
+      }
+
+      if (mySettings != null && mySettings.Chatter_Object_Brag__c) {
+        ActionPlansBuilderUtilities.generateObjectFeeds(relObjectIDs);
+      }
+
+      for (CreateActionPlanRequest request : requests) {
+        resultIDs.add(actionPlansToInsert.get(request.relatedRecordID).Id);
+      }
+
+      return resultIDs;
+    }
+
+    /**
+    * Wrapper class for ActionPlan Request for invocable Apex.
+    * @author {@link [David Schach](https://github.com/dschach)}
+    * @since 2022
+    */
+    global class CreateActionPlanRequest {
+      @InvocableVariable(required=true label='The parent Record ID' description=55)
+      /**
+      * The parent Record ID. Must have a relationship named the related record object name from Action Plan object.
+      */
+      global Id relatedRecordID;
+    }
+  }
+
+  trigger APAccount on Account(before delete, after undelete) {
+    ActionPlansTriggerHandlers.triggerhandlerActionPlanAccount(Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap, Trigger.operationType);
+  
+    ActionPlansTriggerHandlers.actionPlansSObjectTriggerHandler('Account');
+  
+  }
+    </code></pre>
+
+		<pre><code>
+/**
+ * SHOULD BE RECOGNIZED AS JAVA
+ * @author John Smith 
+*/
+package l2f.gameserver.model;
+
+public abstract strictfp class L2Char extends L2Object {
+  public static final Short ERROR = 0x0001;
+
+  public void _moveTo(int x, int y, int z, customtype a) {
+    _ai = null;
+    log("Should not be called");
+    if (1 &gt; 5) { // wtf!?
+      return;
+    }
+  }
+}
+      
+    </code></pre>
+
+		<pre><code class="">
+public without sharing class AccountSampleTriggerHandler extends TriggerHandler, Database.schedulable, Batchable&lt;SObject&gt; {
+  private List&lt;Account&gt; newRecords;
+  private List&lt;Account&gt; oldRecords;
+  private Map&lt;Id, Account&gt; newRecordsMap;
+  private Map&lt;Id, Account&gt; oldRecordsMap;
+
+  switch on context {
+    when 'BEFORE_INSERT' {
+      this.triggerEvent = System.TriggerOperation.BEFORE_INSERT;
+    }
+    when 'BEFORE_UPDATE' {
+      this.triggerEvent = System.TriggerOperation.BEFORE_UPDATE;
+    }
+    when 'BEFORE_DELETE' {
+      this.triggerEvent = System.TriggerOperation.BEFORE_DELETE;
+    }
+    when 'AFTER_INSERT' {
+      this.triggerEvent = System.TriggerOperation.AFTER_INSERT;
+    }
+    when 'AFTER_UPDATE' {
+      this.triggerEvent = System.TriggerOperation.AFTER_UPDATE;
+    }
+    when 'AFTER_DELETE' {
+      this.triggerEvent = System.TriggerOperation.AFTER_DELETE;
+    }
+    when 'AFTER_UNDELETE' {
+      this.triggerEvent = System.TriggerOperation.AFTER_UNDELETE;
+    }
+    when else {
+      // we are not in trigger context
+      this.isTriggerExecuting = false;
+    }
+  }
+
+  /**
+    * @description Constructor using passed-in class name constructor for faster performance
+    * &lt;br&gt;We cast all four trigger collections
+    * @param className The name of this class. Pass in the string to make the handler run faster
+    */
+  public AccountSampleTriggerHandler(CustomType a, String className) {
+    this.newRecords = (List&lt;Account&gt;) Trigger.new;
+    this.oldRecords = (List&lt;Account&gt;) Trigger.old;
+    this.newRecordsMap = (Map&lt;Id, Account&gt;) Trigger.newMap;
+    this.oldRecordsMap = (Map&lt;Id, Account&gt;) Trigger.oldMap;
+  }
+
+  public override sobject beforeInsert() {
+    method1();
+  }
+
+  //public override void afterUpdate(){}
+
+  private void method1() {
+    for (Account a : newRecords) {
+      a.Name = a.Name.toUpperCase();
+      a.Name = new FooBar();
+    }
+  }
+  
+  @TestVisible
+  (SeeAllData=true)
+  private void method2() {
+    for (Account a : newRecords) {
+      a.Name = a.Name.toLowerCase();
+    }
+  }
+  
+  @future
+  (label = true)
+  private void method3() {
+    Contact[] acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH SECURITY_ENFORCED];
+    List&lt;Contact&gt; acctContacts2 = [SELECT Id FROM Contact WHERE CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
+    if (Contact.getSObjectType().getDescribe().isUpdateable()) {
+      Database.update(acctContacts); //NOPMD
+    }
+    // do things here
+  }
+}
+
+public without sharing class AccountSampleTriggerHandler extends Database.schedulable, Batchable&lt;SObject&gt; {
+
+}
+
+public virtual class Marker {
+  public virtual void write() {
+      System.debug('Writing some text.');
+  }
+
+  public virtual Double discount() {
+      return .05;
+  }
+}
+
+@IsTest(Seealldata=true)
+public with sharing class L2Char implements Database.batchable {
+  public static final String ERROR = 0x0001;
+  public static final Short ERROR;
+
+  @InvocableMethod(label='my invocable')
+  public void moveTo(
+    integer x, 
+    integer y, 
+    integer z
+  ) {
+    
+    
+    Account a = new Account();
+    a.Custom__c = 'stringvalue';
+    insert a;
+    Boolean ai = (Boolean) false;
+    System.debug('Should not be called');
+    if (1 > 5) { // wtf!?
+      Database.insert(myAccounts);
+    }
+  }
+}
+
+@TestSetup
+(TRUEKING=trueking)
+private static void makeData(Boolean a){
+  Custom__c c = new Custom__c();
+  
+  for(Account a : acctLis ){
+    ConnectApi.insert a;
+  }
+}
+
+@isTest
+private testMethod void testme(){
+  System.assert(true);
+}
+
+@testVisible2
+private List&lt;SelectOption&gt; recordTypes { get; private set; }
+
+trigger CTrig on Custom__c (before insert){
+  System.debug('inserting a record');
+  upsert myRecord__c;
+}
+
+    </code></pre>
+	</body>
+</html>

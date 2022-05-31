@@ -1,0 +1,46 @@
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@author</span> John Smith
+ */</span>
+<span class="hljs-meta">@IsTest</span>(Seealldata<span class="hljs-operator">=</span><span class="hljs-literal">true</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">with sharing</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">L2Char</span> <span class="hljs-keyword">implements</span> <span class="hljs-built_in">Database</span>.<span class="hljs-built_in">batchable</span> {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-variable language_">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ERROR</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x0001;
+
+  <span class="hljs-meta">@InvocableApex</span>(label<span class="hljs-operator">=</span><span class="hljs-string">&#x27;my invocable&#x27;</span>)
+  <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">moveTo</span>(
+    <span class="hljs-type">integer</span> x, 
+    <span class="hljs-type">integer</span> y, 
+    <span class="hljs-type">integer</span> z
+  ) {
+    
+    
+    <span class="hljs-type">Account</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Account</span>();
+    a.Custom__c <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;stringvalue&#x27;</span>;
+    <span class="hljs-built_in">insert</span> a;
+    <span class="hljs-type">Boolean</span> <span class="hljs-variable">ai</span> <span class="hljs-operator">=</span> (<span class="hljs-type">Boolean</span>) <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">debug</span>(<span class="hljs-string">&#x27;Should not be called&#x27;</span>);
+    <span class="hljs-title function_">if</span> (<span class="hljs-number">1</span><span class="hljs-operator"> &gt; </span><span class="hljs-number">5</span>) { <span class="hljs-comment">// wtf!?
+</span>      <span class="hljs-built_in">Database</span>.<span class="hljs-title function_ invoke__">insert</span>(myAccounts);
+    }
+  }
+}
+
+<span class="hljs-meta">@TestSetup</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">makeData</span>(<span class="hljs-type">Boolean</span> a){
+  <span class="hljs-type">Custom__c</span> c <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Custom__c</span>();
+  
+  <span class="hljs-keyword">for</span>(<span class="hljs-type">Account</span> a : acctLis ){
+    <span class="hljs-built_in">ConnectApi</span>.<span class="hljs-built_in">insert</span> a;
+  }
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">testMethod</span> <span class="hljs-type">void</span> <span class="hljs-title function_">testme</span>(){
+  <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">assert</span>(<span class="hljs-literal">true</span>);
+}
+
+<span class="hljs-meta">@testVisible</span>
+<span class="hljs-keyword">private</span> <span class="hljs-type">List</span>&lt;<span class="hljs-type">SelectOption</span>&gt; recordTypes { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>; }
+
+<span class="hljs-keyword">trigger</span> <span class="hljs-title class_">CTrig</span> on <span class="hljs-type">Custom__c</span> (<span class="hljs-built_in">before insert</span>){
+  <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">debug</span>(<span class="hljs-string">&#x27;inserting a record&#x27;</span>);
+  <span class="hljs-built_in">upsert</span> <span class="hljs-type">myRecord__c</span>;
+}

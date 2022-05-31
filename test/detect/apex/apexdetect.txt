@@ -1,0 +1,28 @@
+/**
+ * @author John Smith `metastring`
+ */
+@IsTest(Seealldata=true)
+public with sharing class L2Char implements Database.batchable {
+
+  @InvocableMethod(label='my invocable')
+  public void moveTo(integer x) {  
+    Account a = new Account();
+    a.Custom__c = 'stringvalue';
+    insert as user a;
+  }
+}
+
+@TestSetup
+private static void makeData(Boolean a){
+  for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){
+    ConnectApi.insert a;
+  }
+}
+
+@testVisible
+private testMethod List<SelectOption> recordTypes { get; private set; }
+
+trigger CTrig on Custom__c (before insert, after update){
+  System.debug('inserting a record');
+  upsert myRecord__c;
+}

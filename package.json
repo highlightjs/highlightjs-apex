@@ -1,0 +1,36 @@
+{
+	"name": "highlightjs-apex",
+	"version": "1.0.0",
+	"description": "Apex Language of Salesforce highlighting plugin for highlight.js",
+	"main": "src/languages/apex.js",
+	"scripts": {
+		"test": "./node_modules/.bin/mocha --reporter spec",
+		"mocha": "mocha test/markup",
+		"changelog": "auto-changelog --output HISTORY.md --hide-credit -p --commit-limit false"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/highlightjs/highlightjs-apex.git"
+	},
+	"keywords": [
+		"apex",
+		"Salesforce",
+		"hljs",
+		"highlightjs",
+		"highlight.js"
+	],
+	"author": "David Schach",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/highlightjs/highlightjs-apex/issues"
+	},
+	"homepage": "https://github.com/highlightjs/highlightjs-apex#readme",
+	"devDependencies": {
+		"auto-changelog": "^2.4.0",
+		"highlight.js": "^11.5.1",
+		"minimist": "^1.2.6",
+		"mocha": "^9.2.2",
+		"prettier": "2.6.2",
+		"should": "^13.2.3"
+	}
+}

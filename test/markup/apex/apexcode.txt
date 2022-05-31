@@ -1,0 +1,46 @@
+/**
+ * @author John Smith
+ */
+@IsTest(Seealldata=true)
+public with sharing class L2Char implements Database.batchable {
+  public static final String ERROR = 0x0001;
+
+  @InvocableApex(label='my invocable')
+  public void moveTo(
+    integer x, 
+    integer y, 
+    integer z
+  ) {
+    
+    
+    Account a = new Account();
+    a.Custom__c = 'stringvalue';
+    insert a;
+    Boolean ai = (Boolean) false;
+    System.debug('Should not be called');
+    if (1 > 5) { // wtf!?
+      Database.insert(myAccounts);
+    }
+  }
+}
+
+@TestSetup
+private static void makeData(Boolean a){
+  Custom__c c = new Custom__c();
+  
+  for(Account a : acctLis ){
+    ConnectApi.insert a;
+  }
+}
+
+private testMethod void testme(){
+  System.assert(true);
+}
+
+@testVisible
+private List<SelectOption> recordTypes { get; private set; }
+
+trigger CTrig on Custom__c (before insert){
+  System.debug('inserting a record');
+  upsert myRecord__c;
+}
