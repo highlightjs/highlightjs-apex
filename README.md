@@ -17,9 +17,10 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 ```html
 <script type="text/javascript" src="/path/to/highlight.min.js"></script>
 <script type="text/javascript" src="/path/to/highlightjs-apex/dist/apex.min.js"></script>
+<!-- Use any stylesheet you'd like - though it's best to choose from those in highlightjs core repo -->
 <link rel="stylesheet" href="/path/to/highlightjs-apex/demo/highlight.css" />
 <script type="text/javascript">
-  hljs.highlightAll();
+	hljs.highlightAll();
 </script>
 ```
 
@@ -33,7 +34,7 @@ If you're using Node / Webpack / Rollup / Browserify, etc, simply require the la
 var hljs = require('highlight.js');
 var hljsApexTxt = require('highlightjs-apex');
 
-hljs.registerLanguage("apex", hljsApexTxt);
+hljs.registerLanguage('apex', hljsApexTxt);
 hljs.highlightAll();
 ```
 
@@ -48,6 +49,7 @@ Highlight.js is released under the BSD 3-Clause License. See [LICENSE](/LICENSE)
 ## Contribution
 
 Feel free to create issues or (even better) pull requests.
+
 ## Links
 
 - The official site for the Highlight.js library is <https://highlightjs.org/>.
