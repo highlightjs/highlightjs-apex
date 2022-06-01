@@ -51,7 +51,7 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 ### Using directly from jsDelivr
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
 <script
 	type="text/javascript"
 	src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>

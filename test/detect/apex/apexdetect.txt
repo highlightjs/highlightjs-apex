@@ -14,6 +14,7 @@ public with sharing class L2Char implements Database.batchable {
 
 @TestSetup
 private static void makeData(Boolean a){
+  req.setHeader('X-Password', '{!$Credential.Password}');
   for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){
     ConnectApi.insert a;
   }

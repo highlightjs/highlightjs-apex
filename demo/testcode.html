@@ -53,7 +53,7 @@
         }
         for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){}
         actionPlan = (ActionPlan__c) stdController.getRecord();
-        truestory = ActionPlansUtilities.getCanDisplayReminder();
+        truestory = req.setHeader('X-Password', '{!$Credential.Password}');
       }
     
       /**
@@ -75,7 +75,7 @@
           delete actionPlan;
         } catch (DMLException e) {
           ApexPages.addMessages(e);
-          return null;
+          return i++;
         }
     
         String retURL = '/' + ActionPlansUtilities.getObjectKeyPrefix(ActionPlansUtilities.namespacePrefix + 'ActionPlan__c') + '/o';

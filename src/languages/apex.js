@@ -25,6 +25,9 @@ export default function (hljs) {
   };
 
   const MAIN_KEYWORDS = [
+    'trigger|10',
+    'class',
+    'interface',
     'abstract',
     'AccessLevel',
     'USER_MODE',
@@ -107,9 +110,6 @@ export default function (hljs) {
   ];
 
   const BUILT_INS = [
-    'trigger|10',
-    'class',
-    'interface',
     'insert',
     'update',
     'upsert|8',
@@ -123,7 +123,8 @@ export default function (hljs) {
     'callable|10'
   ];
 
-  const APEX_ANNOTATIONS = [
+  // Extraneous for now - will be useful if we go this route BUT will need more maintenance
+  /* const APEX_ANNOTATIONS = [
     '@AuraEnabled',
     '@Deprecated',
     '@Future',
@@ -143,7 +144,7 @@ export default function (hljs) {
     '@SuppressWarnings',
     '@TestSetup',
     '@TestVisible'
-  ];
+  ]; */
 
   const KEYWORDS = {
     $pattern: '[A-Za-z][0-9A-Za-z$_]*',
@@ -159,12 +160,6 @@ export default function (hljs) {
     relevance: 8,
     scope: 'keyword'
   };
-
-  const CONSTANTS = {
-    relevance: 0,
-    match: /\b[A-Z][A-Z_0-9]*\b/,
-    scope: 'variable.constant'
-  }
 
   const NAMESPACE_LIST = [
     'ApexPages|10',
@@ -217,8 +212,6 @@ export default function (hljs) {
     /\*=/,
     /\/=/,
     /%/,
-    /\.\.\./,
-    /\.\./,
     /\+/,
     /<</,
     />>/,
@@ -235,9 +228,10 @@ export default function (hljs) {
     /&/,
     /\|\|/,
     /\|/,
-    /\?:/,
+    /(?<=\s)\?|:(?=\s)/,
     /=/,
-    /=>/
+    /=>/,
+    /\?\./
   ];
 
   const OPERATORS = {
@@ -298,7 +292,7 @@ export default function (hljs) {
   );
 
   // Extraneous for now - will be useful if we go this route BUT will need more maintenance
-  const ANNOTATION_MODIFIER_TYPES = [
+  /* const ANNOTATION_MODIFIER_TYPES = [
     'required',
     'label',
     'description',
@@ -313,11 +307,12 @@ export default function (hljs) {
     'IconName',
     'cacheable',
     'scope'
-  ];
+  ]; */
 
   const ANNOTATIONS = {
     relevance: 10,
     scope: { 1: 'meta' },
+    // We will allow any annotation, so we do not need to maintain this as often
     //match: [regex.either(...APEX_ANNOTATIONS), /(?=(\(|\b|\s))/],
     match: ['@' + APEX_IDENT_RE, /(?=(\(|\b|\s))/],
   };
@@ -444,9 +439,9 @@ export default function (hljs) {
     },
     // Class Name
     {
-      match: [/\bclass/, /\s+/, APEX_IDENT_RE],
+      match: [/(?<=\bclass\b)/, /\s+/, APEX_IDENT_RE],
       scope: {
-        1: 'keyword',
+        //1: 'keyword',
         3: 'title.class'
       }
     },
@@ -459,10 +454,10 @@ export default function (hljs) {
     },
     // Trigger
     {
-      begin: [/\btrigger/, /\s+/, APEX_IDENT_RE, /\s+/, 'on', /\s+/, APEX_IDENT_RE],
+      begin: [/(?<=\btrigger\b)/, /\s+/, APEX_IDENT_RE, /\s+/, 'on', /\s+/, APEX_IDENT_RE],
       end: '{',
       scope: {
-        1: 'keyword',
+        //1: 'keyword',
         3: 'title.class',
         7: 'type'
       },
@@ -528,6 +523,15 @@ export default function (hljs) {
     }
   ];
 
+  const MERGE_FIELDS = {
+    begin: ['{', /\$[a-zA-Z]+]/, '.', /\w+/],
+    end: '}',
+    scope: {
+      2: "built_in",
+      4: "property"
+    }
+  };
+
   const FOR_LOOP = {
     variants: [
       {
@@ -589,46 +593,6 @@ export default function (hljs) {
   }
   ];
 
-  /* const TRIGGERS = {
-    begin: [/\btrigger/, /\s+/, APEX_IDENT_RE, /\s+/, 'on', /\s+/, APEX_IDENT_RE],
-    end: '{',
-    scope: {
-      1: 'keyword',
-      3: 'title.class',
-      7: 'type'
-    },
-    contains: [
-      COMMENT_LINE,
-      COMMENT_BLOCK,
-      {
-        match: /(?:before|after)\s+(?:insert|update|delete|undelete)/,
-        scope: 'built_in',
-        relevance: 10
-      }
-    ],
-    relevance: 10
-  }; */
-
-  /* const METHOD_DEFINITION = {
-    begin: [
-      '(?:' + GENERIC_IDENT_RE + '\\s+)',
-      '(?:' + GENERIC_IDENT_RE + '\\s+)',
-      hljs.UNDERSCORE_IDENT_RE,
-      /(?=\s*\()/
-    ],
-    keywords: KEYWORDS,
-    scope: { 2: 'type', 3: 'title.function' },
-    contains: [
-      COMMENT_LINE,
-      COMMENT_BLOCK,
-      hljs.APOS_STRING_MODE,
-      COLLECTION_DECLARATION,
-      COLLECTION_MAP_VALUE
-    ],
-    relevance: 0,
-    illegal: [/\b_/, /_\b/]
-  }; */
-
   const SALESFORCE_ID = {
     match: /(?<!\.)\bId\b/,
     scope: 'type',
@@ -643,11 +607,12 @@ export default function (hljs) {
     '<!--',
     '!DOCTYPE',
     /<iframe\b/,
-    /\n#/,
-    /\nimport \.[a-zA-Z]+\./,
-    /\nimport [\w]+/,
-    /\ninclude </,
-    /\nuse\s+</,
+    /^#/,
+    /^import \.[a-zA-Z]+\./,
+    /^import [\w]+/,
+    /^import$/,
+    /^include </,
+    /^use\s+</,
     /\b(const|var)\s+\w+\s*=/,
     /\bstruct\b/,
     'System.log',
@@ -665,6 +630,7 @@ export default function (hljs) {
     /\s\$[a-zA-Z]/,
     '#if',
     '%if',
+    /\bif(?!\s+\()/, //coffeescript
     '%endif',
     '#endif',
     /\w::\w/,
@@ -679,7 +645,8 @@ export default function (hljs) {
     /\bend\.\n/,
     /\bend\n/,
     '"""',
-    /"\w+"/
+    // /"[^"]+"/, // Quote_string_mode
+    /@\w+\[\w+\]/ //moonscript
   ];
 
   return {
@@ -700,19 +667,17 @@ export default function (hljs) {
       COMMENT_BLOCK,
       COMMENT_LINE,
       COMPOUND_KEYWORDS,
-      //CONSTANTS,
       CUSTOM_OBJECT,
       EXCEPTION,
       FOR_LOOP,
       hljs.APOS_STRING_MODE,
       METHOD_CALL,
-      //METHOD_DEFINITION,
+      MERGE_FIELDS,
       NAMESPACES,
       NUMBER,
       OPERATORS,
       SALESFORCE_ID,
-      SOQL_QUERY,
-      //TRIGGERS
+      SOQL_QUERY
     ]
   };
 }
