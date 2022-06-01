@@ -1,16 +1,24 @@
-# Apex - a language grammar for the [Salesforce Platform](https://developer.salesforce.com)
+![](./assets/salesforce_platform.png)
 
-[![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://npmjs.org/package/highlightjs-apex)
+# Apex - a language grammar for the [Salesforce Platform](https://developer.salesforce.com)
+[![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://www.npmjs.com/package/highlightjs-apex)
+
+[![npm](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
+[![npm](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
+![install size](https://badgen.net/packagephobia/install/highlightjs-apex) 
+[![GitHub](https://img.shields.io/github/license/highlightjs/highlightjs-apex)](https://github.com/highlightjs/highlightjs-apex/blob/main/LICENSE.md)
+![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/highlightjs-apex)
+[![CDN download](https://badgen.net/badge/jsDelivr/download/blue?icon=jsdelivr)](https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js)
 
 ## Demo
 
-The below screenshot was captured from a [demo webpage](demo/testcode.html) after dropping `highlight.min.js` to a `dist` folder.
-(Code taken from [Salesforce Trigger Framework](https://github.com/dschach/salesforce-trigger-framework) and Highlight Java example code)
+The screenshot was captured from a [demo webpage](demo/testcode.html) after dropping `highlight.min.js` to a `dist` folder.
+(Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/) and Highlight Java example code)
 ![Demo](demo/ApexHighlighting.png)
 
 ## Usage
 
-Simply include the Highlight.js library in your webpage or Node app, then load this module.
+Simply include the Highlight.js library in your webpage or Node app, then load this module. For more complex usage, see [highlight.js usage](https://github.com/highlightjs/highlight.js#basic-usage).
 
 ### Static website or simple usage
 
@@ -19,7 +27,8 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 ```html
 <script type="text/javascript" src="/path/to/highlight.min.js"></script>
 <script type="text/javascript" src="/path/to/apex.min.js"></script>
-<!-- Use any stylesheet you'd like - though it's best to choose from those in highlightjs core repo -->
+<!-- Use any stylesheet you'd like - though it's best to choose from 
+	those in highlightjs core repo -->
 <link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" />
 <script type="text/javascript">
 	hljs.highlightAll();
@@ -38,14 +47,15 @@ This will find and highlight code inside of `<pre><code>` tags; it tries to dete
 
 For more details see [Highlight.js main page](https://github.com/highlightjs/highlight.js#highlightjs).
 
-### Using directly from the UNPKG CDN
+### Using directly from jsDelivr
 
 ```html
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
 <script type="text/javascript"
-  src="https://unpkg.com/highlightjs-apex/dist/apex.min.js"></script>
+  src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 ```
 
-- More info: <https://unpkg.com>
+- More info: <https://www.jsdelivr.com/>
 
 ### With Node or another build system
 
@@ -59,43 +69,6 @@ hljs.registerLanguage('apex', hljsApex);
 hljs.highlightAll();
 ```
 
-
-### React
-
-You need to import both Highlight.js and third-party language like Apex:
-
-```js
-import React, {Component} from 'react'
-import 'highlight.js/scss/vs.scss' # your favourite theme
-import apex from './apex'
-import hljs from 'highlight.js'
-hljs.registerLanguage('apex', apex);
-
-class Highlighter extends Component
-{
-  constructor(props)
-  {
-    super(props);
-    hljs.highlightAll();
-  }
-
-  render()
-  {
-    let {children} = this.props;
-    return
-    {
-      <pre ref={(node) => this.node = node}>
-        <code className="language-apex">
-          {children}
-        </code>
-      </pre>
-    }
-  }
-}
-
-export default Highlighter;
-```
-
 ## License
 
 Highlight.js is released under the BSD 3-Clause License. See [LICENSE](https://github.com/highlightjs/highlight.js/blob/main/LICENSE) file for details.
@@ -103,7 +76,7 @@ Highlightjs-apex is released under the MIT License. See [LICENSE](/LICENSE.md) f
 
 ## Author
 
-David Schach [[David Schach](https://github.com/dschach)](https://github.com/dschach)
+David Schach [https://github.com/dschach](https://github.com/dschach)
 
 ## Contribution
 
