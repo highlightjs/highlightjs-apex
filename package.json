@@ -19,7 +19,7 @@
 		"highlightjs",
 		"highlight.js"
 	],
-	"author": "David Schach",
+	"author": "David Schach (https://github.com/dschach)",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/highlightjs/highlightjs-apex/issues"
