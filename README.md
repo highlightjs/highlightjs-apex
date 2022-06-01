@@ -1,18 +1,19 @@
 ![](./assets/salesforce_platform.png)
 
 # Apex - a language grammar for the [Salesforce Platform](https://developer.salesforce.com)
+
 [![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://www.npmjs.com/package/highlightjs-apex)
 
 [![npm](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 [![npm](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
-![install size](https://badgen.net/packagephobia/install/highlightjs-apex) 
+![install size](https://badgen.net/packagephobia/install/highlightjs-apex)
 [![GitHub](https://img.shields.io/github/license/highlightjs/highlightjs-apex)](https://github.com/highlightjs/highlightjs-apex/blob/main/LICENSE.md)
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/highlightjs-apex)
 [![CDN download](https://badgen.net/badge/jsDelivr/download/blue?icon=jsdelivr)](https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js)
 
 ## Demo
 
-The screenshot was captured from a [demo webpage](demo/testcode.html) after dropping `highlight.min.js` to a `dist` folder.
+The screenshot was captured from a [demo webpage](demo/testcode.html) using `highlight.min.js` from the `dist` folder.
 (Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/) and Highlight Java example code)
 ![Demo](demo/ApexHighlighting.png)
 
@@ -51,8 +52,9 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
-<script type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
+<script
+	type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 ```
 
 - More info: <https://www.jsdelivr.com/>
