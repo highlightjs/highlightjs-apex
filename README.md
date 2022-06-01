@@ -1,5 +1,7 @@
 # Apex - a language grammar for the [Salesforce Platform](https://developer.salesforce.com)
 
+[![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://npmjs.org/package/highlightjs-apex)
+
 ## Demo
 
 The below screenshot was captured from a [demo webpage](demo/testcode.html) after dropping `highlight.min.js` to a `dist` folder.
@@ -22,6 +24,16 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 <script type="text/javascript">
 	hljs.highlightAll();
 </script>
+```
+
+This will find and highlight code inside of `<pre><code>` tags; it tries to detect the language automatically. If automatic detection doesn’t work for you, you can specify the language in the `class` attribute:
+
+```html
+<pre>
+    <code class="language-apex">
+    ...
+    </code>
+</pre>
 ```
 
 For more details of the usage see [Highlight.js main page](https://github.com/highlightjs/highlight.js#highlightjs).
