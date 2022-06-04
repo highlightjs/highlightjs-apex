@@ -14,7 +14,7 @@
 ## Demo
 
 The screenshot was captured from a [demo webpage](demo/testcode.html) using `highlight.min.js` from the `dist` folder.
-(Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/) and Highlight Java example code)
+(Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
 ![Demo](demo/ApexHighlighting.png)
 
 ## Usage
