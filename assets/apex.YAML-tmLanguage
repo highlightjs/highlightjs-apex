@@ -53,15 +53,7 @@ patterns:
     patterns:
     - include: '#bracketed-argument-list'
 
-  block:
-    begin: \{
-    beginCaptures:
-      '0': {name: punctuation.curlybrace.open.apex}
-    end: \}
-    endCaptures:
-      '0': {name: punctuation.curlybrace.close.apex}
-    patterns:
-    - include: '#statement'
+
 
   bracketed-argument-list:
     begin: \[
@@ -76,11 +68,7 @@ patterns:
     - include: '#expression'
     - include: '#punctuation-comma'
 
-  break-or-continue-statement:
-    match: (?<!\.)\b(?:(break)|(continue))\b
-    captures:
-      '1': {name: keyword.control.flow.break.apex}
-      '2': {name: keyword.control.flow.continue.apex}
+
 
   cast-expression:
     match: |-
@@ -148,110 +136,6 @@ patterns:
     - include: '#comment'
     - include: '#block'
 
-  class-declaration:
-    begin: (?=\bclass\b)
-    end: (?<=\})
-    patterns:
-    - begin: |-
-        (?x)
-        \b(class)\b\s+
-        (@?[_[:alpha:]][_[:alnum:]]*)\s*
-      beginCaptures:
-        '1': {name: keyword.other.class.apex}
-        '2': {name: entity.name.type.class.apex}
-      end: (?=\{)
-      patterns:
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - include: '#type-parameter-list'
-      - include: '#extends-class'
-      - include: '#implements-class'
-    - begin: \{
-      beginCaptures:
-        '0': {name: punctuation.curlybrace.open.apex}
-      end: \}
-      endCaptures:
-        '0': {name: punctuation.curlybrace.close.apex}
-      patterns:
-      - include: '#class-or-trigger-members'
-    - include: '#javadoc-comment'
-    - include: '#comment'
-
-  class-or-trigger-members:
-    patterns:
-    - include: '#javadoc-comment'
-    - include: '#comment'
-    - include: '#storage-modifier'
-    - include: '#sharing-modifier'
-    - include: '#type-declarations'
-    - include: '#field-declaration'
-    - include: '#property-declaration'
-    - include: '#indexer-declaration'
-    - include: '#variable-initializer'
-    - include: '#constructor-declaration'
-    - include: '#method-declaration'
-    - include: '#punctuation-semicolon'
-
-
-
-  conditional-operator:
-    begin: (?<!\?)\?(?!\?|\.|\[)
-    beginCaptures:
-      '0': {name: keyword.operator.conditional.question-mark.apex}
-    end: ':'
-    endCaptures:
-      '0': {name: keyword.operator.conditional.colon.apex}
-    patterns:
-    - include: '#expression'
-
-  constructor-declaration:
-    begin: (?=@?[_[:alpha:]][_[:alnum:]]*\s*\()
-    end: (?<=\})|(?=;)
-    patterns:
-    - match: (@?[_[:alpha:]][_[:alnum:]]*)\b
-      captures:
-        '1': {name: entity.name.function.apex}
-    - begin: (:)
-      beginCaptures:
-        '1': {name: punctuation.separator.colon.apex}
-      end: (?=\{|=>)
-      patterns:
-      - include: '#constructor-initializer'
-    - include: '#parenthesized-parameter-list'
-    - include: '#comment'
-    - include: '#expression-body'
-    - include: '#block'
-
-  constructor-initializer:
-    begin: \b(?:(this))\b\s*(?=\()
-    beginCaptures:
-      '1': {name: keyword.other.this.apex}
-    end: (?<=\))
-    patterns:
-    - include: '#argument-list'
-
-  date-literal-with-params:
-    match: \b((LAST_N_DAYS|NEXT_N_DAYS|NEXT_N_WEEKS|LAST_N_WEEKS|NEXT_N_MONTHS|LAST_N_MONTHS|NEXT_N_QUARTERS|LAST_N_QUARTERS|NEXT_N_YEARS|LAST_N_YEARS|NEXT_N_FISCAL_QUARTERS|LAST_N_FISCAL_QUARTERS|NEXT_N_FISCAL_YEARS|LAST_N_FISCAL_YEARS)\s*\:\d+)\b
-    captures:
-      '1': {name: keyword.operator.query.date.apex}
-
-  date-literals:
-    match: \b(YESTERDAY|TODAY|TOMORROW|LAST_WEEK|THIS_WEEK|NEXT_WEEK|LAST_MONTH|THIS_MONTH|NEXT_MONTH|LAST_90_DAYS|NEXT_90_DAYS|THIS_QUARTER|LAST_QUARTER|NEXT_QUARTER|THIS_YEAR|LAST_YEAR|NEXT_YEAR|THIS_FISCAL_QUARTER|LAST_FISCAL_QUARTER|NEXT_FISCAL_QUARTER|THIS_FISCAL_YEAR|LAST_FISCAL_YEAR|NEXT_FISCAL_YEAR)\b\s*
-    captures:
-      '1': {name: keyword.operator.query.date.apex}
-
-
-
-
-
-  do-statement:
-    begin: (?<!\.)\b(do)\b
-    beginCaptures:
-      '1': {name: keyword.control.loop.do.apex}
-    end: (?=;|})
-    patterns:
-    - include: '#statement'
-
   element-access-expression:
     begin: |-
       (?x)
@@ -278,59 +162,15 @@ patterns:
     patterns:
     - include: '#statement'
 
-  enum-declaration:
-    begin: (?=\benum\b)
-    end: (?<=\})
-    patterns:
-    - begin: (?=enum)
-      end: (?=\{)
-      patterns:
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - match: (enum)\s+(@?[_[:alpha:]][_[:alnum:]]*)
-        captures:
-          '1': {name: keyword.other.enum.apex}
-          '2': {name: entity.name.type.enum.apex}
-    - begin: \{
-      beginCaptures:
-        '0': {name: punctuation.curlybrace.open.apex}
-      end: \}
-      endCaptures:
-        '0': {name: punctuation.curlybrace.close.apex}
-      patterns:
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - include: '#punctuation-comma'
-      - begin: '@?[_[:alpha:]][_[:alnum:]]*'
-        beginCaptures:
-          '0': {name: entity.name.variable.enum-member.apex}
-        end: (?=(,|\}))
-        patterns:
-        - include: '#javadoc-comment'
-        - include: '#comment'
-        - include: '#variable-initializer'
-    - include: '#javadoc-comment'
-    - include: '#comment'
 
 
 
-  expression-body:
-    begin: =>
-    beginCaptures:
-      '0': {name: keyword.operator.arrow.apex}
-    end: (?=[,\);}])
-    patterns:
-    - include: '#expression'
 
 
 
-  extends-class:
-    begin: (extends)\b\s+([_[:alpha:]][_[:alnum:]]*)
-    beginCaptures:
-      '1': {name: keyword.other.extends.apex}
-      '2': {name: entity.name.type.extends.apex}
-    end: (?={|implements)
 
+
+  
   field-declaration:
     begin: |-
       (?x)
@@ -405,11 +245,7 @@ patterns:
       - include: '#colon-expression'
     - include: '#statement'
 
-  from-clause:
-    match: (FROM)\b\s*([_\.[:alnum:]]+\b)?
-    captures:
-      '1': {name: keyword.operator.query.from.apex}
-      '2': {name: storage.type.apex}
+
 
   goto-statement:
     begin: (?<!\.)\b(goto)\b
@@ -431,28 +267,8 @@ patterns:
 
 
 
-  if-statement:
-    begin: (?<!\.)\b(if)\b\s*(?=\()
-    beginCaptures:
-      '1': {name: keyword.control.conditional.if.apex}
-    end: (?<=\})|(?=;)
-    patterns:
-    - begin: \(
-      beginCaptures:
-        '0': {name: punctuation.parenthesis.open.apex}
-      end: \)
-      endCaptures:
-        '0': {name: punctuation.parenthesis.close.apex}
-      patterns:
-      - include: '#expression'
-    - include: '#statement'
 
-  implements-class:
-    begin: (implements)\b\s+([_[:alpha:]][_[:alnum:]]*)
-    beginCaptures:
-      '1': {name: keyword.other.implements.apex}
-      '2': {name: entity.name.type.implements.apex}
-    end: (?={|extends)
+
 
   indexer-declaration:
     begin: |-
@@ -493,66 +309,12 @@ patterns:
     - include: '#expression-body'
     - include: '#variable-initializer'
 
-  initializer-expression:
-    begin: \{
-    beginCaptures:
-      '0': {name: punctuation.curlybrace.open.apex}
-    end: \}
-    endCaptures:
-      '0': {name: punctuation.curlybrace.close.apex}
-    patterns:
-    - include: '#expression'
-    - include: '#punctuation-comma'
 
-  interface-declaration:
-    begin: (?=\binterface\b)
-    end: (?<=\})
-    patterns:
-    - begin: |-
-        (?x)
-        (interface)\b\s+
-        (@?[_[:alpha:]][_[:alnum:]]*)
-      beginCaptures:
-        '1': {name: keyword.other.interface.apex}
-        '2': {name: entity.name.type.interface.apex}
-      end: (?=\{)
-      patterns:
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - include: '#type-parameter-list'
-      - include: '#extends-class'
-    - begin: \{
-      beginCaptures:
-        '0': {name: punctuation.curlybrace.open.apex}
-      end: \}
-      endCaptures:
-        '0': {name: punctuation.curlybrace.close.apex}
-      patterns:
-      - include: '#interface-members'
-    - include: '#javadoc-comment'
-    - include: '#comment'
+  
 
 
 
-  invocation-expression:
-    begin: |-
-      (?x)
-      (?:(\??\.)\s*)?                                  # safe navigator or accessor
-      (@?[_[:alpha:]][_[:alnum:]]*)\s*                 # method name
-      (?<type-args>\s*<([^<>]|\g<type-args>)+>\s*)?\s* # type arguments
-      (?=\()                                           # open paren of argument list
-    beginCaptures:
-      '1':
-        patterns:
-        - include: '#punctuation-accessor'
-        - include: '#operator-safe-navigation'
-      '2': {name: entity.name.function.apex}
-      '3':
-        patterns:
-        - include: '#type-arguments'
-    end: (?<=\))
-    patterns:
-    - include: '#argument-list'
+
 
 
 
@@ -592,10 +354,7 @@ patterns:
     - include: '#comment'
     - include: '#variable-initializer'
 
-  local-declaration:
-    patterns:
-    - include: '#local-constant-declaration'
-    - include: '#local-variable-declaration'
+
 
   local-variable-declaration:
     begin: |-
@@ -635,6 +394,11 @@ patterns:
     - include: '#punctuation-comma'
     - include: '#comment'
     - include: '#variable-initializer'
+
+    local-declaration:
+    patterns:
+    - include: '#local-constant-declaration'
+    - include: '#local-variable-declaration'
 
   member-access-expression:
     patterns:
@@ -677,23 +441,8 @@ patterns:
       captures:
         '1': {name: variable.other.object.apex}
 
-  merge-expression:
-    begin: (merge)\b\s+
-    beginCaptures:
-      '1': {name: support.function.apex}
-    end: (?<=\;)
-    patterns:
-    - include: '#object-creation-expression'
-    - include: '#merge-type-statement'
-    - include: '#expression'
-    - include: '#punctuation-semicolon'
 
-  merge-type-statement:
-    match: ([_[:alpha:]]*)\b\s+([_[:alpha:]]*)\b\s*(\;)
-    captures:
-      '1': {name: variable.other.readwrite.apex}
-      '2': {name: variable.other.readwrite.apex}
-      '3': {name: punctuation.terminator.statement.apex}
+
 
   method-declaration:
     begin: |-
@@ -814,30 +563,6 @@ patterns:
     patterns:
     - include: '#argument-list'
 
-
-
-
-
-  orderby-clause:
-    match: \b(ORDER BY)\b\s*
-    captures:
-      '1': {name: keyword.operator.query.orderby.apex}
-    patterns:
-    - include: '#ordering-direction'
-    - include: '#ordering-nulls'
-
-  ordering-direction:
-    match: \b(?:(ASC)|(DESC))\b
-    captures:
-      '1': {name: keyword.operator.query.ascending.apex}
-      '2': {name: keyword.operator.query.descending.apex}
-
-  ordering-nulls:
-    match: \b(?:(NULLS FIRST)|(NULLS LAST))\b
-    captures:
-      '1': {name: keyword.operator.query.nullsfirst.apex}
-      '2': {name: keyword.operator.query.nullslast.apex}
-
   parameter:
     match: |-
       (?x)
@@ -949,23 +674,49 @@ patterns:
     - include: '#variable-initializer'
     - include: '#class-or-trigger-members'
 
+
+  date-literal-with-params:
+    match: \b((LAST_N_DAYS|NEXT_N_DAYS|NEXT_N_WEEKS|LAST_N_WEEKS|NEXT_N_MONTHS|LAST_N_MONTHS|NEXT_N_QUARTERS|LAST_N_QUARTERS|NEXT_N_YEARS|LAST_N_YEARS|NEXT_N_FISCAL_QUARTERS|LAST_N_FISCAL_QUARTERS|NEXT_N_FISCAL_YEARS|LAST_N_FISCAL_YEARS)\s*\:\d+)\b
+    captures:
+      '1': {name: keyword.operator.query.date.apex}
+
+  date-literals:
+    match: \b(YESTERDAY|TODAY|TOMORROW|LAST_WEEK|THIS_WEEK|NEXT_WEEK|LAST_MONTH|THIS_MONTH|NEXT_MONTH|LAST_90_DAYS|NEXT_90_DAYS|THIS_QUARTER|LAST_QUARTER|NEXT_QUARTER|THIS_YEAR|LAST_YEAR|NEXT_YEAR|THIS_FISCAL_QUARTER|LAST_FISCAL_QUARTER|NEXT_FISCAL_QUARTER|THIS_FISCAL_YEAR|LAST_FISCAL_YEAR|NEXT_FISCAL_YEAR)\b\s*
+    captures:
+      '1': {name: keyword.operator.query.date.apex}
+
+
+  from-clause:
+    match: (FROM)\b\s*([_\.[:alnum:]]+\b)?
+    captures:
+      '1': {name: keyword.operator.query.from.apex}
+      '2': {name: storage.type.apex}
+
+  orderby-clause:
+    match: \b(ORDER BY)\b\s*
+    captures:
+      '1': {name: keyword.operator.query.orderby.apex}
+    patterns:
+    - include: '#ordering-direction'
+    - include: '#ordering-nulls'
+
+  ordering-direction:
+    match: \b(?:(ASC)|(DESC))\b
+    captures:
+      '1': {name: keyword.operator.query.ascending.apex}
+      '2': {name: keyword.operator.query.descending.apex}
+
+  ordering-nulls:
+    match: \b(?:(NULLS FIRST)|(NULLS LAST))\b
+    captures:
+      '1': {name: keyword.operator.query.nullsfirst.apex}
+      '2': {name: keyword.operator.query.nullslast.apex}
+
   query-operators:
     match: \b(ABOVE|AND|AT|FOR REFERENCE|FOR UPDATE|FOR VIEW|GROUP BY|HAVING|IN|LIKE|LIMIT|NOT
       IN|NOT|OFFSET|OR|TYPEOF|UPDATE TRACKING|UPDATE VIEWSTAT|WITH DATA CATEGORY|WITH)\b\s*
     captures:
       '1': {name: keyword.operator.query.apex}
-
-  return-statement:
-    begin: (?<!\.)\b(return)\b
-    beginCaptures:
-      '1': {name: keyword.control.flow.return.apex}
-    end: (?=;)
-    patterns:
-    - include: '#expression'
-
-  sharing-modifier:
-    name: sharing.modifier.apex
-    match: (?<!\.)\b(with sharing|without sharing|inherited sharing)\b
 
   soql-colon-method-statement:
     begin: (:?\.)?([_[:alpha:]][_[:alnum:]]*)(?=\()
@@ -1074,232 +825,15 @@ patterns:
         '2': {name: punctuation.separator.comma.apex}
 
 
-  storage-modifier:
-    name: storage.modifier.apex
-    match: (?<!\.)\b(new|public|protected|private|abstract|virtual|override|global|static|final|transient)\b
-
-  
 
 
 
-  support-arguments:
-    begin: <
-    beginCaptures:
-      '0': {name: punctuation.definition.typeparameters.begin.apex}
-    end: '>'
-    endCaptures:
-      '0': {name: punctuation.definition.typeparameters.end.apex}
-    patterns:
-    - include: '#comment'
-    - include: '#support-type'
-    - include: '#punctuation-comma'
 
 
 
-  support-expression:
-    begin: |-
-      (?x)
-      (ApexPages|Database|DMLException|Exception|PageReference|Savepoint|SchedulableContext|Schema|SObject|System|Test)(?=\.|\s) # supported apex namespaces
-    beginCaptures:
-      '1': {name: support.class.apex}
-    end: (?<=\)|$)|(?=\})|(?=;)|(?=\)|(?=\]))|(?=\,)
-    patterns:
-    - include: '#support-type'
-    - match: (?:(\.))([[:alpha:]]*)(?=\()
-      captures:
-        '1': {name: punctuation.accessor.apex}
-        '2': {name: support.function.apex}
-    - match: (?:(\.))([[:alpha:]]+)
-      captures:
-        '1': {name: punctuation.accessor.apex}
-        '2': {name: support.type.apex}
-    - begin: \(
-      beginCaptures:
-        '0': {name: punctuation.parenthesis.open.apex}
-      end: \)
-      endCaptures:
-        '0': {name: punctuation.parenthesis.close.apex}
-      patterns:
-      - include: '#expression'
-      - include: '#punctuation-comma'
-    - include: '#comment'
-    - include: '#statement'
 
-  support-functions:
-    match: \b(delete|execute|finish|insert|start|undelete|update|upsert)\b
-    captures:
-      '1': {name: support.function.apex}
 
-  support-name:
-    patterns:
-    - match: (\.)\s*([[:alpha:]]*)(?=\()
-      captures:
-        '1': {name: punctuation.accessor.apex}
-        '2': {name: support.function.apex}
-    - begin: \(
-      beginCaptures:
-        '0': {name: punctuation.parenthesis.open.apex}
-      end: \)
-      endCaptures:
-        '0': {name: punctuation.parenthesis.close.apex}
-      patterns:
-      - include: '#expression'
-      - include: '#punctuation-comma'
-    - match: (\.)\s*([_[:alpha:]]*)
-      captures:
-        '1': {name: punctuation.accessor.apex}
-        '2': {name: support.type.apex}
 
-  support-type:
-    name: support.apex
-    patterns:
-    - include: '#comment'
-    - include: '#support-class'
-    - include: '#support-functions'
-    - include: '#support-name'
-
-  switch-statement:
-    begin: |-
-      (?x)
-      (switch)\b\s+
-      (on)\b\s+
-      (?:([_.?\'\(\)[:alnum:]]+)\s*)?
-      (\{)
-    beginCaptures:
-      '1': {name: keyword.control.switch.apex}
-      '2': {name: keyword.control.switch.on.apex}
-      '3':
-        patterns:
-        - include: '#statement'
-        - include: '#parenthesized-expression'
-      '4': {name: punctuation.curlybrace.open.apex}
-    end: (\})
-    endCaptures:
-      '0': {name: punctuation.curlybrace.close.apex}
-    patterns:
-    - include: '#when-string'
-    - include: '#when-else-statement'
-    - include: '#when-sobject-statement'
-    - include: '#when-statement'
-    - include: '#when-multiple-statement'
-    - include: '#expression'
-    - include: '#punctuation-comma'
-    - include: '#punctuation-semicolon'
-
-  this-expression:
-    match: \b(?:(this))\b
-    captures:
-      '1': {name: keyword.other.this.apex}
-
-  throw-expression:
-    match: (?<!\.)\b(throw)\b
-    captures:
-      '1': {name: keyword.control.flow.throw.apex}
-
-  throw-statement:
-    begin: (?<!\.)\b(throw)\b
-    beginCaptures:
-      '1': {name: keyword.control.flow.throw.apex}
-    end: (?=;)
-    patterns:
-    - include: '#expression'
-
-  trigger-context-declaration:
-    begin: \b(?:(Trigger))\b(\.)\b
-    beginCaptures:
-      '1': {name: support.class.trigger.apex}
-      '2': {name: punctuation.accessor.apex}
-    end: (?=\})|(?=;)|(?=\)|(?=\]))
-    patterns:
-    - name: support.type.trigger.apex
-      match: \b(isExecuting|isInsert|isUpdate|isDelete|isBefore|isAfter|isUndelete|new|newMap|old|oldMap|size)\b
-    - match: (?:(\??\.))([[:alpha:]]+)(?=\()
-      captures:
-        '1':
-          patterns:
-          - include: '#punctuation-accessor'
-          - include: '#operator-safe-navigation'
-        '2': {name: support.function.trigger.apex}
-    - begin: \(
-      beginCaptures:
-        '0': {name: punctuation.parenthesis.open.apex}
-      end: \)
-      endCaptures:
-        '0': {name: punctuation.parenthesis.close.apex}
-      patterns:
-      - include: '#trigger-type-statement'
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - include: '#expression'
-    - include: '#expression'
-
-  trigger-declaration:
-    begin: (?=\btrigger\b)
-    end: (?<=\})
-    patterns:
-    - begin: |-
-        (?x)
-        \b(trigger)\b\s+
-        (@?[_[:alpha:]][_[:alnum:]]*)\s*
-        \b(on)\b\s+
-        ([_[:alpha:]][_[:alnum:]]*)\s*
-      beginCaptures:
-        '1': {name: keyword.other.trigger.apex}
-        '2': {name: entity.name.type.trigger.apex}
-        '3': {name: keyword.operator.trigger.on.apex}
-        '4': {name: storage.type.apex}
-      end: (?=\{)
-      patterns:
-      - begin: \(
-        beginCaptures:
-          '0': {name: punctuation.parenthesis.open.apex}
-        end: \)
-        endCaptures:
-          '0': {name: punctuation.parenthesis.close.apex}
-        patterns:
-        - include: '#trigger-type-statement'
-        - include: '#trigger-operator-statement'
-        - include: '#punctuation-comma'
-        - include: '#expression'
-      - include: '#javadoc-comment'
-      - include: '#comment'
-      - include: '#type-parameter-list'
-    - begin: \{
-      beginCaptures:
-        '0': {name: punctuation.curlybrace.open.apex}
-      end: \}
-      endCaptures:
-        '0': {name: punctuation.curlybrace.close.apex}
-      patterns:
-      - include: '#statement'
-      - include: '#class-or-trigger-members'
-    - include: '#javadoc-comment'
-    - include: '#comment'
-
-  trigger-operator-statement:
-    name: keyword.operator.trigger.apex
-    match: \b(insert|update|delete|merge|upsert|undelete)\b
-
-  trigger-type-statement:
-    match: \b(?:(before)|(after))\b
-    captures:
-      '1': {name: keyword.control.trigger.before.apex}
-      '2': {name: keyword.control.trigger.after.apex}
-
-  try-block:
-    begin: (?<!\.)\b(try)\b
-    beginCaptures:
-      '1': {name: keyword.control.try.apex}
-    end: (?<=\})
-    patterns:
-    - include: '#comment'
-    - include: '#block'
-
-  try-statement:
-    patterns:
-    - include: '#try-block'
-    - include: '#catch-clause'
-    - include: '#finally-clause'
 
   type-parameter-list:
     begin: \<
@@ -1320,13 +854,7 @@ patterns:
     captures:
       '1': {name: keyword.operator.query.using.apex}
 
-  variable-initializer:
-    begin: (?<!=|!)(=)(?!=|>)
-    beginCaptures:
-      '1': {name: keyword.operator.assignment.apex}
-    end: (?=[,\)\];}])
-    patterns:
-    - include: '#expression'
+  
 
   when-else-statement:
     begin: (when)\b\s+(else)\b\s*
