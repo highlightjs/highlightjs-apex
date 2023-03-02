@@ -4,7 +4,8 @@
 		<title>TEST APEX CODE</title>
 		<meta charset="UTF-8" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
-		<script charset="UTF-8" src="../dist/apex.min.js"></script>
+		<!-- <script charset="UTF-8" src="../dist/apex.min.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 		<link rel="stylesheet" href="./highlight.css" />
 		<script>
 			//hljs.configure({ ignoreUnescapedHTML: true, ignoreIllegals: false });
@@ -51,7 +52,7 @@
         if (!Test.isRunningTest()) {
           stdController.addFields(ActionPlansUtilities.getCustomRelationshipFields());
         }
-        for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){}
+        for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER  BY CreatedDate ASC] ){}
         actionPlan = (ActionPlan__c) stdController.getRecord();
         truestory = req.setHeader('X-Password', '{!$Credential.Password}');
       }

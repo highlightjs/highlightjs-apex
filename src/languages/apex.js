@@ -10,9 +10,9 @@ export default function (hljs) {
   const regex = hljs.regex;
   const APEX_ALPHA = "[a-zA-Z]";
   const APEX_ALNUM = "[A-Za-z0-9]";
-  const APEX_ALPHA_UNDER = APEX_ALPHA + "_";
-  const APEX_ALNUM_UNDER = APEX_ALNUM + "_";
-  const APEX_IDENT_RE = "@?" + APEX_ALPHA + APEX_ALNUM_UNDER + "*";
+  const APEX_ALPHA_UNDER = "[a-zA-Z_]";
+  const APEX_ALNUM_UNDER = "[A-Za-z0-9_]"
+  const APEX_IDENT_RE = APEX_ALPHA + APEX_ALNUM_UNDER + "*"; // [a-zA-Z][A-Za-z0-9_]*
 
   // PUNCTUATION DEFINITIONS
   const PUNCTUATION_ACCESSOR = {
@@ -40,6 +40,11 @@ export default function (hljs) {
     scope: "variable",
   };
 
+  const TYPE_NULLABLE_SUFFIX = {
+    match: /\?/,
+    scope: "punctuation",
+  };
+
   const SHARING_MODIFIER = {
     relevance: 10,
     match: [/\b(?:with|without|inherited)\s+sharing/],
@@ -59,6 +64,133 @@ export default function (hljs) {
     match: APEX_IDENT_RE,
     scope: "title.function",
   };
+
+  const SOQL_DATE_LITERALS = {
+    variants: [{
+    match: /\b((LAST_N_DAYS|NEXT_N_DAYS|NEXT_N_WEEKS|LAST_N_WEEKS|NEXT_N_MONTHS|LAST_N_MONTHS|NEXT_N_QUARTERS|LAST_N_QUARTERS|NEXT_N_YEARS|LAST_N_YEARS|NEXT_N_FISCAL_QUARTERS|LAST_N_FISCAL_QUARTERS|NEXT_N_FISCAL_YEARS|LAST_N_FISCAL_YEARS)\s*\:\d+)\b/,
+    },{
+    match: /\b(YESTERDAY|TODAY|TOMORROW|LAST_WEEK|THIS_WEEK|NEXT_WEEK|LAST_MONTH|THIS_MONTH|NEXT_MONTH|LAST_90_DAYS|NEXT_90_DAYS|THIS_QUARTER|LAST_QUARTER|NEXT_QUARTER|THIS_YEAR|LAST_YEAR|NEXT_YEAR|THIS_FISCAL_QUARTER|LAST_FISCAL_QUARTER|NEXT_FISCAL_QUARTER|THIS_FISCAL_YEAR|LAST_FISCAL_YEAR|NEXT_FISCAL_YEAR)\b\s*/
+    }],
+    scope: "keyword"
+  }
+
+  const FROM_CLAUSE = {
+  match: ['FROM', /\b\s*/, APEX_ALNUM_UNDER, /\b/],
+  scope: {1: "keyword", 3: "type"}
+  }
+
+  const SOQL_KEYWORDS = {
+    match: regex.either('ASC','DESC',/ORDER\s+BY/,'NULLS FIRST','NULLS LAST', 'WHERE',
+  /\b(ABOVE|AND|AT|FOR\s+REFERENCE|FOR UPDATE|FOR\s+VIEW|GROUP\s+BY|HAVING|IN|LIKE|LIMIT|NOT\s+IN|NOT|OFFSET|OR|TYPEOF|UPDATE\s+TRACKING|UPDATE\s+VIEWSTAT|WITH\s+DATA CATEGORY|WITH)\b\s*/, /USING\s+SCOPE\s*(Delegated|Everything|Mine|My_Territory|My_Team_Territory|Team)\b\s*/),
+  scope: "keyword"
+  }
+
+  const SOQL_COLON_METHOD_STATEMENT= {
+    begin: [/(:?\.)?/, APEX_IDENT_RE, /(?=\()/],
+    beginScope: {1: "punctuation", 2: "title.function.invoke"},
+    contains:[
+      STATEMENT,
+      {
+       begin: '(',
+       beginScope: 'punctuation',
+       end: ')',
+       endScope: 'punctuation',
+       contains: [EXPRESSION]
+      }
+    ]
+  }
+
+  const SOQL_COLON_VARS = {
+    begin: /\:\s*/,
+    beginScope: 'operator',
+    end:  regex.concat('/(?!', APEX_IDENT_RE,  '|\(|(\?)?\[|<)/'),
+    contains: [
+      TRIGGER_CONTEXT_DECLARATION,
+      OPERATOR_REGEX,
+      {
+        match: regex.concat(APEX_IDENT_RE, /(?=\?\.|\.)/),
+        scope: "title.class"
+      },
+      SOQL_COLON_METHOD_STATEMENT,
+      {
+        match: APEX_IDENT_RE,
+        scope: 'variable'
+      }
+    ]
+  }
+
+  const SOQL_FUNCTIONS = {
+    begin: [
+     /\b(AVG|CALENDAR_MONTH|CALENDAR_QUARTER|CALENDAR_YEAR|convertCurrency|convertTimezone|COUNT|COUNT_DISTINCT|DAY_IN_MONTH|DAY_IN_WEEK|DAY_IN_YEAR|DAY_ONLY|toLabel|INCLUDES|EXCLUDES|FISCAL_MONTH|FISCAL_QUARTER|FISCAL_YEAR|FORMAT|GROUPING|GROUP\s+BY CUBE|GROUP\s+BY\s+ROLLUP|HOUR_IN_DAY|MAX|MIN|SUM|WEEK_IN_MONTH|WEEK_IN_YEAR)\s*/, /\(/],
+      beginScope: {1: "keyword", 2: "punctuation"},
+      end: ')',
+      endScope: "punctuation",
+      contains:[
+        LITERAL,
+        PUNCTUATION_COMMA,
+        SOQL_FUNCTIONS,
+        {
+          match: APEX_IDENT_RE,
+          //scope: 'property'
+        }
+      ]
+  }
+
+  const SOQL_GROUP_CLAUSES = {
+    BEGIN: '\(',
+    beginScope: "punctuation",
+    end: '\)',
+    endScope: "punctuation",
+    contains: [
+      SOQL_QUERY_EXPRESSION,
+      SOQL_COLON_VARS,
+      SOQL_GROUP_CLAUSES,
+      PUNCTUATION_COMMA,
+      OPERATOR_ASSIGNMENT,
+      LITERAL,
+      SOQL_KEYWORDS,
+      SOQL_DATE_LITERALS,
+      USING_SCOPE,
+      {
+        match: APEX_IDENT_RE,
+        //scope: 'property'
+      }
+    ]
+  }
+
+  const SOQL_QUERY_BODY = [
+    TRIGGER_CONTEXT_DECLARATION,
+    SOQL_COLON_VARS,
+    SOQL_FUNCTIONS,
+    FROM_CLAUSE,
+    WHERE_CLAUSE,
+    SOQL_KEYWORDS,
+    SOQL_DATE_LITERALS,
+    USING_SCOPE,
+    SOQL_GROUP_CLAUSES
+  ]
+
+  const SOQL_QUERY_EXPRESSION = {
+    begin: /\bSELECT\b/,
+    beginScope: 'keyword',
+    end: /(?=;)|(?=\])|(?=\))/,
+    contains:[
+      SOQL_QUERY_BODY,
+      COMMENT,
+      PUNCTUATION_COMMA,
+      OPERATOR_ASSIGNMENT,
+      PARENTHESIZED_EXPRESSION,
+      EXPRESSION_OPERATORS,
+      LITERAL,
+      {
+      match: [/[_.A-Za-z0-9][_.A-Z0-9a-z]*/,/\s*/,/(\,)?/],
+      scope: {1: "property", 3: "punctuation"}
+      }
+    ]
+  }
+
+  
+  
 
   // TYPE DEFINITIONS
   const TYPES = [
@@ -268,8 +400,8 @@ export default function (hljs) {
   const SUPPORT_NAME = {
     variants: [
       {
-        match: [/\./, /\s*/, APEX_ALPHA + "*", /(?=\()/],
-        scope: { 1: "punctuation", 3: "title.function" },
+        match: [/\./, /\s*/, APEX_ALPHA + APEX_ALNUM_UNDER + "*", /(?=\()/],
+        scope: { 3: "title.function" },
       },
       {
         begin: "(",
@@ -280,7 +412,7 @@ export default function (hljs) {
       },
       {
         match: [/\./, /\s*/, APEX_ALPHA_UNDER + "*"],
-        scope: { 1: "punctuation", 2: "type" },
+        scope: { 3: "type" },
       },
     ],
   };
@@ -307,6 +439,53 @@ export default function (hljs) {
     contains: [EXPRESSION],
   };
 
+  const ELSE_PART = {
+    begin: /(?<!\.)\belse\b/,
+    beginScope: "keyword",
+    end: /(?<=\})|(?=;)/,
+    contains: [STATEMENT]
+  }
+
+  const FINALLY_CLAUSE = {
+    begin: /(?<!\.)\bfinally\b/,
+    beginScope: "keyword",
+    end: /(?<=\})/,
+    contains: [COMMENT,BLOCK]
+  }
+
+
+  const FOR_STATEMENT = {
+    begin: [
+      /(?<!\.)\bfor\b/,
+      /\s*\(\s*/,
+      regex.either(regex.concat(...TYPE, ...SUPPORT_TYPE)),
+      /\s+/,
+      APEX_IDENT_RE,
+      /\:/],
+      beginScope: {
+        1: "keyword",
+        //2: "punctuation"
+        3: "type",
+        5: "variable",
+        6: "operator"
+      },
+      end: /(?<=\})|(?=;)/,
+      contains: [
+        {
+          begin: '(',
+          end: ')',
+          contains: [
+            LOCAL_VARIABLE_DECLARATION,
+            EXPRESSION,
+            PUNCTUATION_COMMA,
+            PUNCTUATION_SEMICOLON,
+            COLON_EXPRESSION
+          ]
+        },
+        STATEMENT
+      ]
+  }
+
   const STATEMENT = [
     BLOCK,
     BREAK_OR_CONTINUE_STATEMENT,
@@ -315,7 +494,7 @@ export default function (hljs) {
     ELSE_PART,
     EXPRESSION,
     FOR_STATEMENT,
-    GOTO_STATEMENT,
+    //GOTO_STATEMENT,
     IF_STATEMENT,
     LOCAL_DECLARATION,
     PUNCTUATION_SEMICOLON,
@@ -370,6 +549,7 @@ export default function (hljs) {
     /<<|>>/,
     /<=|>=|<|>/,
     /==|!=/,
+    /\?\./
   ];
 
   const OPERATOR_SAFE_NAVIGATION = {
@@ -411,11 +591,11 @@ export default function (hljs) {
   const TYPE_NAME = [
     {
       match: [APEX_IDENT_RE, /\s*/, /\./],
-      scope: { 1: "type", 3: "punctuation" },
+      scope: { 1: "type" },
     },
     {
       match: [/\./, /\s*/, APEX_IDENT_RE],
-      scope: { 1: "punctuation", 3: "type" },
+      scope: { 3: "type" },
     },
     {
       match: APEX_IDENT_RE,
@@ -423,10 +603,7 @@ export default function (hljs) {
     },
   ];
 
-  const TYPE_NULLABLE_SUFFIX = {
-    match: /\?/,
-    scope: "punctuation",
-  };
+
 
   const TYPE_BUILTIN = [
     {
@@ -445,8 +622,7 @@ export default function (hljs) {
     TYPE_BUILTIN,
     TYPE_NAME,
     TYPE_ARGUMENTS,
-    TYPE_ARRAY_SUFFIX,
-    TYPE_NULLABLE_SUFFIX,
+    TYPE_ARRAY_SUFFIX
   ];
 
   // ENUM
@@ -513,7 +689,7 @@ export default function (hljs) {
   // COMMENTS & ANNOTATIONS
 
   const ANNOTATION_DECLARATION = {
-    begin: regex.concat("[@]" + APEX_ALNUM_UNDER + "+\b"),
+    begin: regex.concat("@" + APEX_ALNUM_UNDER + "+\b"),
     beginScope: "meta",
     end: /(?=[\)])|$/,
     contains: [
@@ -553,6 +729,13 @@ export default function (hljs) {
 		  EXPRESSION,
 		  PUNCTUATION_SEMICOLON
 	  ]
+  }
+
+  const ELEMENT_ACCESS_EXPRESSION = {
+    begin: regex.concat('/(?:(', APEX_IDENT_RE, '*)\s*)?(?=\[)'),
+    beginScope: {1: "variable"},
+    end: /(?<=\])(?!\s*\[)/,
+    contains: [BRACKETED_ARGUMENT_LIST]
   }
 
   var EXPRESSION = [
@@ -613,11 +796,11 @@ export default function (hljs) {
   ];
 
   const TRIGGER_OPERATOR_STATEMENT = {
-    match: regex.either(...BUILT_INS),
+    match: /\b(insert|update|delete|merge|upsert|undelete)\b/,
     scope: "keyword",
   };
   const TRIGGER_TYPE_STATEMENT = {
-    match: /\b(?:(before)|(after))\b/,
+    match: /\b(?:before|after)\b/,
     scope: "keyword",
   };
 
@@ -637,7 +820,7 @@ export default function (hljs) {
       },
       {
         match: [/(?<!\?)\./, regex.concat(APEX_ALPHA + "+(?=()")],
-        scope: { 1: "punctuation", 2: "title.class" },
+        scope: { 2: "title.class" },
       },
       {
         begin: "(",
@@ -671,7 +854,7 @@ export default function (hljs) {
         beginScope: {
           1: "keyword",
           3: "title.class",
-          5: "operator",
+         // 5: "operator",
           7: "type",
         },
         end: /(?=\{)/,
