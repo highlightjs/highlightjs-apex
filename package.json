@@ -27,10 +27,10 @@
 	},
 	"homepage": "https://github.com/highlightjs/highlightjs-apex#readme",
 	"devDependencies": {
-		"highlight.js": "^11.5.1",
-		"minimist": "^1.2.6",
-		"mocha": "^9.2.2",
-		"prettier": "2.6.2",
+		"highlight.js": "^11.7.0",
+		"minimist": "^1.2.8",
+		"mocha": "^10.2.0",
+		"prettier": "2.8.4",
 		"should": "^13.2.3"
 	}
 }
