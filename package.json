@@ -31,6 +31,7 @@
 		"minimist": "^1.2.8",
 		"mocha": "^10.2.0",
 		"prettier": "2.8.4",
+		"release-please": "^15.9.1",
 		"should": "^13.2.3"
 	}
 }
