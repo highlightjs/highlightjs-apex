@@ -9,7 +9,7 @@ Website: https://developer.salesforce.com/
 export default function (hljs) {
   const regex = hljs.regex;
   const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
-  const APEX_FULL_TYPE_RE = '[a-zA-Z][a-zA-Z_0-9.<>]*';
+  const APEX_FULL_TYPE_RE = '[a-zA-Z][a-zA-Z_0-9\.\<\>]*';
 
   const NUMBER = {
     scope: 'number',
@@ -31,18 +31,17 @@ export default function (hljs) {
     'abstract',
     'AccessLevel',
     'USER_MODE',
-    'SYSTEM_MODE',
-    'AccessType',
     'break',
-    'cast',
     'catch',
     'continue',
     'default',
     'do',
     'else',
+    'execute',
     'exports',
     'extends|6',
     'finally',
+    'finish',
     'for',
     'get',
     'put',
@@ -51,8 +50,6 @@ export default function (hljs) {
     'if',
     'implements',
     'new',
-    /as\s+user/,
-    /as\s+system/,
     'newMap|10',
     'old|10',
     'oldMap|10',
@@ -61,7 +58,7 @@ export default function (hljs) {
     'protected',
     'public',
     'return',
-    'size',
+    'start',
     'static',
     'throws',
     'throw',
@@ -73,9 +70,19 @@ export default function (hljs) {
     'while'
   ];
 
-  const LANGUAGE_VARS = ['final', 'instanceof', 'super', 'this', 'transient'];
+  const LANGUAGE_VARS = [
+    'final',
+    'instanceof',
+    'super',
+    'this',
+    'transient'
+  ]
 
-  const LITERALS = ['false', 'true', 'null'];
+  const LITERALS = [
+    'false',
+    'true',
+    'null'
+  ];
 
   const TYPES = [
     'anytype',
@@ -109,9 +116,6 @@ export default function (hljs) {
     'delete',
     'undelete',
     'merge',
-    'finish',
-    'start',
-    'execute',
     'schedulable|10',
     'batchable|10',
     'queueable|10',
@@ -145,7 +149,7 @@ export default function (hljs) {
   const KEYWORDS = {
     $pattern: '[A-Za-z][0-9A-Za-z$_]*',
     keyword: MAIN_KEYWORDS,
-    'variable.language': LANGUAGE_VARS,
+    "variable.language": LANGUAGE_VARS,
     built_in: BUILT_INS,
     type: TYPES,
     literal: LITERALS
@@ -161,7 +165,6 @@ export default function (hljs) {
     'ApexPages|10',
     'AppLauncher',
     'Approval',
-    'Assert',
     'Auth',
     'Cache',
     'Canvas',
@@ -170,14 +173,11 @@ export default function (hljs) {
     'ConnectApi|10',
     'Database',
     'Datacloud|10',
-    'Dataweave|10',
     'DataSource|10',
     'Dom',
     'EventBus|10',
-    'ExternalService',
     'Flow',
     'Functions',
-    'Invocable',
     'KbManagement|10',
     'Label',
     'LxScheduler|10',
@@ -187,9 +187,6 @@ export default function (hljs) {
     'Process',
     'QuickAction',
     'Reports',
-    'RichMessageing',
-    'Savepoint',
-    'SchedulableContext',
     'Schema',
     'Search',
     'Sfc|10',
@@ -210,14 +207,12 @@ export default function (hljs) {
 
   const OPERATOR_REGEX = [
     /-/,
-    /--/,
     /~/,
     /\*/,
     /\*=/,
     /\/=/,
     /%/,
     /\+/,
-    /\+\+/,
     /<</,
     />>/,
     />=/,
@@ -261,36 +256,40 @@ export default function (hljs) {
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/);
 
-  const COMMENT_BLOCK = hljs.COMMENT('/\\*', '\\*/', {
-    relevance: 0,
-    contains: [
-      {
-        // eat up @'s in emails to prevent them to be recognized as doctags
-        begin: /\w+@/,
-        relevance: 0
-      },
-      {
-        scope: 'doctag',
-        begin: '@[A-Za-z_]+'
-      },
-      {
-        begin: '`',
-        end: '`',
-        excludeBegin: true,
-        excludeEnd: true,
-        scope: 'code',
-        contains: [hljs.BACKSLASH_ESCAPE],
-        relevance: 0
-      },
-      hljs.APOS_STRING_MODE,
-      {
-        match: [/(?<=@param)/, /\s+/, /\w+/],
-        scope: {
-          3: 'variable'
+  const COMMENT_BLOCK = hljs.COMMENT(
+    '/\\*',
+    '\\*/',
+    {
+      relevance: 0,
+      contains: [
+        {
+          // eat up @'s in emails to prevent them to be recognized as doctags
+          begin: /\w+@/,
+          relevance: 0
+        },
+        {
+          scope: 'doctag',
+          begin: '@[A-Za-z_]+'
+        },
+        {
+          begin: '`',
+          end: '`',
+          excludeBegin: true,
+          excludeEnd: true,
+          scope: 'code',
+          contains: [hljs.BACKSLASH_ESCAPE],
+          relevance: 0
+        },
+        hljs.APOS_STRING_MODE,
+        {
+          match: [/(?<=@param)/, /\s+/, /\w+/],
+          scope: {
+            3: 'variable'
+          }
         }
-      }
-    ]
-  });
+      ]
+    }
+  );
 
   // Extraneous for now - will be useful if we go this route BUT will need more maintenance
   /* const ANNOTATION_MODIFIER_TYPES = [
@@ -315,24 +314,23 @@ export default function (hljs) {
     scope: { 1: 'meta' },
     // We will allow any annotation, so we do not need to maintain this as often
     //match: [regex.either(...APEX_ANNOTATIONS), /(?=(\(|\b|\s))/],
-    match: ['@' + APEX_IDENT_RE, /(?=(\(|\b|\s))/]
+    match: ['@' + APEX_IDENT_RE, /(?=(\(|\b|\s))/],
   };
 
-  const EXCEPTION = [
-    {
-      // Various Apex Exception types
-      match: /\b[a-zA-Z\d]*Exception\b/,
-      scope: 'title.class',
-      relevance: 0
+  const EXCEPTION = [{
+    // Various Apex Exception types
+    match: /\b[a-zA-Z\d]*Exception\b/,
+    scope: 'title.class',
+    relevance: 0
+  },
+  {
+    match: [/\wthrow\s+new\s+/, APEX_IDENT_RE],
+    scope: {
+      1: 'keyword',
+      2: 'title.class'
     },
-    {
-      match: [/\wthrow\s+new\s+/, APEX_IDENT_RE],
-      scope: {
-        1: 'keyword',
-        2: 'title.class'
-      },
-      relevance: 0
-    }
+    relevance: 0
+  }
   ];
 
   const COLLECTION_MAP_VALUE = [
@@ -340,23 +338,21 @@ export default function (hljs) {
       match: [regex.concat(/\b/, APEX_IDENT_RE, /\b/), />/],
       scope: {
         1: 'type'
-      },
-      relevance: 10
+      }, relevance: 10
     }
   ];
 
-  const COLLECTION_DECLARATION = [
-    {
-      match: [/\b(list|set|map)\s*/, '<', /[\.\w]+/],
-      scope: { 1: 'type', 3: 'type' },
-      relevance: 10
-    },
-    {
-      match: [APEX_IDENT_RE, regex.lookahead(/\s*\[\]/)],
-      scope: {
-        1: 'type'
-      }
+  const COLLECTION_DECLARATION = [{
+    match: [/\b(list|set|map)\s*/, '<', /[\.\w]+/],
+    scope: { 1: 'type', 3: 'type' },
+    relevance: 10
+  },
+  {
+    match: [APEX_IDENT_RE, regex.lookahead(/\s*\[\]/)],
+    scope: {
+      1: 'type'
     }
+  }
   ];
 
   const CUSTOM_OBJECT = {
@@ -375,105 +371,24 @@ export default function (hljs) {
         scope: { 2: 'title.function.invoke' }
       },
       {
-        begin: [
-          /\./,
-          regex.concat('(?:' + APEX_IDENT_RE + ')'),
-          /(?=\s*\([^\)])/
-        ],
+        begin: [/\./, regex.concat('(?:' + APEX_IDENT_RE + ')'), /(?=\s*\([^\)])/],
         scope: { 2: 'title.function.invoke' }
       },
       {
-        begin: [
-          /(?<=\s)/,
-          regex.concat('(?:' + APEX_IDENT_RE + ')'),
-          /(?=\s*\()/
-        ],
+        begin: [/(?<=\s)/, regex.concat('(?:' + APEX_IDENT_RE + ')'), /(?=\s*\()/],
         scope: { 2: 'title.function' }
       }
     ],
-    contains: [COMMENT_LINE, COMMENT_BLOCK, hljs.APOS_STRING_MODE],
+    contains: [
+      COMMENT_LINE,
+      COMMENT_BLOCK,
+      hljs.APOS_STRING_MODE
+    ],
     relevance: 0
   };
 
   const SOQL_KEYWORDS = [
-    'ABOVE_OR_BELOW',
-    'ABOVE',
-    'ACTIVE',
-    'ADVANCED',
-    'ALL',
-    /ALL\s+FIELDS/,
-    'AND',
-    'ANY',
-    'ARRAY',
-    'AS',
-    'ASC',
-    'BY',
-    'CATEGORY',
-    'CONTAINS',
-    'COUNT',
-    'COUNT_DISTINCT',
-    'SUM',
-    'MAX',
-    'MIN',
-    'HOUR_IN_DAY',
-    'CONVERTCURRENCY',
-    'CUBE',
-    'DATA',
-    'DESC',
-    'DIVISION',
-    'END',
-    'EXCLUDES',
-    'FIELDS',
-    'FIND',
-    'FIRST',
-    'FOR',
-    'FROM',
-    /GROUP\s+BY/,
-    'HAVING',
-    'INCLUDES',
-    'LAST',
-    'LAST_90_DAYS',
-    'LAST_MONTH',
-    'LAST_N_DAYS',
-    'LAST_WEEK',
-    'LAST',
-    'LIKE',
-    'LIMIT',
-    'NETWORK',
-    'NEXT_90_DAYS',
-    'NEXT_MONTH',
-    'NEXT_N_DAYS',
-    'NEXT_WEEK',
-    'NULLS',
-    'OFFSET',
-    'ON',
-    'OR',
-    /ORDER\s+BY/,
-    'REFERENCE',
-    'RETURNING',
-    'ROLLUP',
-    'ROWS',
-    'SEARCH',
-    'SECURITY_ENFORCED',
-    'SELECT',
-    'SNIPPET',
-    'SORT',
-    'THIS_MONTH',
-    'THIS_WEEK',
-    'TODAY',
-    'TOLABEL',
-    'TOMORROW',
-    'TRACKING',
-    'TYPEOF',
-    'UPDATE',
-    /USING\s+SCOPE/,
-    'VIEW',
-    'VIEWSTAT',
-    'VIEWSTATE',
-    'WHERE',
-    'WITH',
-    'YESTERDAY',
-    'USER_MODE'
+    'ABOVE_OR_BELOW', 'ABOVE', 'ACTIVE', 'ADVANCED', 'ALL', /ALL\s+FIELDS/, 'AND', 'ANY', 'ARRAY', 'AS', 'ASC', 'BY', 'CATEGORY', 'CONTAINS', 'COUNT', 'COUNT_DISTINCT', 'SUM', 'MAX', 'MIN', 'HOUR_IN_DAY', 'CONVERTCURRENCY', 'CUBE', 'DATA', 'DESC', 'DIVISION', 'END', 'EXCLUDES', 'FIELDS', 'FIND', 'FIRST', 'FOR', 'FROM', /GROUP\s+BY/, 'HAVING', 'INCLUDES', 'LAST', 'LAST_90_DAYS', 'LAST_MONTH', 'LAST_N_DAYS', 'LAST_WEEK', 'LAST', 'LIKE', 'LIMIT', 'NETWORK', 'NEXT_90_DAYS', 'NEXT_MONTH', 'NEXT_N_DAYS', 'NEXT_WEEK', 'NULLS', 'OFFSET', 'ON', 'OR', /ORDER\s+BY/, 'REFERENCE', 'RETURNING', 'ROLLUP', 'ROWS', 'SEARCH', 'SECURITY_ENFORCED', 'SELECT', 'SNIPPET', 'SORT', 'THIS_MONTH', 'THIS_WEEK', 'TODAY', 'TOLABEL', 'TOMORROW', 'TRACKING', 'TYPEOF', 'UPDATE', /USING\s+SCOPE/, 'VIEW', 'VIEWSTAT', 'VIEWSTATE', 'WHERE', 'WITH', 'YESTERDAY', 'USER_MODE'
   ];
 
   const SOQL_QUERY = {
@@ -483,10 +398,13 @@ export default function (hljs) {
     relevance: 10,
     contains: [
       {
-        begin: regex.concat(/\b/, regex.either(...SOQL_KEYWORDS), /\b/),
+        begin: regex.concat(
+          /\b/,
+          regex.either(...SOQL_KEYWORDS),
+          /\b/
+        ),
         scope: 'keyword'
-      },
-      {
+      }, {
         match: /(\bIN\b|<|<=|>|>=|\bNOT\s+IN\b|=|!\s*=|:{1})/,
         scope: 'literal',
         relevance: 0
@@ -513,7 +431,11 @@ export default function (hljs) {
       scope: {
         3: 'type' //title.class?
       },
-      contains: [COMMENT_LINE, COMMENT_BLOCK, CUSTOM_OBJECT]
+      contains: [
+        COMMENT_LINE,
+        COMMENT_BLOCK,
+        CUSTOM_OBJECT
+      ]
     },
     // Class Name
     {
@@ -532,18 +454,10 @@ export default function (hljs) {
     },
     // Trigger
     {
-      begin: [
-        /(?<=\btrigger\b)/,
-        /\s+/,
-        APEX_IDENT_RE,
-        /\s+/,
-        'on',
-        /\s+/,
-        APEX_IDENT_RE
-      ],
+      begin: [/(?<=\btrigger\b)/, /\s+/, APEX_IDENT_RE, /\s+/, 'on', /\s+/, APEX_IDENT_RE],
       end: '{',
       scope: {
-        1: 'keyword',
+        //1: 'keyword',
         3: 'title.class',
         7: 'type'
       },
@@ -600,7 +514,11 @@ export default function (hljs) {
       scope: {
         3: 'title.class.inherited'
       },
-      contains: [COMMENT_LINE, COMMENT_BLOCK, NAMESPACES],
+      contains: [
+        COMMENT_LINE,
+        COMMENT_BLOCK,
+        NAMESPACES
+      ],
       illegal: [/\b_/, /_\b/]
     }
   ];
@@ -609,8 +527,8 @@ export default function (hljs) {
     begin: ['{', /\$[a-zA-Z]+]/, '.', /\w+/],
     end: '}',
     scope: {
-      2: 'built_in',
-      4: 'property'
+      2: "built_in",
+      4: "property"
     }
   };
 
@@ -621,56 +539,58 @@ export default function (hljs) {
         match: [/\bfor\b/, /\s*\(/, /\w+/, /\s+/, /\w+/, /\s+:/, /(?=\s*\[)/],
         scope: {
           1: 'keyword',
-          3: 'type'
+          3: 'type',
           //5: 'variable'
-        }
+        },
       },
       {
         match: [/\bfor\b/, /\s*\(/, /\w+/, /\s+/, /\w+/, /\s+:/, /\s*/, /\w+/],
         scope: {
           1: 'keyword',
-          3: 'type'
+          3: 'type',
           //5: 'variable',
           //8: 'variable'
-        }
+        },
       }
     ],
-    contains: [COMMENT_LINE, COMMENT_BLOCK, SOQL_QUERY]
+    contains: [
+      COMMENT_LINE,
+      COMMENT_BLOCK,
+      SOQL_QUERY
+    ]
   };
 
-  const ASSIGNMENTS = [
-    {
-      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, /=/],
-      scope: {
-        1: 'type',
-        3: 'variable',
-        5: 'operator'
-      },
-      relevance: 0
+  const ASSIGNMENTS = [{
+    match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, /=/],
+    scope: {
+      1: 'type',
+      3: 'variable',
+      5: 'operator'
     },
-    {
-      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, ';'],
-      scope: {
-        1: 'type',
-        3: 'variable'
-      },
-      relevance: 0
+    relevance: 0
+  },
+  {
+    match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, ';'],
+    scope: {
+      1: 'type',
+      3: 'variable'
     },
-    {
-      match: [/\s+/, APEX_IDENT_RE, /\s+/, /=/],
-      scope: {
-        2: 'variable',
-        4: 'operator'
-      },
-      relevance: 0
+    relevance: 0
+  },
+  {
+    match: [/\s+/, APEX_IDENT_RE, /\s+/, /=/],
+    scope: {
+      2: 'variable',
+      4: 'operator'
     },
-    {
-      match: [/(?<=\w+\s+=\s+\()/, APEX_IDENT_RE, /(?=\))/],
-      scope: {
-        2: 'type'
-      },
-      relevance: 0
-    }
+    relevance: 0
+  }, {
+    match: [/(?<=\w+\s+=\s+\()/, APEX_IDENT_RE, /(?=\))/],
+    scope: {
+      2: 'type'
+    },
+    relevance: 0
+  }
   ];
 
   const SALESFORCE_ID = {
