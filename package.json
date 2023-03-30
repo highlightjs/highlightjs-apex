@@ -6,12 +6,20 @@
 	"scripts": {
 		"test": "./node_modules/.bin/mocha --reporter spec",
 		"mocha": "mocha test/markup",
-		"changelog": "auto-changelog --output HISTORY.md --hide-credit -p --commit-limit false",
+		"changelog": "auto-changelog",
 		"npm-patch": "npm version patch && npm publish"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/highlightjs/highlightjs-apex.git"
+	},
+	"auto-changelog": {
+		"output": "HISTORY.md",
+		"template": "keepachangelog",
+		"unreleased": true,
+		"hideCredit": true,
+		"tagPrefix": "v",
+		"commitLimit": 1000
 	},
 	"keywords": [
 		"Apex",
