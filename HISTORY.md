@@ -5,10 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.0...HEAD)
+## [Unreleased](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.0...HEAD)
+
+## [v1.2.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.0...v1.2.0) - 2023-03-29
 
 ### Merged
 
+- feat(auto-changelog): configure auto-changelog [`#6`](https://github.com/highlightjs/highlightjs-apex/pull/6)
+- build(deps-dev): bump prettier from 2.8.4 to 2.8.7 [`#5`](https://github.com/highlightjs/highlightjs-apex/pull/5)
 - feat: update to Spring 23 (API 57.0) [`#4`](https://github.com/highlightjs/highlightjs-apex/pull/4)
 
 ### Commits
