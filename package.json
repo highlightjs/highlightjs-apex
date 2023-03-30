@@ -1,6 +1,6 @@
 {
 	"name": "highlightjs-apex",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Apex Language of Salesforce highlighting plugin for highlight.js",
 	"main": "src/languages/apex.js",
 	"scripts": {
