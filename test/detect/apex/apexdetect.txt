@@ -23,6 +23,10 @@ private static void makeData(Boolean a){
 @testVisible
 private testMethod List<SelectOption> recordTypes { get; private set; }
 
+for(Account a : [SELECT Id FROM Account WHERE LastModifiedDate = LAST_N_DAYS:3]){
+  Assert.fail();
+}
+
 trigger CTrig on Custom__c (before insert, after update){
   System.debug('inserting a record');
   upsert myRecord__c;

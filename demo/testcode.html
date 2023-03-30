@@ -3,7 +3,7 @@
 	<head>
 		<title>TEST APEX CODE</title>
 		<meta charset="UTF-8" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
 		<link rel="stylesheet" href="./highlight.css" />
 		<script>
@@ -20,12 +20,8 @@
 	</head>
 
 	<body>
-		<pre><code class="">
+		<pre><code>
     /*
-    Action Plans v3
-    Force.com Labs 2011
-    https://appexchange.salesforce.com/listingDetail?listingId=a0N30000003HcINEA0
-    
     Copyright (c) 2022, salesforce.com, inc.
     All rights reserved.
     SPDX-License-Identifier: BSD-3-Clause
@@ -33,7 +29,6 @@
     */
 
     /**
-     * @author {@link [Rodrigo Birriel](https://www.linkedin.com/in/rbirriel)}
      * @author {@link [David Schach](https://github.com/dschach)}
      * @group Visualforce
      * @since 2022
@@ -619,9 +614,9 @@ public without sharing class AccountSampleTriggerHandler extends TriggerHandler,
   (label = true)
   private void method3() {
     Contact[] acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH SECURITY_ENFORCED];
-    List&lt;Contact&gt; acctContacts2 = [SELECT Id FROM Contact WHERE CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
+    List&lt;Contact&gt; acctContacts2 = [SELECT Id FROM Contact WHERE ID = '012000000' AND CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
     if (Contact.getSObjectType().getDescribe().isUpdateable()) {
-      Database.update(acctContacts); //NOPMD
+      update as user acctContacts; //NOPMD
     }
     // do things here
   }
@@ -644,7 +639,6 @@ public virtual class Marker {
 @IsTest(Seealldata=true)
 public with sharing class L2Char implements Database.batchable {
   public static final String ERROR = 0x0001;
-  public static final Short ERROR;
 
   @InvocableMethod(label='my invocable')
   public void moveTo(
@@ -652,7 +646,6 @@ public with sharing class L2Char implements Database.batchable {
     integer y, 
     integer z
   ) {
-    
     
     Account a = new Account();
     a.Custom__c = 'stringvalue';
@@ -662,6 +655,11 @@ public with sharing class L2Char implements Database.batchable {
     if (1 > 5) { // wtf!?
       Database.insert(myAccounts);
     }
+  }
+
+  @InvocableMethod
+  (label='my invocable')
+  public void doThis(){
   }
 }
 
@@ -677,7 +675,7 @@ private static void makeData(Boolean a){
 
 @isTest
 private testMethod void testme(){
-  System.assert(true);
+  Assert.isTrue(true);
 }
 
 @testVisible2

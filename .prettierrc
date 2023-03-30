@@ -1,9 +1,15 @@
 {
-  "trailingComma": "none",
-  "useTabs": true,
-  "printWidth": 100,
-  "bracketSameLine": true,
-  "bracketSpacing": true,
-  "tabWidth": 2,
-  "singleQuote": true
+	"trailingComma": "none",
+	"useTabs": true,
+	"printWidth": 120,
+	"bracketSameLine": true,
+	"bracketSpacing": true,
+	"tabWidth": 2,
+	"singleQuote": true,
+	"overrides": [
+		{
+			"files": "**/*.js",
+			"options": { "useTabs": false, "printWidth": 80 }
+		}
+	]
 }
