@@ -27,6 +27,7 @@
 	},
 	"homepage": "https://github.com/highlightjs/highlightjs-apex#readme",
 	"devDependencies": {
+		"auto-changelog": "^2.4.0",
 		"highlight.js": "^11.7.0",
 		"minimist": "^1.2.8",
 		"mocha": "^10.2.0",
