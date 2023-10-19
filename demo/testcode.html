@@ -5,9 +5,8 @@
 		<meta charset="UTF-8" />
 		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
-		<link rel="stylesheet" href="./highlight.css" />
+		<link rel="stylesheet" href="./testcode.css" />
 		<script>
-			//hljs.configure({ ignoreUnescapedHTML: true, ignoreIllegals: false });
 			hljs.debugMode();
 			hljs.highlightAll();
 		</script>
@@ -20,6 +19,20 @@
 	</head>
 
 	<body>
+    <pre><code>
+      List&lt;SObject&gt; mylist = [SELECT Name, StreetAddress__c, COUNT(),
+      FROM Warehouse__c 
+      WHERE DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi') < 20 
+      AND Date__kav NOT IN LAST_N_DAYS:80
+      ORDER BY DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi')
+      LIMIT 10];
+    </code></pre>
+    <pre><code>
+      @IsTest
+      private without sharing class myTestClass {
+        
+      }
+    </code></pre>
 		<pre><code>
     /*
     Copyright (c) 2022, salesforce.com, inc.
@@ -543,7 +556,7 @@ public abstract strictfp class L2Char extends L2Object {
     </code></pre>
 
 		<pre><code class="">
-public without sharing class AccountSampleTriggerHandler extends TriggerHandler, Database.schedulable, Batchable&lt;SObject&gt; {
+public without sharing class AccountSampleTriggerHandler extends Database.schedulable, TriggerHandler, Database.Batchable&lt;SObject&gt; {
   private List&lt;Account&gt; newRecords;
   private List&lt;Account&gt; oldRecords;
   private Map&lt;Id, Account&gt; newRecordsMap;
@@ -552,21 +565,6 @@ public without sharing class AccountSampleTriggerHandler extends TriggerHandler,
   switch on context {
     when 'BEFORE_INSERT' {
       this.triggerEvent = System.TriggerOperation.BEFORE_INSERT;
-    }
-    when 'BEFORE_UPDATE' {
-      this.triggerEvent = System.TriggerOperation.BEFORE_UPDATE;
-    }
-    when 'BEFORE_DELETE' {
-      this.triggerEvent = System.TriggerOperation.BEFORE_DELETE;
-    }
-    when 'AFTER_INSERT' {
-      this.triggerEvent = System.TriggerOperation.AFTER_INSERT;
-    }
-    when 'AFTER_UPDATE' {
-      this.triggerEvent = System.TriggerOperation.AFTER_UPDATE;
-    }
-    when 'AFTER_DELETE' {
-      this.triggerEvent = System.TriggerOperation.AFTER_DELETE;
     }
     when 'AFTER_UNDELETE' {
       this.triggerEvent = System.TriggerOperation.AFTER_UNDELETE;
@@ -643,7 +641,6 @@ public with sharing class L2Char implements Database.batchable {
   @InvocableMethod(label='my invocable')
   public void moveTo(
     integer x, 
-    integer y, 
     integer z
   ) {
     
@@ -653,7 +650,7 @@ public with sharing class L2Char implements Database.batchable {
     Boolean ai = (Boolean) false;
     System.debug('Should not be called');
     if (1 > 5) { // wtf!?
-      Database.insert(myAccounts);
+      Database.insert(myAccounts, AccessLevel.USER_MODE);
     }
   }
 
