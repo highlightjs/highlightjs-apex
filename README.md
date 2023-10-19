@@ -89,3 +89,11 @@ Feel free to create issues or (even better) pull requests.
 - The official site for the Highlight.js library is <https://highlightjs.org/>.
 - The Highlight.js GitHub project: <https://github.com/highlightjs/highlight.js>
 - Learn more about Apex: <https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_intro_what_is_apex.htm>
+
+#Notes
+
+This library has been ported from the Apex language definition, used by GitHub and other websites. There are a few differences:
+
+1. The "nullable suffix" has been removed. This is not a feature of Apex, so it is not in this library. If that changes, this will be updated.
+2. Parts of the library have been condensed. For example, the Apex definition file specifies each punctuation type by a specific pattern (e.g. #punctutation-comma and #punctuation-semicolon). They should be highlighted the same, so they have been combined into an array. You won't notice if you only use this library, but you will if you compare the two files.
+3. A decision has been made not to highlight "dot" (e.g. Trigger.isNew) because it would cause huge bloat in page size, and because it doesn't really matter. If this feature is desired, please create an Issue.
