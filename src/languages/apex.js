@@ -18,7 +18,7 @@ export default function (hljs) {
       {
         match: /(-?)\b[0-9]+(?:\.[0-9]+)?/
       },
-       {
+      {
         // numeric decimal
         // decimal-digits . decimal-digits exponent-part[opt] real-type-suffix[opt] OR . decimal-digits exponent-part[opt] real-type-suffix[opt]
         match: /(-?)\b([0-9_]+)?\.[0-9_]+((e|E)[0-9]+)?(F|f|D|d|M|m)?\b/
@@ -315,23 +315,15 @@ export default function (hljs) {
 
   const SYSTEM_INVOKE = [
     {
-      match: [
-        /\b/,
-        regex.either(...SYSTEM_CLASSES),
-        /\./
-      ],
+      match: [/\b/, regex.either(...SYSTEM_CLASSES), /\./],
       scope: { 2: 'title' },
       relevance: 9
     }
-  ]
+  ];
 
   const NAMESPACES = [
     {
-      match: [
-        /\b/,
-        regex.either(...SYSTEM_INTERFACES),
-        /\b/
-      ],
+      match: [/\b/, regex.either(...SYSTEM_INTERFACES), /\b/],
       scope: { 2: 'title.class.inherited' },
       relevance: 10
     },
@@ -393,18 +385,13 @@ export default function (hljs) {
     relevance: 0
   };
 
-  const PUNCTUATION_REGEX = [
-    '{',
-    '}',
-    ',',
-    /\./
-  ];
+  const PUNCTUATION_REGEX = ['{', '}', ',', /\./];
 
   const PUNCTUATION = {
     match: regex.either(...PUNCTUATION_REGEX),
     scope: 'punctuation',
     relevance: 0
-  }
+  };
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
     relevance: 0
@@ -564,45 +551,45 @@ export default function (hljs) {
   };
 
   const PARAM_VARS = {
-    contains:[NUMBER, hljs.APOS_STRING_MODE],
+    contains: [NUMBER, hljs.APOS_STRING_MODE],
     illegal: ':',
     relevance: 0,
-    variants:[
-    {
-      match: regex.concat(/\b/,regex.either(...LITERALS),/\b/),
-      scope: 'literal'
-    },
-    {
-      // mymethod(c.Id, c.Name); highlights each part of each parameter
-      // must be followed by comma or paren
-      match: [APEX_IDENT_RE, /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
-      scope: { 1: 'variable', 3: 'property' }
-    },
-    {
-      // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
-      // must be followed by comma or paren
-    match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
-      scope: { 1: 'type', 3: 'variable' }
-    },
-    {
-      // Parameter type, when declaring a method.
-      // This is a word, with/without a period, followed by a space and then NOT by a comma or paren
-      match: [
-        regex.either(
-          APEX_IDENT_RE,
-          regex.concat(APEX_IDENT_RE, /\./, APEX_IDENT_RE)
-        ),
-        /\s+(?![,)])/
-      ],
-      scope: { 1: 'variable' }
-    },
-    {
-      // Second part of the parameter, followed by comma or paren
-      match: [APEX_IDENT_RE, /\s*(?=[,)])/],
-      scope: { 1: 'variable' }
-   
-    }
-  ]}
+    variants: [
+      {
+        match: regex.concat(/\b/, regex.either(...LITERALS), /\b/),
+        scope: 'literal'
+      },
+      {
+        // mymethod(c.Id, c.Name); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: [APEX_IDENT_RE, /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'variable', 3: 'property' }
+      },
+      {
+        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'type', 3: 'variable' }
+      },
+      {
+        // Parameter type, when declaring a method.
+        // This is a word, with/without a period, followed by a space and then NOT by a comma or paren
+        match: [
+          regex.either(
+            APEX_IDENT_RE,
+            regex.concat(APEX_IDENT_RE, /\./, APEX_IDENT_RE)
+          ),
+          /\s+(?![,)])/
+        ],
+        scope: { 1: 'variable' }
+      },
+      {
+        // Second part of the parameter, followed by comma or paren
+        match: [APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'variable' }
+      }
+    ]
+  };
 
   const INSTANTIATE = [
     {
@@ -626,7 +613,7 @@ export default function (hljs) {
         begin: [/\./, regex.concat('(?:' + APEX_IDENT_RE + ')'), /(?=\s*\(\))/],
         beginScope: { 2: 'title.function.invoke' }
       },
-     /*  {
+      /*  {
         begin: [
           /\./,
           regex.concat('(?:' + APEX_IDENT_RE + ')'),
@@ -645,23 +632,26 @@ export default function (hljs) {
     ],
     end: /(?=\))/,
     returnEnd: true,
-    contains: [COMMENT_LINE, COMMENT_BLOCK, hljs.APOS_STRING_MODE, PARAM_VARS, INSTANTIATE],
+    contains: [
+      COMMENT_LINE,
+      COMMENT_BLOCK,
+      hljs.APOS_STRING_MODE,
+      PARAM_VARS,
+      INSTANTIATE
+    ],
     relevance: 0
   };
-
-  
 
   const CLASS_SHARING = {
     relevance: 10,
     match: /\b(with|without|inherited)\s+sharing\b/,
     scope: 'keyword'
-    
   };
 
   const APEX_DECLARATIONS = [
     {
       // Enum
-      begin: [/\b(?<=enum)\s+/, APEX_IDENT_RE, /\s*/,/[{()]/],
+      begin: [/\b(?<=enum)\s+/, APEX_IDENT_RE, /\s*/, /[{()]/],
       beginScope: {
         2: 'type',
         4: 'punctuation'
@@ -669,11 +659,14 @@ export default function (hljs) {
       end: /[})]/,
       endScope: 'punctuation',
       relevance: 0,
-      contains: [COMMENT_LINE, COMMENT_BLOCK,
-      {
-        match: regex.concat(/\b/, APEX_IDENT_RE, /\b/),
-        scope: 'variable.constant'
-      }] // , CUSTOM_OBJECT
+      contains: [
+        COMMENT_LINE,
+        COMMENT_BLOCK,
+        {
+          match: regex.concat(/\b/, APEX_IDENT_RE, /\b/),
+          scope: 'variable.constant'
+        }
+      ] // , CUSTOM_OBJECT
     },
     // Class Name
     {
@@ -797,7 +790,6 @@ export default function (hljs) {
     },
     endScope: 'punctuation'
   }; */
-
 
   const ASSIGNMENTS = [
     {
@@ -968,8 +960,8 @@ export default function (hljs) {
     'FISCAL_QUARTER',
     'FISCAL_YEAR',
     'TODAY',
-    'TOMORROW',
-  ]
+    'TOMORROW'
+  ];
 
   const SOQL_SCOPE = [
     'Delegated',
@@ -1000,7 +992,8 @@ export default function (hljs) {
         scope: 'title.function.invoke'
       },
       {
-        match: /(NEXT|LAST|THIS)_(N_)?(90_DAY|DAY|FISCAL_QUARTER|FISCAL_YEAR|MONTH|QUARTER|WEEK|YEAR)S?/,
+        match:
+          /(NEXT|LAST|THIS)_(N_)?(90_DAY|DAY|FISCAL_QUARTER|FISCAL_YEAR|MONTH|QUARTER|WEEK|YEAR)S?/,
         scope: 'literal'
       },
       {
@@ -1039,12 +1032,13 @@ export default function (hljs) {
           5: 'number'
         },
         relevance: 10
-      },{
-      match: [/(?<=:)/, /\s*/, APEX_IDENT_RE],
-      scope: {3: 'variable'}
       },
       {
-        match:/[(:)]/,
+        match: [/(?<=:)/, /\s*/, APEX_IDENT_RE],
+        scope: { 3: 'variable' }
+      },
+      {
+        match: /[(:)]/,
         scope: 'punctuation',
         relevance: 0
       },
