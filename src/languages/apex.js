@@ -8,35 +8,46 @@ Website: https://developer.salesforce.com/
 /** @type LanguageFn */
 export default function (hljs) {
 	const regex = hljs.regex;
-	const APEX_ALPHA = '[a-zA-Z]';
-	const APEX_ALNUM = '[A-Za-z0-9]';
-	const APEX_ALPHA_UNDER = '[a-zA-Z_]';
-	const APEX_ALNUM_UNDER = '[A-Za-z0-9_]';
-	const APEX_IDENT_RE = regex.concat(APEX_ALPHA, APEX_ALNUM_UNDER, '*'); // [a-zA-Z][A-Za-z0-9_]*
+	//const APEX_ALPHA = '[a-zA-Z]';
+	//const APEX_ALNUM = '[A-Za-z0-9]';
+	//const APEX_ALPHA_UNDER = '[a-zA-Z_]';
+	const APEX_IDENT_RE = regex.concat('[a-zA-Z]', '[A-Za-z0-9_]', '*'); // [a-zA-Z][A-Za-z0-9_]*
 	const APEX_ACCESSOR_RE = regex.concat(/@?/, APEX_IDENT_RE);
 
-  // * APEX KEYWORDS
-  
-  const APEX_KEYWORDS = [
-    /(?<!\.)\bthrow\b/,
-    /\bthis\b/,
-    /\b(get|set)\b/,
-    /(?<!\.)\b(return)\b/
-  ];
+	// * APEX KEYWORDS
 
-  // * KEYWORD REGEX TO FOLD INTO KEYWORDS
+	const APEX_KEYWORDS = [
+		/throw/,
+		/this/,
+		/(get|set)/,
+		/return/,
+		'break',
+		'continue',
+		'if',
+		'else',
+		'throw',
+		/switch\s+on/,
+		/(do|while)/,
+		/try/,
+		/catch/,
+		/finally/,
+		/this/,
+		/when/
+	];
 
-  const THROW_EXPRESSION = {
-    match: /(?<!\.)\bthrow\b/,
-    scope: 'keyword'
-  }
+	// * KEYWORD REGEX TO FOLD INTO KEYWORDS
 
-  const THIS_EXPRESSION = {
-    match: /\bthis\b/,
-    scope: 'keyword'
-  }
+	const THROW_EXPRESSION = {
+		match: /(?<!\.)\bthrow\b/,
+		scope: 'keyword'
+	};
 
-  const STORAGE_MODIFIERS = [
+	const THIS_EXPRESSION = {
+		match: /\bthis\b/,
+		scope: 'keyword'
+	};
+
+	const STORAGE_MODIFIERS = [
 		'new',
 		'public',
 		'protected',
@@ -47,7 +58,8 @@ export default function (hljs) {
 		'global',
 		'static',
 		'final',
-		'transient'
+		'transient',
+		'testMethod'
 	];
 
 	// * ARRAY DECLARATIONS
@@ -104,9 +116,9 @@ export default function (hljs) {
 		/<=|>=|<|>/,
 		/==|!=/,
 		/\?\./,
-    /:/,
-    /(?<!\?)\?(?!\?|\.|\[)/, // ternary operator or CONDITIONAL_OPERATOR
-    /:/
+		/:/,
+		/(?<!\?)\?(?!\?|\.|\[)/, // ternary operator or CONDITIONAL_OPERATOR
+		/:/
 	];
 
 	const EXPRESSION_OPERATORS = {
@@ -119,9 +131,9 @@ export default function (hljs) {
 		scope: 'operator'
 	};
 
-  // ! THIS is not supported with lookbehinds on begin
-  // TERNARY OPERATOR
-	const CONDITIONAL_OPERATOR = { 
+	// ! THIS is not supported with lookbehinds on begin
+	// TERNARY OPERATOR
+	const CONDITIONAL_OPERATOR = {
 		begin: /(?<!\?)\?(?!\?|\.|\[)/,
 		beginScope: 'operator',
 		end: ':',
@@ -135,7 +147,7 @@ export default function (hljs) {
 		match: /(?<!\?)\./
 	};
 
-  const SAFE_NAVIGATOR_OR_ACCESSOR = [].concat(OPERATOR_SAFE_NAVIGATION, PUNCTUATION_ACCESSOR);
+	const SAFE_NAVIGATOR_OR_ACCESSOR = [].concat(OPERATOR_SAFE_NAVIGATION, PUNCTUATION_ACCESSOR);
 
 	const COLON_EXPRESSION = {
 		match: ':',
@@ -152,16 +164,17 @@ export default function (hljs) {
 	};
 
 	const PUNCTUATION = [
-    // punctuation accessor
-    // punctuation comma
-    // punctuation semicolon
-    // parentheses
-    // square brackets
-    // curly brackets
-    /</,
-    />/,
-    /\(/,/\)/
-  ].concat(PUNCTUATION_SEMICOLON, PUNCTUATION_COMMA, PUNCTUATION_ACCESSOR);
+		// punctuation accessor
+		// punctuation comma
+		// punctuation semicolon
+		// parentheses
+		// square brackets
+		// curly brackets
+		/</,
+		/>/,
+		/\(/,
+		/\)/
+	].concat(PUNCTUATION_SEMICOLON, PUNCTUATION_COMMA, PUNCTUATION_ACCESSOR);
 
 	// * GENERIC APEX IDENTIFIER
 	const IDENTIFIER = {
@@ -201,14 +214,7 @@ export default function (hljs) {
 		'void|0'
 	];
 
-  const DML = [
-    'insert',
-		'update',
-		'upsert|8',
-		'delete',
-		'undelete',
-		'merge'
-  ];
+	const DML = ['insert', 'update', 'upsert|8', 'delete', 'undelete', 'merge'];
 
 	const BUILT_INS = [].concat(DML, [
 		'start',
@@ -220,8 +226,6 @@ export default function (hljs) {
 		'comparable|10',
 		'callable|10'
 	]);
-
-	
 
 	const STORAGE_MODIFIER = {
 		match: regex.concat(/(?<!\.)\b/, regex.either(...STORAGE_MODIFIERS), /\b/),
@@ -402,21 +406,21 @@ export default function (hljs) {
 		contains: [COMMENT, SUPPORT_TYPE, PUNCTUATION_COMMA]
 	};
 
-  // CANNOT USE lookbehind in begin
+	// CANNOT USE lookbehind in begin
 	const RETURN_STATEMENT = {
 		begin: /(?<!\.)\breturn\b/,
 		beginScope: 'keyword',
 		end: /(?=;)/,
 		contains: [EXPRESSION]
 	};
-  // CANNOT USE lookbehind in begin
+	// CANNOT USE lookbehind in begin
 	const ELSE_PART = {
 		begin: /(?<!\.)\belse\b/,
 		beginScope: 'keyword',
 		end: /(?<=\})|(?=;)/,
 		contains: [STATEMENT]
 	};
-  // CANNOT USE lookbehind in begin
+	// CANNOT USE lookbehind in begin
 	const FINALLY_CLAUSE = {
 		begin: /(?<!\.)\bfinally\b/,
 		beginScope: 'keyword',
@@ -424,7 +428,19 @@ export default function (hljs) {
 		contains: [COMMENT, BLOCK]
 	};
 
-	const FOR_STATEMENT = { // ! REDO THIS!
+	const BREAK_OR_CONTINUE_STATEMENT = {
+		match: /(?<!\.)\b(?:(break)|(continue))\b/,
+		scope: 'keyword'
+	};
+
+	const IF_STATEMENT = {
+		match: /(?<!\.)\b(if)\b\s*(?=\()/,
+		scope: 'keyword'
+	};
+
+	// * ADD SOQL QUERY?
+	const FOR_STATEMENT = {
+		// ! REDO THIS!
 		begin: [
 			/(?<!\.)\bfor\b/,
 			/\s*\(\s*/,
@@ -457,6 +473,8 @@ export default function (hljs) {
 		]
 	};
 
+	//const WHEN_STATEMENT =
+
 	const STATEMENT = [
 		BLOCK,
 		BREAK_OR_CONTINUE_STATEMENT,
@@ -466,13 +484,12 @@ export default function (hljs) {
 		EXPRESSION,
 		FOR_STATEMENT,
 		//GOTO_STATEMENT,
-		IF_STATEMENT,
+		//IF_STATEMENT,
 		LOCAL_DECLARATION,
 		PUNCTUATION_SEMICOLON,
 		RETURN_STATEMENT,
 		SOQL_QUERY_EXPRESSION,
-		SWITCH_STATEMENT,
-		THROW_STATEMENT,
+		//SWITCH_STATEMENT,
 		TRY_STATEMENT,
 		WHEN_ELSE_STATEMENT,
 		WHEN_MULTIPLE_STATEMENT,
@@ -489,11 +506,11 @@ export default function (hljs) {
 			COMMENT,
 			STATEMENT,
 			{
-				match: [/(?:(\.))/, regex.concat(APEX_ALPHA + '*' + '(?=()')],
+				match: [/(?:(\.))/, regex.concat(APEX_IDENT_RE + '(?=()')],
 				scope: { 1: 'punctuation', 2: 'title.function' }
 			},
 			{
-				match: [/(?:(\.))/, regex.concat(APEX_ALPHA + '+')],
+				match: [/(?:(\.))/, regex.concat(APEX_IDENT_RE)],
 				scope: { 1: 'punctuation', 2: 'type' }
 			},
 			{
@@ -527,7 +544,7 @@ export default function (hljs) {
 	const TYPE_NAME = [
 		{
 			match: [APEX_ACCESSOR_RE, /\s*/, /\./],
-			scope: { 1: 'type', 3: 'dot'}
+			scope: { 1: 'type', 3: 'dot' }
 		},
 		{
 			match: [/\./, /\s*/, APEX_IDENT_RE],
@@ -593,11 +610,10 @@ export default function (hljs) {
 		]
 	};
 
-
 	// * COMMENTS & ANNOTATIONS
 
 	const ANNOTATION_DECLARATION = {
-		begin: regex.concat('@', APEX_ALNUM_UNDER, /\b/),
+		begin: regex.concat('@', APEX_IDENT_RE, /\b/),
 		beginScope: 'meta',
 		end: /(?=[\)])|$/,
 		contains: [
@@ -646,21 +662,24 @@ export default function (hljs) {
 		contains: [BRACKETED_ARGUMENT_LIST]
 	};
 
-  const MEMBER_ACCESS_EXPRESSION =[ {
-    // An identifier with no type parameters and a dot to the left should
-    // be treated as a property, so long as it isn't followed by a ( or [.
+	const MEMBER_ACCESS_EXPRESSION = [
+		{
+			// An identifier with no type parameters and a dot to the left should
+			// be treated as a property, so long as it isn't followed by a ( or [.
 
-    match: [
-      /(?<=\.)\s*/, APEX_IDENT_RE, /\s*/, regex.concat('(?!' , APEX_ALNUM_UNDER, '|\(|(\?)?\[|<)')
-    ],
-    scope: { 2: 'property'},
-    contains: [SAFE_NAVIGATOR_OR_ACCESSOR]
-  },
-  {
-    // An identifier with type parameters should be treated as an object,
-      // regardless of whether there is a dot to the left.
-
-      /* (\??\.)?\s*
+			match: [
+				/(?<=\.)\s*/,
+				APEX_IDENT_RE,
+				/\s*/,
+				regex.concat('(?!', APEX_IDENT_RE, '|(|(?)?[|<)')
+			],
+			scope: { 2: 'property' },
+			contains: [SAFE_NAVIGATOR_OR_ACCESSOR]
+		},
+		{
+			// An identifier with type parameters should be treated as an object,
+			// regardless of whether there is a dot to the left.
+			/* (\??\.)?\s*
         (@?[_[:alpha:]][_[:alnum:]]*)
         (?<type_params>\s*<([^<>]|\g<type_params>)+>\s*)
         (?=
@@ -676,27 +695,22 @@ export default function (hljs) {
         '3':
           patterns:
           - include: '#type-arguments' */
-  },
-  {
-    ///  An identifier with no type parameters (and no dot to the left per the
-      //  matches above) should be treated as an object.
-      match: [
-        APEX_ACCESSOR_RE, regex.concat('(?=(\s*\?)?\s*\.\s*', APEX_ACCESSOR_RE, '*)')
-      ],
-      scope: {1: 'variable'} // variable.other.object.apex so may want to change to class
-  }
-  
-];
+		},
+		{
+			///  An identifier with no type parameters (and no dot to the left per the
+			//  matches above) should be treated as an object.
+			match: [APEX_ACCESSOR_RE, regex.concat('(?=(s*?)?s*.s*', APEX_ACCESSOR_RE, '*)')],
+			scope: { 1: 'variable' } // variable.other.object.apex so may want to change to class
+		}
+	];
 
-const PARENTHESIZED_EXPRESSION = {
-  begin: '\)',
-  beginScope: 'punctuation',
-  end: '\)',
-  endScope: 'punctuation',
-  contains: [EXPRESSION]
-};
-
-
+	const PARENTHESIZED_EXPRESSION = {
+		begin: ')',
+		beginScope: 'punctuation',
+		end: ')',
+		endScope: 'punctuation',
+		contains: [EXPRESSION]
+	};
 
 	var EXPRESSION = [
 		COMMENT,
@@ -717,9 +731,8 @@ const PARENTHESIZED_EXPRESSION = {
 		LITERAL,
 		PARENTHESIZED_EXPRESSION,
 		IDENTIFIER,
-    'self'
+		'self'
 	];
-
 
 	// * ARGUMENTS
 
@@ -738,9 +751,7 @@ const PARENTHESIZED_EXPRESSION = {
 		contains: [NAMED_ARGUMENT, EXPRESSION, PUNCTUATION_COMMA]
 	};
 
-  const BRACKETED_ARGUMENT_LIST = {
-
-  }
+	const BRACKETED_ARGUMENT_LIST = {};
 
 	// * PARAMETERS
 	const TYPE_PARAMETER_LIST = {
@@ -760,15 +771,11 @@ const PARENTHESIZED_EXPRESSION = {
 		]
 	};
 
-  // * DML
+	// * DML
 
-  const OBJECT_CREATION_EXPRESSION_WITH_NO_PARAMETERS = {
-    match: [
-      regex.either(...DML), /\s+/, 'new', /s+/,
-
-    ]
-    
-  }
+	const OBJECT_CREATION_EXPRESSION_WITH_NO_PARAMETERS = {
+		match: [regex.either(...DML), /\s+/, 'new', /s+/]
+	};
 
 	// * CLASSES
 
@@ -886,11 +893,11 @@ const PARENTHESIZED_EXPRESSION = {
 
 	// * CLASS DECLARATION
 
-  const EXTENDS_CLASS = {
-    begin:[/\bextends\b/,/\s+/, APEX_IDENT_RE],
-    beginScope: {1: 'keyword', 3: 'title.class.inherited'},
-    end: /(?={|implements)/
-  };
+	const EXTENDS_CLASS = {
+		begin: [/\bextends\b/, /\s+/, APEX_IDENT_RE],
+		beginScope: { 1: 'keyword', 3: 'title.class.inherited' },
+		end: /(?={|implements)/
+	};
 
 	const IMPLEMENTS_CLASS = {
 		begin: [/\bimplements\b/, /\s+/, APEX_IDENT_RE],
@@ -971,9 +978,9 @@ const PARENTHESIZED_EXPRESSION = {
 		built_in: BUILT_INS,
 		//type: TYPE_BUILTIN
 		//literal: LITERALS // do not use
-    number: NUMERIC_LITERAL_LIST,
-    punctuation: PUNCTUATION,
-    operator: EXPRESSION_OPERATORS
+		number: NUMERIC_LITERAL_LIST,
+		punctuation: PUNCTUATION,
+		operator: EXPRESSION_OPERATORS
 	};
 
 	// * SOQL
@@ -1003,7 +1010,7 @@ const PARENTHESIZED_EXPRESSION = {
 	};
 
 	const FROM_CLAUSE = {
-		match: ['FROM', /\b\s*/, APEX_ALNUM_UNDER, /\b/],
+		match: ['FROM', /\b\s*/, APEX_IDENT_RE, /\b/],
 		scope: { 1: 'keyword', 3: 'type' }
 	};
 
@@ -1135,9 +1142,9 @@ const PARENTHESIZED_EXPRESSION = {
 		ignoreIllegals: false,
 		keywords: KEYWORDS,
 		contains: [JAVADOC_COMMENT, COMMENT, DIRECTIVES, DECLARATIONS, SCRIPT_TOP_LEVEL],
-    classNameAliases:  {
-      dot: 'punctuation',
-      comma: 'punctuation'
-    }
+		classNameAliases: {
+			dot: 'punctuation',
+			comma: 'punctuation'
+		}
 	};
 }
