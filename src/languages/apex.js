@@ -389,7 +389,9 @@ export default function (hljs) {
 
   const OPERATOR_REGEX = [
     //=/,
-    /(?<!=|!)=(?!=|>)/,
+    /(?<=')\s*\+/, // string concat before
+    /\+(?=\s*')/, // string concat after
+    /(?<!=|!)(\=)(?!=|>)/,
 
       /(--)/, // decrement
       /(\!|&&|\|\|)/, // logical
@@ -397,12 +399,12 @@ export default function (hljs) {
       /(\&=|\^=|<<=|>>=|\|=)/, // assignment.compound.bitwise
       /(\&|~|\^|\|)/, // bitwise
       /(\+\+)/, // increment
-      /(\=)/, // assignment
+      //(\=)/, // assignment
       /(%[^%]|\*[^\/]|\/[^\/\*]|-|\+)/, // arithmetic
       /(<<|>>)/, // bitwise.shift
       /(<=|>=|\s(<|>)\s)/, // relational
       /(==|!=)/, // comparison
-      /(=>)/, // map assign
+      /=>/, // map assign
     /(!(?=\w))/, // negator
     /(\&\&)/,
     /((?<=\s)(\?|:)(?=\s))/, // standalone ? or : (ternary operator?)
@@ -412,8 +414,8 @@ export default function (hljs) {
   ];
 
   const OPERATORS = {
-    match: regex.concat( /\s*\(/, regex.either(...OPERATOR_REGEX), /\){1}\s*/),
-    scope: 'operator main',
+    match: regex.concat(  '(' + regex.either(...OPERATOR_REGEX) + '){1}'),
+    scope: 'operator',
     relevance: 0
   };
 
@@ -506,7 +508,7 @@ export default function (hljs) {
       // Type 1: one annotation
       // @isTest
       match: regex.concat(ANNOTATION_RE, /\b(?!\s*\()/), //, /(?=(\(|\b|\s))/]
-      scope: 'meta SOLO'
+      scope: 'meta' //SOLO
     },
     // Type 2: annotation and parentheses
     // @SuppressWarnings('PMD.AvoidGlobalModifier'))
@@ -517,7 +519,7 @@ export default function (hljs) {
       begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*\(/],
       beginScope: { 1: 'meta', 2: 'punctuation' },
       end: /\)/,
-      endScope: 'punctuation end',
+      endScope: 'punctuation', //END
       //returnEnd: true,
       scope: 'annotation',
       contains: [
@@ -716,7 +718,7 @@ export default function (hljs) {
   const METHOD_CALL = {
     end: /(?=\)\s*[^{])/,
     returnEnd: true,
-    scope: 'method call',
+    scope: 'method_call',
     variants: [
       {
         begin: regex.concat(APEX_IDENT_RE, /(?=\s*\()/),
@@ -792,7 +794,6 @@ export default function (hljs) {
       7: 'type'
     },
     end: '{',
-    //endScope: 'punctuation end',
     returnEnd: true,
     scope: 'trigger_declaration',
     contains: [
@@ -823,7 +824,7 @@ export default function (hljs) {
     //endScope: 'punctuation',
     returnEnd: true,
     //returnEnd: true,
-    scope: 'class-declaration',
+    scope: 'class_declaration',
     keywords: {type: TYPES, keyword: ['extends','implements']},
     contains: [
       {
@@ -891,7 +892,7 @@ export default function (hljs) {
     },
     end: /[\}\n]/,
     endScope: 'punctuation',
-    scope: 'enum declaration',
+    scope: 'enum_declaration',
     relevance: 0,
     contains: [
       COMMENT_LINE,
@@ -1078,10 +1079,10 @@ export default function (hljs) {
 
   const SOQL_QUERY = {
     begin: [/\[/, /\s*/, /\b(SELECT|FIND)\b/],
-    beginScope: { 1: 'punctuation', 3: 'keyword for soql' },
+    beginScope: { 1: 'punctuation', 3: 'keyword soql' },
     //returnBegin: true,
     end: /\]/,
-    endScope: 'punctuation outer',
+    //endScope: 'punctuation', //outer
     //returnEnd: true,
     scope: 'soql',
     relevance: 10,
@@ -1093,7 +1094,7 @@ export default function (hljs) {
           1: 'keyword',
           2: 'type'
         },
-        scope: 'from clause',
+        scope: 'from_clause',
         end: /(?=\]|\s)/,
         //endScope: 'punctuation',
         contains: [
@@ -1115,7 +1116,7 @@ export default function (hljs) {
       },
       {
         begin: regex.concat(/\b/, regex.either(...SOQL_KEYWORDS), /\b/),
-        scope: 'keyword',
+        scope: 'keyword soql',
         relevance: 0
       },
       {
