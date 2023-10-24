@@ -54,20 +54,10 @@ export default function (hljs) {
   ];
 
   const LANGUAGE_VARS = [
-    'abstract',
-    'global',
-    'interface',
-    //'new',
-    'private',
-    'protected',
-    'public',
-    'static',
-    'virtual',
-    'final',
     'instanceof',
+    'new',
     'super',
-    'this',
-    'transient'
+    'this'
   ];
 
   // keyword
@@ -75,7 +65,7 @@ export default function (hljs) {
     'abstract',
     'final',
     'global',
-    'new',
+    'interface',
     'override',
     'private',
     'protected',
@@ -519,7 +509,6 @@ export default function (hljs) {
     // Type 3: annotation on one line and parentheses on next
     // @IsTest
     // (Seealldata=true)
-
     {
       begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*\(/],
       beginScope: { 1: 'meta annotations', 2: 'punctuation' },
@@ -615,45 +604,25 @@ export default function (hljs) {
       OPERATORS,
       COLLECTION_DECLARATION,
       {
-        //contains: [NUMBERS, hljs.APOS_STRING_MODE],
-        illegal: ':',
-        endsWithParent: true,
-        relevance: 0,
-        variants: [
-          {
-            match: regex.concat(/\b/, regex.either(...LITERALS), /\b/),
-            scope: 'literal'
-          },
-          {
-            // mymethod(c.Id, c.Name); highlights each part of each parameter
-            // must be followed by comma or paren
-            match: [APEX_IDENT_RE, /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
-            scope: { 1: 'variable', 3: 'property' }
-          },
-          {
-            // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
-            // must be followed by comma or paren
-            match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
-            scope: { 1: 'type', 3: 'variable' }
-          },
-          {
-            // Parameter type, when declaring a method.
-            // This is a word, with/without a period, followed by a space and then NOT by a comma or paren
-            match: [
-              regex.either(
-                APEX_IDENT_RE,
-                regex.concat(APEX_IDENT_RE, /\./, APEX_IDENT_RE)
-              ),
-              /\s+(?![,)])/
-            ],
-            scope: { 1: 'variable' }
-          },
-          {
-            // Second part of the parameter, followed by comma or paren
-            match: [APEX_IDENT_RE, /\s*(?=[,)])/],
-            scope: { 1: 'variable' }
-          }
-        ]
+        match: regex.concat(/\b/, regex.either(...LITERALS), /\b\s*(?=[,)])/),
+        scope: 'literal'
+      },
+      {
+        // mymethod(c.Id, c.Name); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: [/(?<=[,\(])\s*(${APEX_IDENT_RE})/, /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'variable', 3: 'property' }
+      },
+      {
+        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: [/(?<=[,\(])\s*(${APEX_IDENT_RE})/, /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'type', 3: 'variable' }
+      },
+      {
+        // Second part of the parameter, followed by comma or paren
+        match: [APEX_IDENT_RE, /\s*(?=[,)])/],
+        scope: { 1: 'variable' }
       }
     ]
   };
@@ -661,7 +630,7 @@ export default function (hljs) {
   const INSTANTIATE = [
     {
       // Account a = new Account(Name = 'test account);
-      begin: [/\bnew\b/, /\s+/, APEX_IDENT_RE, /\s*/, /(?=\()/],
+      begin: [/\bnew\b/, /\s+/, APEX_IDENT_RE, /\s*(?=\()/],
       beginScope: {
         1: 'keyword',
         3: 'title.function.invoke'
@@ -675,37 +644,37 @@ export default function (hljs) {
     }
   ];
 
+  const PARAMS_CALL = {
+
+  };
+
   const METHOD_CALL = {
+    end: /(?=\)\s*[^{])/,
+    returnEnd: true,
+    scope: 'method call',
     variants: [
       {
-        begin: [/\./, APEX_IDENT_RE, /(?=\s*\(\))/],
-        beginScope: { 2: 'title.function.invoke' }
+        begin: regex.concat(APEX_IDENT_RE, /(?=\s*\()/),
+        beginScope: 'title.function.invoke',
+      },
+      {
+        begin: [APEX_IDENT_RE, /\./, /(${APEX_IDENT_RE})(?=\s*\()/],
+        beginScope:  {1: 'class.title', 3: 'title.function.invoke'},
       }
-      /*  {
-        begin: [
-          /\./,
-          regex.concat('(?:' + APEX_IDENT_RE + ')'),
-          /(?=\s*\([^\)])/
-        ],
-        beginScope: { 2: 'title.function.invoke' }
-      }, */
-      /* {
-        begin: [
-          /(?<=\s)/,
-          regex.concat('(?:' + APEX_IDENT_RE + ')'),
-          /(?=\s*\()/
-        ],
-        beginScope: { 2: 'title.function' }
-      } */
     ],
-    end: /(?=\))/,
-    returnEnd: true,
-    contains: [
+     contains: [
       COMMENT_LINE,
       COMMENT_BLOCK,
       hljs.APOS_STRING_MODE,
       PARAMS,
-      INSTANTIATE
+      INSTANTIATE,
+      /* {
+        begin: [/\bthis/,/\(/],
+        returnBegin: true,
+        end: /\)/,
+        returnEnd: true,
+        contains: [PARAMS]
+      } */
     ],
     relevance: 0
   };
@@ -838,7 +807,7 @@ export default function (hljs) {
     scope: 'keyword'
   };
 
-  const CONSTRUCTOR_DECLARATION = [
+  /* const CONSTRUCTOR_DECLARATION = [
     {
       // Constructor
       // Matches public/private, methodname, then parens and a curly bracket
@@ -850,50 +819,9 @@ export default function (hljs) {
       end: /\)\s*{/,
       contains: [PARAMS]
     }
-  ];
+  ]; */
 
-  const METHOD_DECLARATION = [
-    {
-      match: /method/,
-      scope: 'substr'
-
-      // Method declarations
-      /* begin: [
-        '(?:' + APEX_IDENT_RE + '\\s+)',
-        '(?:' + APEX_IDENT_RE + '\\s+)',
-        hljs.UNDERSCORE_IDENT_RE,
-        /(?=\s*\()/
-      ],
-      scope: { 2: 'type', 3: 'title.function' }, */
-      /* {
-      begin: [
-        /((?:public|private|protected|global))?\s* /,
-        /((?:static|override))?\s* /,
-        /((?:static|override))?\s* /,
-        '(?:' + APEX_FULL_TYPE_RE + ')\\s+',
-        APEX_IDENT_RE,
-        /(?=\s* \()/
-      ],
-      scope: {
-        1: 'keyword',
-        2: 'keyword',
-        3: 'keyword',
-        //4: 'type',
-        5: 'title.function'
-      },
-      keywords: KEYWORDS,
-
-      contains: [
-        COMMENT_LINE,
-        COMMENT_BLOCK,
-        hljs.APOS_STRING_MODE,
-        COLLECTION_DECLARATION
-      ],
-      relevance: 0,
-      illegal: [/\b_/, /_\b/]
-    }, */
-    }
-  ];
+  
 
   const DECLARATIONS = [
     TRIGGER_DECLARATION,
@@ -901,7 +829,6 @@ export default function (hljs) {
     TRIGGER_CONTEXT_DECLARATION,
     ENUM_DECLARATION
     //CONSTRUCTOR_DECLARATION,
-    //METHOD_DECLARATION
   ].concat(CLASS_DECLARATION);
 
   const ASSIGNMENTS = [
@@ -941,20 +868,27 @@ export default function (hljs) {
 
   const RETURNS = [
     {
+      match: [/(?<=\breturn\b)\s+/, regex.either(LITERALS), /(?=\s*;)/],
+      scope: {
+        2: 'literal'
+      }
+    },
+    {
       match: [/(?<=return)/, /\s+/, APEX_IDENT_RE, /(?=\s*;)/],
       scope: {
         3: 'variable'
       }
     },
     {
-      begin: [/(?<=return)/, /\s+/, APEX_IDENT_RE, /\(/],
-      end: /\)/,
-      beginScope: {
-        3: 'title.function.invoke'
-      }
-      //contains: [PARAMS]
-      // * RETURN NEW OBJECT - NO PARAMS BY DEFAULT
+      match: [/(?<=return)/, /\s+/, /(?=(${APEX_IDENT_RE})\()/],
+      //returnBegin: true,
+      //end: /(?=\))/,
+      scope: {
+        2: 'title.function.invoke'
+      }, 
+      //contains: [METHOD_CALL, PARAMS]
     }
+    // * RETURN NEW OBJECT - NO PARAMS BY DEFAULT
   ];
 
   const SALESFORCE_ID = {
@@ -1076,7 +1010,7 @@ export default function (hljs) {
     begin: [/\[/, /\s*/, /\b(SELECT|FIND)\b/],
     beginScope: { 1: 'punctuation', 3: 'keyword for soql' },
     //returnBegin: true,
-    end: /\]|\;/,
+    end: /\]/,
     endScope: 'punctuation outer',
     //returnEnd: true,
     scope: 'soql',
@@ -1106,7 +1040,7 @@ export default function (hljs) {
         endsParent: true
       },
       {
-        match: /=\s*:/,
+        match: /IN|=\s*:/,
         scope: 'operator'
       },
       {
@@ -1205,9 +1139,7 @@ export default function (hljs) {
     {
       begin: regex.concat(/\b/, regex.either(...DMLS), /\b/),
       //returnBegin: true,
-      //returnBegin: true,
       beginScope: 'built_in',
-
       scope: 'DML',
       contains: [
         INSTANTIATE,

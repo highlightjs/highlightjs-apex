@@ -29,6 +29,8 @@
       AND Date__kav NOT IN LAST_N_DAYS:80
       ORDER BY DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi')
       LIMIT 10];
+
+      List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
     </code></pre>
     <p>-------NEW LANGUAGE----------</p>
     <pre><code>
@@ -89,6 +91,7 @@
        * @return `PageReference` Page to go to after deleting `ActionPlan__c`
        */
       public PageReference deletePlan() {
+        this(DEFAULT_SIZE);
         //delete ap, which will also delete apts via master-detail relationship
         try {
           delete actionPlan;
