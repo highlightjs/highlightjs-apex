@@ -41,6 +41,7 @@ export default function (hljs) {
     'put',
 
     'if',
+    'for',
     'else',
     'do',
     'while',
@@ -572,6 +573,40 @@ export default function (hljs) {
     }
   ];
 
+  const ASSIGNMENTS = [
+    {
+      // Account a =
+      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, /(?==)/],
+      scope: {
+        1: 'type',
+        3: 'variable'
+      },
+      relevance: 0
+    },
+    {
+      // Account abcd;
+      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, ';'],
+      scope: {
+        1: 'type',
+        3: 'variable'
+      },
+      relevance: 0
+    },
+    {
+      // mynum =
+      match: [/\s+/, APEX_IDENT_RE, /\s+/, /(?==)/],
+      scope: {
+        2: 'variable'
+      },
+      relevance: 0
+    },
+    // Casting
+    {
+      match: [/(?<==)\s*/, /\(/, APEX_IDENT_RE, /\)/],
+      scope: { 2: 'punctuation', 3: 'type', 4: 'punctuation' }
+    }
+  ];
+
   const CUSTOM_METADATA = {
     // Custom fields, types, etc.
     match: [
@@ -601,7 +636,10 @@ export default function (hljs) {
     contains: [
       NUMBERS,
       hljs.APOS_STRING_MODE,
+      COMMENT_LINE,
+      COMMENT_BLOCK,
       OPERATORS,
+      ASSIGNMENTS,
       COLLECTION_DECLARATION,
       {
         match: regex.concat(/\b/, regex.either(...LITERALS), /\b\s*(?=[,)])/),
@@ -610,13 +648,13 @@ export default function (hljs) {
       {
         // mymethod(c.Id, c.Name); highlights each part of each parameter
         // must be followed by comma or paren
-        match: [/(?<=[,\(])\s*(${APEX_IDENT_RE})/, /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
+        match: [regex.concat(/(?<=[,\(])\s*/,APEX_IDENT_RE), /\./, APEX_IDENT_RE, /\s*(?=[,)])/],
         scope: { 1: 'variable', 3: 'property' }
       },
       {
         // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
         // must be followed by comma or paren
-        match: [/(?<=[,\(])\s*(${APEX_IDENT_RE})/, /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
+        match: [regex.concat(/\b/,APEX_IDENT_RE), /\s+/, APEX_IDENT_RE, /\s*(?=[,)])/],
         scope: { 1: 'type', 3: 'variable' }
       },
       {
@@ -658,7 +696,7 @@ export default function (hljs) {
         beginScope: 'title.function.invoke',
       },
       {
-        begin: [APEX_IDENT_RE, /\./, /(${APEX_IDENT_RE})(?=\s*\()/],
+        begin: [APEX_IDENT_RE, /\./, regex.concat(APEX_IDENT_RE, /(?=\s*\()/)],
         beginScope:  {1: 'class.title', 3: 'title.function.invoke'},
       }
     ],
@@ -676,7 +714,8 @@ export default function (hljs) {
         contains: [PARAMS]
       } */
     ],
-    relevance: 0
+    relevance: 0,
+    illegal: [].concat(...MAIN_KEYWORDS)
   };
 
   // * TRIGGER DECLARATION
@@ -831,40 +870,7 @@ export default function (hljs) {
     //CONSTRUCTOR_DECLARATION,
   ].concat(CLASS_DECLARATION);
 
-  const ASSIGNMENTS = [
-    {
-      // Account a =
-      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, /(?==)/],
-      scope: {
-        1: 'type',
-        3: 'variable'
-      },
-      relevance: 0
-    },
-    {
-      // Account abcd;
-      match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s+/, ';'],
-      scope: {
-        1: 'type',
-        3: 'variable'
-      },
-      relevance: 0
-    },
-    {
-      // mynum =
-      match: [/\s+/, APEX_IDENT_RE, /\s+/, /(?==)/],
-      scope: {
-        2: 'variable'
-      },
-      relevance: 0
-    },
-
-    // Casting
-    {
-      match: [/(?<==)\s*/, /\(/, APEX_IDENT_RE, /\)/],
-      scope: { 2: 'punctuation', 3: 'type', 4: 'punctuation' }
-    }
-  ];
+  
 
   const RETURNS = [
     {
@@ -880,7 +886,7 @@ export default function (hljs) {
       }
     },
     {
-      match: [/(?<=return)/, /\s+/, /(?=(${APEX_IDENT_RE})\()/],
+      match: [/(?<=return)/, /\s+/, regex.lookahead(APEX_IDENT_RE + /\(/)],
       //returnBegin: true,
       //end: /(?=\))/,
       scope: {
@@ -1096,7 +1102,7 @@ export default function (hljs) {
   const FOR_LOOP = {
     begin: [/\bfor\b/, /\s*\(/, APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*:/],
     beginScope: {
-      1: 'keyword',
+      //1: 'keyword',
       2: 'punctuation',
       3: 'type',
       5: 'variable',
