@@ -5,10 +5,15 @@ npm run build-cdn apex
 
 ## Set up developer.html
 # build just common set
-node ./tools/build -t browser :common
+node ./tools/build.js -t browser :common
 
 # build common set + 3rd party `apex` from extra
-node ./tools/build -t browser :common apex
+node ./tools/build.js -t browser :common apex
 
 # build everything (including all in extra)
-node ./tools/build -t browser 
+node ./tools/build.js -t browser 
+
+# run all builds
+node tools/build.js -t node apex
+node tools/build.js -t cdn :common apex
+node tools/build.js -t browser :common apex

@@ -105,3 +105,9 @@ typings/
 
 # OSX file
 .DS_Store
+
+#PMD file
+.pmdCache
+
+demo/scratchpad.html
+demo/scratchpad.css

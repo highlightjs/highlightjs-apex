@@ -3,8 +3,10 @@
 	<head>
 		<title>TEST APEX CODE</title>
 		<meta charset="UTF-8" />
-		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.js"></script>
+    <!-- <script src="../dist/highlight.js"/> -->
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
+  <!--   <script src="../src/languages/apex.js"/> -->
 		<link rel="stylesheet" href="./testcode.css" />
 		<script>
 			hljs.debugMode();
@@ -21,24 +23,33 @@
 	<body>
     <pre><code>
       List&lt;SObject&gt; mylist = [SELECT Name, StreetAddress__c, COUNT(),
-      FROM Warehouse__c 
+      (SELECT Id FROM Contacts)
+      FROM Warehouse__c.Contacts__r
       WHERE DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi') < 20 
       AND Date__kav NOT IN LAST_N_DAYS:80
       ORDER BY DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi')
       LIMIT 10];
     </code></pre>
+    <p>-------NEW LANGUAGE----------</p>
     <pre><code>
       @IsTest
       private without sharing class myTestClass {
-        
+        myMap?.get('Id');
       }
     </code></pre>
-		<pre><code>
+    <p>-------NEW LANGUAGE----------</p>
+		<pre><code class="language-apex">
+
+    Database.insert(myAccounts, AccessLevel.USER_MODE);
+    delete myAccount;
+    delete [SELECT Id FROM Account];
+
     /*
     Copyright (c) 2022, salesforce.com, inc.
     All rights reserved.
     SPDX-License-Identifier: BSD-3-Clause
     For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+    'This is a string in a comment'
     */
 
     /**
@@ -46,7 +57,7 @@
      * @group Visualforce
      * @since 2022
      */
-    public with sharing class ActionPlanDetailController {
+    public with sharing class ActionPlanDetailController extends APController {
 
       public enum Season {WINTER, SPRING, SUMMER, FALL}
      
@@ -56,7 +67,7 @@
        */
       public ActionPlanDetailController(ApexPages.StandardController stdController, Integer x, Double y) {
         Map&ltId, Map&ltString, Wrapper&gt&gt renew = new Map&ltId, Map&ltString, SObject&gt&gt();
-        if (!Test.isRunningTest()) {
+        if (!Test.isRunningTest() && false) {
           stdController.addFields(ActionPlansUtilities.getCustomRelationshipFields());
         }
         for(Account a : [SELECT Id FROM Account WHERE Id = :a.Id ORDER BY CreatedDate ASC] ){}
@@ -83,6 +94,7 @@
           delete actionPlan;
         } catch (DMLException e) {
           ApexPages.addMessages(e);
+          throw new CustomException('my error');
           return i++;
         }
     
@@ -91,7 +103,7 @@
         String hasTemplateIdParam = ApexPages.currentPage().getParameters().containsKey('templateId');
         Boolean hasRetURLParam = ApexPages.currentPage().getParameters().containsKey('retURL');
     
-        if (hasTemplateIdParam) {
+        if (hasTemplateIdParam && true) {
           retURL = '/' + ActionPlansUtilities.getEscapedPageParameter('templateId');
         } else if (hasRetURLParam && !ActionPlansUtilities.getIsLex()) {
           retURL = '' + ActionPlansUtilities.getEscapedPageParameter('retURL');
@@ -405,7 +417,7 @@
         }
       }
 
-      Database.insert(planTaskIndexToTask.values());
+      Database.insert(new planTaskIndexToTask.values());
 
       // Now we have to update with the controlling/dependent task IDs
 
@@ -528,12 +540,11 @@
 
   trigger APAccount on Account(before delete, after undelete) {
     ActionPlansTriggerHandlers.triggerhandlerActionPlanAccount(Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap, Trigger.operationType);
-  
     ActionPlansTriggerHandlers.actionPlansSObjectTriggerHandler('Account');
   
   }
     </code></pre>
-
+    <p>-------NEW LANGUAGE----------</p>
 		<pre><code>
 /**
  * SHOULD BE RECOGNIZED AS JAVA
@@ -554,7 +565,7 @@ public abstract strictfp class L2Char extends L2Object {
 }
       
     </code></pre>
-
+    <p>-------NEW LANGUAGE----------</p>
 		<pre><code class="">
 public without sharing class AccountSampleTriggerHandler extends Database.schedulable, TriggerHandler, Database.Batchable&lt;SObject&gt; {
   private List&lt;Account&gt; newRecords;
@@ -635,7 +646,7 @@ public virtual class Marker {
 }
 
 @IsTest(Seealldata=true)
-public with sharing class L2Char implements Database.batchable {
+public with sharing class L2Char implements Queueable, Database.batchable&lt;Sobject&gt; {
   public static final String ERROR = 0x0001;
 
   @InvocableMethod(label='my invocable')
@@ -681,6 +692,7 @@ private List&lt;SelectOption&gt; recordTypes { get; private set; }
 trigger CTrig on Custom__c (before insert){
   System.debug('inserting a record');
   upsert myRecord__c;
+  Database.upsert(myRecord__c, AccessLevel.USER_MODE);
 }
 
     </code></pre>
