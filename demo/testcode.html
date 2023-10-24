@@ -31,6 +31,14 @@
       LIMIT 10];
 
       List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
+
+      String queryText =
+				'SELECT Id, Name, AccountId, FirstName, LastName, mailingstreet, mailingcity, mailingstate, mailingpostalcode, mailingcountry, ' +
+				'otherstreet, othercity, otherstate, otherpostalcode, othercountry, mailinglatitude, mailinglongitude, otherlatitude, otherlongitude ' +
+				'FROM Contact WHERE AccountId = :acctid ORDER BY ' +
+				String.escapeSingleQuotes(SortFullExp) +
+				' NULLS LAST LIMIT 1000';
+        String queryText = 'SELECT Id, Name, AccountId, FirstName, LastName, mailingstreet, mailingcity, mailingstate, mailingpostalcode, mailingcountry, '
     </code></pre>
     <p>-------NEW LANGUAGE----------</p>
     <pre><code>
@@ -38,6 +46,8 @@
       private without sharing class myTestClass {
         myMap?.get('Id');
       }
+      System.URL.getCurrentRequestUrl();
+      System.getCurrentRequestUrl();
     </code></pre>
     <p>-------NEW LANGUAGE----------</p>
 		<pre><code class="language-apex">
@@ -45,6 +55,8 @@
     Database.insert(myAccounts, AccessLevel.USER_MODE);
     delete myAccount;
     delete [SELECT Id FROM Account];
+
+    public String myString { get; set; }
 
     /*
     Copyright (c) 2022, salesforce.com, inc.
@@ -103,14 +115,6 @@
     
         String retURL = '/' + ActionPlansUtilities.getObjectKeyPrefix(ActionPlansUtilities.namespacePrefix + 'ActionPlan__c') + '/o';
     
-        String hasTemplateIdParam = ApexPages.currentPage().getParameters().containsKey('templateId');
-        Boolean hasRetURLParam = ApexPages.currentPage().getParameters().containsKey('retURL');
-    
-        if (hasTemplateIdParam && true) {
-          retURL = '/' + ActionPlansUtilities.getEscapedPageParameter('templateId');
-        } else if (hasRetURLParam && !ActionPlansUtilities.getIsLex()) {
-          retURL = '' + ActionPlansUtilities.getEscapedPageParameter('retURL');
-        }
         Pagereference newPage = new PageReference('' + retURL);
         newPage.setRedirect(true);
     
