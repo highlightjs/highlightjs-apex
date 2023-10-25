@@ -5,11 +5,11 @@
 public with sharing class L2Char implements Database.batchable {
   public static final String ERROR = 0x0001;
 
-  @InvocableApex(label='my invocable')
-  public void moveTo(
-    integer x, 
-    integer y, 
-    integer z
+  @InvocableMethod(label='my invocable')
+  public static void moveTo(
+    Integer x, 
+    Integer y, 
+    Integer z
   ) {
     
     
@@ -18,8 +18,8 @@ public with sharing class L2Char implements Database.batchable {
     insert a;
     Boolean ai = (Boolean) false;
     System.debug('Should not be called');
-    if (1 > 5) { // wtf!?
-      Database.insert(myAccounts);
+    if (1 > 5 && !Test.isRunningTest()) { // wtf!?
+      Database.insert(myAccounts, false);
     }
   }
 }
@@ -33,7 +33,8 @@ private static void makeData(Boolean a){
   }
 }
 
-private testMethod void testme(){
+@isTest
+private static void testme(){
   System.assert(true);
 }
 
