@@ -32,6 +32,8 @@
       LIMIT 10];
 
       delete myAccount;
+      Account a;
+      String s;
       delete [SELECT Id FROM Account];
 
       Integer myInt = 8 - 7++;
@@ -372,7 +374,6 @@
 
       for (ActionPlanTemplate__c apt : possibleTemplates) {
         templateNameOrIdToTemplate.put(apt.Id, apt);
-        templateNameOrIdToTemplate.put(apt.Name, apt);
       }
 
       Set&lt;Id&gt; relatedIDs = new Set&lt;Id&gt;();
@@ -663,13 +664,14 @@ public virtual class Marker {
 }
 
 @IsTest(Seealldata=true)
-public with sharing class L2Char implements Queueable, Database.batchable&lt;Sobject&gt; {
+public with sharing class L2Char implements Queueable, WebServiceMock.WebServiceMock, Database.batchable&lt;Sobject&gt; {
   public static final String ERROR = 0x0001;
 
   @InvocableMethod(label='my invocable')
   public void moveTo(
     integer x, 
-    integer z
+    integer z,
+    SchedulableContext ct
   ) {
     
     Account a = new Account();

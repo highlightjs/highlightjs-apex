@@ -106,6 +106,10 @@ typings/
 # OSX file
 .DS_Store
 
+# SFDX CLI
+.sf
+.sfdx
+
 #PMD file
 .pmdCache
 

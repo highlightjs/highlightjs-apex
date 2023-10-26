@@ -7,7 +7,9 @@
 		"test": "./node_modules/.bin/mocha --reporter spec",
 		"mocha": "mocha test/markup",
 		"changelog": "auto-changelog",
-		"npm-patch": "npm version patch && npm publish"
+		"npm-patch": "npm version patch && npm publish",
+		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
+		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
 	},
 	"repository": {
 		"type": "git",

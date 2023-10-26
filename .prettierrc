@@ -1,15 +1,30 @@
 {
 	"trailingComma": "none",
 	"useTabs": true,
-	"printWidth": 120,
 	"bracketSameLine": true,
 	"bracketSpacing": true,
 	"tabWidth": 2,
 	"singleQuote": true,
 	"overrides": [
 		{
+			"files": ".prettierrc",
+			"options": { "parser": "json", "printWidth": 80 }
+		},
+		{
 			"files": "**/*.js",
-			"options": { "useTabs": false, "printWidth": 80 }
+			"options": { "parser": "json", "useTabs": false, "printWidth": 80 }
+		},
+		{
+			"files": "doc*/**/*.html",
+			"options": {
+				"parser": "html",
+				"useTabs": true,
+				"tabWidth": 2,
+				"printWidth": 150,
+				"htmlWhitespaceSensitivity": "ignore",
+				"singleQuote": false
+			}
 		}
-	]
+	],
+	"$schema": "https://json.schemastore.org/prettierrc"
 }
