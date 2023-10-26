@@ -36,7 +36,7 @@
 
       Integer myInt = 8 - 7++;
 
-      public List<String> myString { get; set; }
+      public List&lt;String&gt; myString { get; set; }
 
       List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
 
@@ -55,6 +55,8 @@
       }
       System.URL.getCurrentRequestUrl();
       System.getCurrentRequestUrl();
+
+      public List&lt;SelectOption&gt; recordTypes { get; private set; }
     </code></pre>
     <p>-------NEW LANGUAGE----------</p>
 		<pre><code class="language-apex">

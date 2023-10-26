@@ -28,7 +28,7 @@ export default function (hljs) {
     relevance: 0
   };
 
-  const MAIN_KEYWORDS = [
+  const MAIN_KEYWORD_LIST = [
     'cast',
     'default',
     'export',
@@ -58,7 +58,7 @@ export default function (hljs) {
     'when'
   ];
 
-  const LANGUAGE_VARS = ['instanceof', 'new', 'super', 'this'];
+  const LANGUAGE_VAR_LIST = ['instanceof', 'new', 'super', 'this'];
 
   // keyword
   const STORAGE_MODIFIER_LIST = [
@@ -77,7 +77,7 @@ export default function (hljs) {
     'webservice'
   ];
 
-  const STORAGE_MODIFIER = {
+  const STORAGE_MODIFIER_RE = {
     match: regex.concat(
       /(?<!\.)\b/,
       regex.either(...STORAGE_MODIFIER_LIST),
@@ -313,7 +313,7 @@ export default function (hljs) {
     'WebServiceMock'
   ];
 
-  const LITERAL_REGEX = {
+  const LITERAL_RE = {
     match: regex.concat(/\b/, regex.either(...LITERALS), /\b\s*(?=[,)])/),
     scope: 'literal regex',
     relevance: 0
@@ -397,7 +397,7 @@ export default function (hljs) {
     scope: { 1: 'keyword', 2: 'variable' }
   };
 
-  const OPERATOR_REGEX = [
+  const OPERATOR_LIST = [
     //=/,
     //(?<=')\s*\+/, // string concat before
     //\+(?=\s*')/, // string concat after
@@ -424,14 +424,14 @@ export default function (hljs) {
     /(?<!\?)\?(?!\?|\.|\[)/ // ternary operator or CONDITIONAL_OPERATOR 
   ];
 
-  const OPERATORS = {
-    match: regex.concat( regex.either(...OPERATOR_REGEX), '{1}'),
+  const OPERATOR_RE = {
+    match: regex.concat( regex.either(...OPERATOR_LIST), '{1}'),
     //match: /((?<!\+)\+(?!\+)|(\=)){1}/,
     scope: 'operator',
     relevance: 0
   };
 
-  const PUNCTUATION_REGEX = [
+  const PUNCTUATION_LIST = [
     /(\{|\})/,
     ',',
     /\(|\)/,
@@ -440,8 +440,8 @@ export default function (hljs) {
     // /(?<!\?)\./ //"Period/dot"
   ];
 
-  const PUNCTUATION = {
-    match: regex.either(...PUNCTUATION_REGEX),
+  const PUNCTUATION_RE = {
+    match: regex.either(...PUNCTUATION_LIST),
     scope: 'punctuation',
     relevance: 0
   };
@@ -475,7 +475,7 @@ export default function (hljs) {
         contains: [hljs.BACKSLASH_ESCAPE],
         relevance: 0
       },
-      hljs.inherit(hljs.APOS_STRING_MODE, { className: 'meta string' }),
+      hljs.inherit(hljs.APOS_STRING_MODE, { scope: 'meta string' }),
       {
         match: [/(?<=@param)/, /\s+/, /\S+/],
         scope: {
@@ -541,9 +541,9 @@ export default function (hljs) {
           scope: {
             1: 'meta keyword' //,2: 'operator'
           },
-          contains: [OPERATORS]
+          contains: [OPERATOR_RE]
         },
-        hljs.inherit(hljs.APOS_STRING_MODE, { className: 'meta string' }),
+        hljs.inherit(hljs.APOS_STRING_MODE, { scope: 'meta string' }),
         NUMBERS
       ],
       keywords: {
@@ -573,7 +573,7 @@ export default function (hljs) {
           match: /</,
           scope: 'punctuation'
         },
-        PUNCTUATION,
+        PUNCTUATION_RE,
         {
           match: regex.concat(/\b/, APEX_IDENT_RE, /\b/),
           scope: 'type'
@@ -588,7 +588,7 @@ export default function (hljs) {
         1: 'type',
         2: 'punctuation'
       },
-      contains: [PUNCTUATION],
+      contains: [PUNCTUATION_RE],
       relevance: 0
     }
   ];
@@ -596,7 +596,7 @@ export default function (hljs) {
   const ASSIGNMENTS = {
     scope: 'assignment',
     relevance: 0,
-    contains: [PUNCTUATION, OPERATORS],
+    contains: [PUNCTUATION_RE, OPERATOR_RE],
     variants: [
     {
       // Account a =
@@ -648,33 +648,26 @@ export default function (hljs) {
     relevance: 10
   };
 
-  const PROPERTY_DECLARATION = [
+  const VISUALFORCE_PROPERTY = [
+    // public String myString { get; private set;}
+    // for now, we handle only single lines
     {
-      // non-collection property
-      match: [
-        APEX_IDENT_RE,
-        regex.concat(/\b/, APEX_IDENT_RE, /\b[ \n\t]*/),
-        /\{/,
-//        /[ \n\t]*(public|private)?[ \n\t]+(get|set)\b/
-      ],
-      scope: { 1: 'type', 2: 'property' }
-    },
-    {
-      // all other properties
-      match: [
-        regex.concat(/\b/, APEX_IDENT_RE, /\b/),
-        /[ \n\t]*\{/ //[ \n\t]*(public|private)?[ \n\t]+(get|set)\b/
-      ],
-      scope: { 1: 'property' }
+      match: [  /(?<=(public|private)?\s+[\w<>,\.]+\s+)/,
+        /[\w<>]+/,
+        /(?=\s+\{\s*(public|private\s+)?(get|set);\s+((public|private)\s+)?(get|set);\s*\})/],
+      scope: {
+        //2: 'type',
+        2: 'property'
+      }
     }
   ];
 
   const PARAMS = {
     scope: 'params',
     begin: /\(/,
-    beginScope: 'punctuation',
+    //beginScope: 'punctuation',
     end: /\)/,
-    endScope: 'punctuation',
+    //endScope: 'punctuation',
     endsParent: true,
     relevance: 0,
     contains: [
@@ -682,11 +675,12 @@ export default function (hljs) {
       hljs.APOS_STRING_MODE,
       COMMENT_LINE,
       COMMENT_BLOCK,
-      OPERATORS,
+      OPERATOR_RE,
       ASSIGNMENTS,
       COLLECTION_DECLARATION,
-      LITERAL_REGEX,
+      LITERAL_RE,
       NAMESPACES,
+      LITERAL_RE, NUMBERS,
       //'self',
       {
         // mymethod(c.Id, c.Name); highlights each part of each parameter
@@ -730,7 +724,7 @@ export default function (hljs) {
       returnEnd: true,
       //endScope: 'punctuation',
       scope: 'instantiate',
-      contains: [PARAMS, COMMENT_LINE, PUNCTUATION],
+      contains: [PARAMS, COMMENT_LINE, PUNCTUATION_RE],
       illegal: ':',
       relevance: 0
     }
@@ -766,33 +760,17 @@ export default function (hljs) {
       COMMENT_BLOCK,
       hljs.APOS_STRING_MODE,
       PARAMS,
-      INSTANTIATE
+      INSTANTIATE,
+      "self",
     ],
     relevance: 0,
-    illegal: [].concat(...MAIN_KEYWORDS)
+    illegal: [].concat(...MAIN_KEYWORD_LIST)
   };
 
   // * TRIGGER DECLARATION
 
-  const TRIGGER_PROPERTIES = [
-    // will be scoped as keywords
-    'isExecuting',
-    'isInsert',
-    'isUpdate',
-    'isDelete',
-    'isBefore',
-    'isAfter',
-    'isUndelete',
-    'new',
-    'newMap',
-    'old',
-    'oldMap',
-    'size',
-    'operationType'
-  ];
-
-  const TRIGGER_CONTEXT_DECLARATION = {
-    match: [/\bTrigger\b/, /\./, regex.either(...TRIGGER_PROPERTIES), /\b/],
+  const TRIGGER_NAMESPACE_CALLS = {
+    match: [/\bTrigger/, /\./, /(isExecuting|isInsert|isUpdate|isDelete|isBefore|isAfter|isUndelete|new|newMap|old|oldMap|size|operationType)\b/],
     scope: { 1: 'built_in', 3: 'keyword' },
     relevance: 10
   };
@@ -841,15 +819,13 @@ export default function (hljs) {
     //begin: [/\bclass\b/, /\s+/, APEX_IDENT_RE],
     //beginScope: { 1: 'keyword', 3: 'title.class' },
     
-    beginKeywords: 'class',
-    returnBegin: true,
-
+    begin: /\bclass\b/,
+    beginScope: 'keyword',
     end: /\{/,
     endScope: 'punctuation',
-    returnEnd: true,
     //returnEnd: true,
     scope: 'class_declaration',
-    keywords: { type: TYPES, keyword: MAIN_KEYWORDS },
+    keywords: { type: TYPES, keyword: MAIN_KEYWORD_LIST },
     contains: [
       {
         match: [/(?<=\bclass\b)\s+/, APEX_IDENT_RE  ],
@@ -931,7 +907,7 @@ export default function (hljs) {
     contains: [
       COMMENT_LINE,
       COMMENT_BLOCK,
-      PUNCTUATION,
+      PUNCTUATION_RE,
       {
         match: regex.concat(/\b/, APEX_IDENT_RE, /\b/),
         scope: 'variable.constant'
@@ -963,27 +939,27 @@ export default function (hljs) {
   const DECLARATIONS = [
     TRIGGER_DECLARATION,
     CLASS_SHARING,
-    TRIGGER_CONTEXT_DECLARATION,
+    TRIGGER_NAMESPACE_CALLS,
     ENUM_DECLARATION,
     //CONSTRUCTOR_DECLARATION,
     CLASS_DECLARATION
-  ].concat(PROPERTY_DECLARATION);
+  ];
 
   const RETURNS = [
-    {
-      match: [/(?<=\breturn\b)\s+/, regex.either(LITERALS), /(?=\s*;)/],
+    /* {
+      match: [/\breturn\b\s+/, regex.either(LITERALS)],
       scope: {
         2: 'literal'
       }
-    },
+    }, */
     {
-      match: [/(?<=\breturn\b)/, /\s+/, APEX_IDENT_RE, /(?=\s*;)/],
+      match: [/\breturn\b/, /\s+/, APEX_IDENT_RE, ';'],
       scope: {
         3: 'variable'
       }
     },
     {
-      match: [/(?<=\breturn\b)/, /\s+/, regex.lookahead(APEX_IDENT_RE + /\(/)],
+      match: [/\breturn\b/, /\s+/, regex.lookahead(APEX_IDENT_RE + /\(/)],
       //returnBegin: true,
       //end: /(?=\))/,
       scope: {
@@ -1134,7 +1110,7 @@ export default function (hljs) {
             match: [/(?<=\.)/, APEX_IDENT_RE, /\b/],
             scope: { 2: 'type' }
           },
-          PUNCTUATION
+          PUNCTUATION_RE
         ]
       },
       {
@@ -1189,8 +1165,8 @@ export default function (hljs) {
       },
       NUMBERS,
       METHOD_CALL,
-      OPERATORS,
-      PUNCTUATION,
+      OPERATOR_RE,
+      PUNCTUATION_RE,
       hljs.APOS_STRING_MODE
     ],
     illegal: '::'
@@ -1203,7 +1179,7 @@ export default function (hljs) {
       2: 'punctuation',
       3: 'type',
       5: 'variable for',
-      6: 'operator'
+      //6: 'operator'
     },
     scope: 'for_loop',
     end: /\)\s*\{/,
@@ -1215,7 +1191,8 @@ export default function (hljs) {
       scope: 'variable'
     }],
     METHOD_CALL,
-    PUNCTUATION
+    PUNCTUATION_RE,
+    OPERATOR_LIST
    
   };
 
@@ -1244,7 +1221,7 @@ export default function (hljs) {
           match: [APEX_IDENT_RE, /\s*;/],
           scope: {1: 'variable'}
         },
-        PUNCTUATION,
+        PUNCTUATION_RE,
         COMMENT_LINE,
         SOQL_QUERY
       ]
@@ -1255,14 +1232,14 @@ export default function (hljs) {
      *
      */
     {
-    begin: [/\bDatabase\b/,/\./, APEX_IDENT_RE, /\s*/, /\(/],
+    begin: [/\bDatabase\b/,/\./, APEX_IDENT_RE, /\s*/, regex.lookahead(/\(/)],
     beginScope: { 1: 'built_in', 3: 'built_in'},
     end: ';',
     //endScope: 'punctuation',
     scope: 'database_dml',
     contains: [
       
-       PARAMS, LITERAL_REGEX, hljs.APOS_STRING_MODE, COMMENT_BLOCK, COMMENT_LINE,{
+       PARAMS, LITERAL_RE, hljs.APOS_STRING_MODE, COMMENT_BLOCK, COMMENT_LINE,{
         match: [/\(/, APEX_IDENT_RE,/,/],
         scope: {2: 'variable'}
       },{
@@ -1278,7 +1255,7 @@ export default function (hljs) {
         end: /\)/,
         scope: 'dml params',
         endsWithParent: true,
-        contains: [PARAMS, LITERAL_REGEX, hljs.APOS_STRING_MODE, COMMENT_BLOCK, COMMENT_LINE  ]
+        contains: [PARAMS, LITERAL_RE, hljs.APOS_STRING_MODE, COMMENT_BLOCK, COMMENT_LINE  ]
       } */
     ]
     }
@@ -1337,10 +1314,10 @@ export default function (hljs) {
     '%%>',
     '<%%',
     ':-',
-    //\bmergesort\(/,
-    //\bvar\s+env\b/,
-   //\bdef\b\s\W:/
-    // /"[^"]+"/, // Quote_string_mode
+    /\bmergesort\(/,
+    /\bvar\s+env\b/,
+   /\bdef\b\s\W:/,
+     /"[^"]+"/, // Quote_string_mode
     // /@\w+\[\w+\]/ //moonscript
   ];
 
@@ -1352,8 +1329,8 @@ export default function (hljs) {
     ignoreIllegals: false,
     keywords: {
       $pattern: APEX_IDENT_RE,
-      keyword: MAIN_KEYWORDS,
-      'variable.language': LANGUAGE_VARS,
+      keyword: MAIN_KEYWORD_LIST,
+      'variable.language': LANGUAGE_VAR_LIST,
       built_in: BUILT_INS,
       type: TYPES,
       literal: LITERALS
@@ -1375,13 +1352,14 @@ export default function (hljs) {
       METHOD_CALL,
       NAMESPACES,
       NUMBERS,
-      OPERATORS,
-      PUNCTUATION,
+      OPERATOR_RE,
+      PUNCTUATION_RE,
       RETURNS,
       SALESFORCE_ID,
       SOQL_QUERY,
-      STORAGE_MODIFIER,
-      SWITCH_STATEMENT
+      STORAGE_MODIFIER_RE,
+      SWITCH_STATEMENT,
+      VISUALFORCE_PROPERTY
     ]
   };
 }
