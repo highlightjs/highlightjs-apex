@@ -77,16 +77,6 @@ export default function (hljs) {
     'webservice'
   ];
 
-  const STORAGE_MODIFIER_RE = {
-    match: regex.concat(
-      /(?<!\.)\b/,
-      regex.either(...STORAGE_MODIFIER_LIST),
-      /\b/
-    ),
-    scope: 'keyword',
-    relevance: 0
-  };
-
   const LITERALS = ['false', 'true', 'null'];
 
   const TYPES = [
@@ -180,9 +170,9 @@ export default function (hljs) {
     'TxnSecurity',
     'UserProvisioning',
     'VisualEditor',
-    'Wave',
+    'Wave'
   ];
-  
+
   const SYSTEM_CLASSES = [
     'AccessLevel',
     'Address',
@@ -331,7 +321,8 @@ export default function (hljs) {
       scope: { 2: 'built_in' }
     },
     {
-      match: [ regex.concat(/\b/,'(?<=',regex.either(...SYSTEM_CLASSES),')\.'),
+      match: [
+        regex.concat(/\b/, '(?<=', regex.either(...SYSTEM_CLASSES), ').'),
         APEX_IDENT_RE,
         /(?=\()/
       ],
@@ -342,7 +333,7 @@ export default function (hljs) {
       match: [/\b/, regex.either(...SYSTEM_CLASSES), /(?=\.)/],
       scope: { 2: 'title.class' },
       relevance: 4
-    },
+    }
   ];
 
   const SWITCH_STATEMENT = {
@@ -437,35 +428,6 @@ export default function (hljs) {
       }
     ]
   });
-
-  // Extraneous for now - will be useful if we go this route BUT will need more maintenance
-  /* const ANNOTATION_MODIFIER_TYPES = [
-    'required',
-    'label',
-    'description',
-    'seealldata|10',
-    'isparallel|10',
-    'callout',
-    'urlMapping',
-    'serializable',
-    'deserializable',
-    'category',
-    'configurationEditor',
-    'IconName',
-    'cacheable',
-    'scope'
-  ]; */
-
-  /* const ANNOTATION_KEYS = [
-    'label',
-    'description',
-    'callout',
-    'required',
-    'category',
-    'configurationEditor',
-    'iconName',
-    'SeeAllData'
-  ]; */
 
   const ANNOTATIONS = [
     // We will allow any annotation, so we do not need to maintain this as often
@@ -607,8 +569,6 @@ export default function (hljs) {
     },
     relevance: 10
   };
-
-  
 
   const PARAMS = {
     scope: 'params',
@@ -871,14 +831,13 @@ export default function (hljs) {
 
   // commented for now - too easy to overlap with method_call
   const CONSTRUCTOR_DECLARATION = [
-    
     {
       // Constructor
       // Matches public/privat/protectede, methodname, then parens and a curly bracket
 
       begin: [/(public|private|protected)\s+/, APEX_IDENT_RE, /(?=\s*\()/], // /(?=\s*\()/],
       beginScope: {
-        1:  'keyword',
+        1: 'keyword',
         2: 'constructor'
       },
       end: /\{/,
@@ -902,7 +861,7 @@ export default function (hljs) {
       scope: {
         2: 'literal'
       }
-    }, 
+    },
     {
       match: [/\breturn\s+(?!(true|false|null))/, APEX_IDENT_RE, ';'],
       scope: {
@@ -1130,11 +1089,11 @@ export default function (hljs) {
       //2: 'punctuation',
       3: 'type',
       5: 'variable for',
-    6: 'operator'
+      6: 'operator'
     },
     scope: 'for_loop',
     end: [/\)\s*\{/],
-    endScope: {1:'punctuation'},
+    endScope: { 1: 'punctuation' },
     //returnEnd: true,
     //endScope: 'punctuation',
 
@@ -1296,7 +1255,7 @@ export default function (hljs) {
     ignoreIllegals: false,
     keywords: {
       $pattern: APEX_IDENT_RE,
-      keyword: MAIN_KEYWORD_LIST,
+      keyword: MAIN_KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST),
       'variable.language': LANGUAGE_VAR_LIST,
       built_in: BUILT_INS,
       type: TYPES,
@@ -1324,9 +1283,7 @@ export default function (hljs) {
       RETURNS,
       SALESFORCE_ID,
       SOQL_QUERY,
-      STORAGE_MODIFIER_RE,
-      SWITCH_STATEMENT,
-      //GETTER_SETTER
+      SWITCH_STATEMENT
     ]
   };
 }
