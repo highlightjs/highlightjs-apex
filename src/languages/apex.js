@@ -29,10 +29,6 @@ export default function (hljs) {
   };
 
   const MAIN_KEYWORD_LIST = [
-    'cast',
-    'default',
-    'export',
-
     'try',
     'catch',
     'finally',
@@ -55,10 +51,12 @@ export default function (hljs) {
 
     'return',
     'throw',
-    'when'
+    'when',
+
+    'new',
   ];
 
-  const LANGUAGE_VAR_LIST = ['instanceof', 'new', 'super', 'this'];
+  const LANGUAGE_VAR_LIST = ['instanceof',  'super', 'this'];
 
   // keyword
   const STORAGE_MODIFIER_LIST = [
@@ -101,36 +99,32 @@ export default function (hljs) {
     'string|0',
     'time|0',
     'void|0',
-    'float|0'
+    'float|0',
+    'id'
   ];
 
   const DMLS = [
     'insert',
     'update',
-    'upsert|8',
+    'upsert',
     'delete',
     'undelete',
     'merge',
-    'convertLead|8'
+    'convertLead'
   ];
 
-  const BUILT_INS = []
-    .concat(
-      ...[
-        'start',
-        'execute',
-        'finish',
-        'schedulable|10',
-        'batchable|10',
-        'queueable|10',
-        'comparable|10',
-        'callable|10'
-      ]
-    )
-    .concat(...DMLS);
+
+
+    const SYSTEM_INTERFACES = [
+      'schedulable',
+      'batchable',
+      'queueable',
+      'comparable',
+      'callable'
+    ];
 
   const NAMESPACE_LIST = [
-    'ApexPages',
+    //'ApexPages',
     'AppLauncher',
     'Approval',
     'Auth',
@@ -158,14 +152,14 @@ export default function (hljs) {
     'QuickAction',
     'Reports',
     'RichMessageing',
-    'Schema',
+    //'Schema',
     'Search',
     'Sfc',
     'Sfdc_Checkout',
     'sfdc_surveys',
     'Site',
     'Support',
-    'System',
+    //'System', // remove System so we handle it separately
     'TerritoryMgmt',
     'TxnSecurity',
     'UserProvisioning',
@@ -173,6 +167,7 @@ export default function (hljs) {
     'Wave'
   ];
 
+  // TODO: Check if these are necessary
   const SYSTEM_CLASSES = [
     'AccessLevel',
     'Address',
@@ -258,135 +253,16 @@ export default function (hljs) {
     'JSONToken',
     'LoggingLevel',
     'Quiddity',
-    'TriggerOperation'
+    'TriggerOperation',
   ];
+
+  const BUILT_INS = []
+  .concat(      ...NAMESPACE_LIST )
+  .concat(...DMLS);
 
   const LITERAL_RE = {
     match: regex.concat(/\b/, regex.either(...LITERALS), /\b\s*(?=[,)])/),
     scope: 'literal regex',
-    relevance: 0
-  };
-
-  const NAMESPACES = [
-    // * SYSTEM ENUMS W/WO SYSTEM SPECIFIED
-    {
-      match: [
-        /\bSystem/,
-        /\./,
-        regex.either(...SYSTEM_ENUMS),
-        /\./,
-        APEX_IDENT_RE
-      ],
-      scope: {
-        1: 'built_in' /* 2: 'punctuation', */,
-        3: 'built_in' /* 4:'punctuation', */,
-        5: 'variable.constant'
-      },
-      relevance: 9
-    },
-    {
-      match: [
-        regex.concat(/\b/, regex.either(...SYSTEM_ENUMS)),
-        /\./,
-        APEX_IDENT_RE,
-        /\b(?![\.\(])/
-      ],
-      // TODO: Find a better scope for the enum value
-      scope: { 1: 'built_in', 3: 'variable.constant' },
-      relevance: 0
-    },
-    // ANY USE OF SYSTEM (or other Namespace) BASE
-    {
-      match: [
-        regex.either(...NAMESPACE_LIST),
-        /\./,
-        regex.concat('(?=', APEX_IDENT_RE, '\\.)')
-      ],
-      scope: { 1: 'built_in' }
-    },
-    {
-      match: [
-        regex.concat(/\b/, regex.either(...NAMESPACE_LIST)),
-        /\./,
-        regex.concat('(?=', APEX_IDENT_RE, '\\s*\\()')
-      ],
-      scope: {
-        1: 'built_in',
-        /* 2: 'punctuation', */ 3: 'title.function.invoked'
-      },
-      relevance: 10
-    },
-    {
-      match: [/\b/, regex.either(...NAMESPACE_LIST), /\b(?!\.)/],
-      scope: { 2: 'built_in' }
-    },
-    {
-      match: [
-        regex.concat(/\b/, '(?<=', regex.either(...SYSTEM_CLASSES), ').'),
-        APEX_IDENT_RE,
-        /(?=\()/
-      ],
-      scope: { 2: 'title.class', 4: 'title.function.invoke' },
-      relevance: 4
-    },
-    {
-      match: [/\b/, regex.either(...SYSTEM_CLASSES), /(?=\.)/],
-      scope: { 2: 'title.class' },
-      relevance: 4
-    }
-  ];
-
-  const SWITCH_STATEMENT = {
-    match: [/\bswitch\s+on\s+/, APEX_IDENT_RE],
-    scope: { 1: 'keyword', 2: 'variable' }
-  };
-
-  const OPERATOR_LIST = [
-    //=/,
-    //(?<=')\s*\+/, // string concat before
-    //\+(?=\s*')/, // string concat after
-    /(?<!=|!)\=(?!=|>)/, // assignment
-    ///(\=/, // assignment
-
-    /--/, // decrement
-    /\+\+/, // increment
-    /&&|\|\|/, // logical
-    /\*=|\/=|%=|\+=|-=/, // assignment.compound
-    /\&=|\^=|<<=|>>=|>>>=|\|=/, // assignment.compound.bitwise
-    /\&|~|\^|\|/, // bitwise
-
-    /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
-    /<<|>>/, // bitwise.shift
-    /<=|>=|\s(<|>)\s/, // relational
-    /==|!=/, // comparison
-    /=>/, // map assign
-    /!(?=\w)/, // negator
-    /\&\&/,
-    /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
-
-    /\?\./, // null-safe operator
-    /(?<!\?)\?(?!\?|\.|\[)/ // ternary operator or CONDITIONAL_OPERATOR
-  ];
-
-  const OPERATOR_RE = {
-    match: regex.concat(regex.either(...OPERATOR_LIST), '{1}'),
-    //match: /((?<!\+)\+(?!\+)|(\=)){1}/,
-    scope: 'operator',
-    relevance: 0
-  };
-
-  const PUNCTUATION_LIST = [
-    /(\{|\})/,
-    ',',
-    /\(|\)/,
-    ///\[|\]/,
-    ';'
-    // /(?<!\?)\./ //"Period/dot"
-  ];
-
-  const PUNCTUATION_RE = {
-    match: regex.either(...PUNCTUATION_LIST),
-    scope: 'punctuation',
     relevance: 0
   };
 
@@ -397,6 +273,21 @@ export default function (hljs) {
   const COMMENT_BLOCK = hljs.COMMENT('/\\*', '\\*/', {
     relevance: 0,
     contains: [
+        {
+          begin: /\[/,
+          end: '\\]\\(',
+          excludeBegin: true,
+          returnEnd: true,
+          //returnBegin: true,
+          scope: 'symbol'
+        },
+        {
+          begin: '\\]\\(',
+          end: '\\)',
+          excludeBegin: true,
+          excludeEnd: true,
+          scope: 'link'
+        },
       {
         // eat up @'s in emails to prevent them to be recognized as doctags
         begin: /\w+@/,
@@ -404,7 +295,7 @@ export default function (hljs) {
       },
       {
         match: [/@(?:exception|throws)/, /\s+/, APEX_IDENT_RE],
-        scope: { 1: 'doctag', 3: 'class.title' }
+        scope: { 1: 'doctag', 3: 'title.class' }
       },
       {
         begin: /@[A-Za-z_]+\s/,
@@ -421,13 +312,61 @@ export default function (hljs) {
       },
       hljs.inherit(hljs.APOS_STRING_MODE, { scope: 'meta string' }),
       {
-        match: [/(?<=@param)/, /\s+/, /\S+/],
-        scope: {
-          3: 'variable'
-        }
+        match: regex.concat(/(?<=@param)/, /\s+/, APEX_IDENT_RE),
+        scope: 'variable',
       }
     ]
   });
+
+  
+
+  const SWITCH_STATEMENT = {
+    match: [/\bswitch\s+on\s+/, APEX_IDENT_RE],
+    scope: { 1: 'keyword', 2: 'variable' }
+  };
+
+  const OPERATOR_LIST = [
+    /(?<!=|!)\=(?!=|>)/, // assignment
+    /--/, // decrement
+    /\+\+/, // increment
+    /&&|\|\|/, // logical
+    /\*=|\/=|%=|\+=|-=/, // assignment.compound
+    /\&=|\^=|<<=|>>=|>>>=|\|=/, // assignment.compound.bitwise
+    /\&|~|\^|\|/, // bitwise
+    /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
+    /<<|>>/, // bitwise.shift
+    /<=|>=|\s(<|>)\s/, // relational
+    /==|!=/, // comparison
+    /=>/, // map assign
+    /!(?=\w)/, // negator
+    /\&\&/,
+    /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
+    /\?\./, // null-safe operator
+    /(?<!\?)\?(?!\?|\.|\[)/ // ternary operator or CONDITIONAL_OPERATOR
+  ];
+
+  const OPERATOR_RE = {
+    match: regex.concat('(?<!',regex.either(...OPERATOR_LIST),')',regex.either(...OPERATOR_LIST), '(?!',regex.either(...OPERATOR_LIST),')'),
+    scope: 'operator',
+    relevance: 0
+  };
+
+  const PUNCTUATION_LIST = [
+    /(\{|\})/,
+    //',',
+    //\(|\)/,
+    //';',
+    //\[\]/,
+    // /(?<!\?)\./ //"Period/dot"
+  ];
+
+  const PUNCTUATION_RE = {
+    match: regex.either(...PUNCTUATION_LIST),
+    scope: 'punctuation',
+    relevance: 0
+  };
+
+  
 
   const ANNOTATIONS = [
     // We will allow any annotation, so we do not need to maintain this as often
@@ -447,14 +386,13 @@ export default function (hljs) {
       begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*\(/],
       beginScope: { 1: 'meta' },
       end: /\)/,
-      //endScope: 'punctuation', //END
       returnEnd: true,
       scope: 'annotation',
       contains: [
         {
           match: [regex.concat(/\b/, APEX_IDENT_RE), /(?=\s*=)/],
           scope: {
-            1: 'meta keyword' //,2: 'operator'
+            1: '' //,2: 'operator'
           },
           contains: [OPERATOR_RE]
         },
@@ -488,12 +426,9 @@ export default function (hljs) {
       begin: /\b(list|set|map)\s*(?=<)/,
       beginScope: 'type',
       end: />+/,
-      endScope: 'punctuation',
+      //endScope: 'punctuation',
       contains: [
-        {
-          match: /</,
-          scope: 'punctuation'
-        },
+
         PUNCTUATION_RE,
         {
           match: regex.concat(/\b/, APEX_IDENT_RE, /\b/),
@@ -504,15 +439,130 @@ export default function (hljs) {
     },
     {
       // array notation
-      match: [APEX_IDENT_RE, /\s*\[\]/],
+      match: [APEX_IDENT_RE, /\[/,/\d*/,/\]/],
       scope: {
         1: 'type',
-        2: 'punctuation'
+        //2: 'punctuation'
+        3: 'number'
       },
       contains: [PUNCTUATION_RE],
       relevance: 0
     }
   ];
+
+  const TRIGGER_NAMESPACE_CALLS = {
+    match: [
+      /\bTrigger/,
+      /\./,
+      /(isExecuting|isInsert|isUpdate|isDelete|isBefore|isAfter|isUndelete|new|newMap|old|oldMap|size|operationType)\b/
+    ],
+    scope: { 1: 'built_in', 3: 'keyword' },
+    relevance: 10
+  };
+
+  const NAMESPACES = [
+    {
+      match: [
+        /\bSystem/,
+        /\./,
+        regex.either(...SYSTEM_ENUMS),
+        /\./,
+        APEX_IDENT_RE,
+        /\b(?!\()/
+      ],
+      scope: {
+        1: 'built_in' /* 2: 'punctuation', */,
+        3: 'built_in' /* 4:'punctuation', */,
+        5: 'variable.constant'
+      },
+      relevance: 9
+    },
+    {
+      match: [
+        regex.concat(/\b/, regex.either(...SYSTEM_ENUMS)),
+        /\./,
+        APEX_IDENT_RE,
+        /\b(?![\.\(])/
+      ],
+      // TODO: Find a better scope for the enum value
+      scope: { 1: 'built_in', 3: 'variable.constant' },
+      relevance: 0
+    },
+    // USE OF SYSTEM BASE
+    {
+      match: /\bSystem(?=\.System\.)/,
+      scope: 'built_in'
+    },
+    {
+      match: [/\bSystem/,/\./,APEX_IDENT_RE, regex.lookahead(/[\.\(\s]/)],
+      scope: {1: 'built_in', 3: 'keyword'}
+    },
+    {
+      match: [/\b/, regex.either(...SYSTEM_CLASSES),/\b\./,APEX_IDENT_RE, regex.lookahead(/[\.\(\s]/)],
+      scope: {2: 'built_in', 4: 'keyword'}
+    },
+    {match: regex.concat(regex.either(...NAMESPACE_LIST), regex.lookahead(/\./)),
+    scope: 'built_in'}
+  ];
+
+  const PARAMS = {
+    scope: 'params',
+    begin: /\(/,
+    beginScope: 'punctuation',
+    end: /\)/,
+    endScope: 'punctuation',
+    endsParent: true,
+    relevance: 0,
+    keywords: {
+      keyword: MAIN_KEYWORD_LIST
+    },
+    contains: [
+      NUMBERS,
+      hljs.APOS_STRING_MODE,
+      COMMENT_LINE,
+      COMMENT_BLOCK,
+      OPERATOR_RE,
+      //ASSIGNMENTS,
+      COLLECTION_DECLARATION,
+      LITERAL_RE,
+      TRIGGER_NAMESPACE_CALLS,
+      NAMESPACES,
+      NUMBERS,
+      'self',
+      {
+        // mymethod(c.Id, c.Name); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: [
+          /(?<=[,\(])\s*(?!Trigger)/, APEX_IDENT_RE,
+          /\./,
+          APEX_IDENT_RE,
+          /\s*(?=[,)])/
+        ],
+        scope: { 
+          //2: 'variable', 
+       // 3: 'variable'
+       }
+      },
+      {
+        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
+        // must be followed by comma or paren
+        match: 
+          regex.concat(regex.concat(/\b/, APEX_IDENT_RE),
+          regex.lookahead(regex.concat(/\s+/,
+          APEX_IDENT_RE,
+          /\s*[,)]/)))
+        ,
+        scope: 'type'
+        
+      },
+      {
+        // Second part of the parameter, followed by comma or paren
+        match: regex.concat(APEX_IDENT_RE, /(?=\s*[,)])/),
+        //scope:  'variable' 
+      },
+     
+    ]
+  };
 
   const ASSIGNMENTS = {
     scope: 'assignment',
@@ -523,30 +573,37 @@ export default function (hljs) {
         // Account a =
         match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /(?=\s*\=)/],
         scope: {
-          1: 'type',
+          //1: 'title.class',
           3: 'variable assigned'
         }
       },
       {
         // Account abcd;
-        match: [APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*/, ';'],
+        match: [
+          regex.concat(/(?!return)\b/,APEX_IDENT_RE), 
+          regex.concat(/\s+(?!get|set)/, APEX_IDENT_RE), 
+          '\\s*', 
+          ';' 
+        ],
         scope: {
-          1: 'type',
-          3: 'variable declare'
+          1: 'title.class',
+          2: 'variable declare'
         }
       },
       {
         // mynum =
         // could also be a collection variable
         match: [/(?<!\.)\b/, APEX_IDENT_RE, /(?=\s*\=)/],
-        scope: {
-          2: 'variable mynum'
-        }
+        scope: { 2: 'variable mynum' }
       },
       // Casting
       {
-        match: [/(?<==)\s*/, /\(/, APEX_IDENT_RE, /\)/],
-        scope: { 2: 'punctuation', 3: 'type', 4: 'punctuation' }
+        match: [/(?<==)\s*/, /\(/, APEX_IDENT_RE, /\)/, '(?=\\s*' + APEX_IDENT_RE + ')'],
+        scope: { 
+          //2: 'punctuation', 
+        3: 'title.class', 
+        //4: 'punctuation'
+       }
       }
     ]
   };
@@ -570,63 +627,14 @@ export default function (hljs) {
     relevance: 10
   };
 
-  const PARAMS = {
-    scope: 'params',
-    begin: /\(/,
-    beginScope: 'punctuation',
-    end: /\)/,
-    endScope: 'punctuation',
-    endsParent: true,
-    relevance: 0,
-    contains: [
-      NUMBERS,
-      hljs.APOS_STRING_MODE,
-      COMMENT_LINE,
-      COMMENT_BLOCK,
-      OPERATOR_RE,
-      ASSIGNMENTS,
-      COLLECTION_DECLARATION,
-      LITERAL_RE,
-      NAMESPACES,
-      NUMBERS,
-      'self',
-      {
-        // mymethod(c.Id, c.Name); highlights each part of each parameter
-        // must be followed by comma or paren
-        match: [
-          regex.concat(/(?<=[,\(])\s*/, APEX_IDENT_RE),
-          /\./,
-          APEX_IDENT_RE,
-          /\s*(?=[,)])/
-        ],
-        scope: { 1: 'variable', 3: 'variable' }
-      },
-      {
-        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
-        // must be followed by comma or paren
-        match: [
-          regex.concat(/\b/, APEX_IDENT_RE),
-          /\s+/,
-          APEX_IDENT_RE,
-          /\s*(?=[,)])/
-        ],
-        scope: { 1: 'type', 3: 'variable' }
-      },
-      {
-        // Second part of the parameter, followed by comma or paren
-        match: [APEX_IDENT_RE, /\s*(?=[,)])/],
-        scope: { 1: 'variable' }
-      }
-    ]
-  };
-
+  
   const INSTANTIATE = [
     {
       // Account a = new Account(Name = 'test account);
       begin: [/\bnew\b/, /\s+/, APEX_IDENT_RE, /\s*(?=\()/],
       beginScope: {
-        1: 'keyword',
-        3: 'title.function.invoke'
+        //1: 'keyword',
+        3: 'title.class'
       },
       end: /\)/,
       returnEnd: true,
@@ -638,29 +646,19 @@ export default function (hljs) {
     }
   ];
 
-  const PARAMS_CALL = {};
-
   const METHOD_CALL = {
     end: /(?=\)\s*[^{])/,
     returnEnd: true,
-    scope: 'method_call',
+    //scope: 'method_call',
     relevance: 0,
     variants: [
       {
-        begin: regex.concat(APEX_IDENT_RE, /(?=\s*\()/),
-        beginScope: 'title.function.invoke'
+        begin: regex.concat(APEX_IDENT_RE, /(?=\()/),
+        beginScope: 'title.function solo'
       },
       {
-        begin: [
-          regex.either(...NAMESPACE_LIST),
-          /\./,
-          regex.concat(APEX_IDENT_RE, /(?=\s*\()/)
-        ],
-        beginScope: { 1: 'built_in', 3: 'title.function.invoke' }
-      },
-      {
-        begin: [APEX_IDENT_RE, /\./, regex.concat(APEX_IDENT_RE, /(?=\s*\()/)],
-        beginScope: { 1: 'class.title', 3: 'title.function.invoke' }
+        begin: [regex.concat('(?!', regex.either(  [].concat(...NAMESPACE_LIST, ['System'])) , ')',APEX_IDENT_RE)      , /\./, regex.concat(APEX_IDENT_RE, /(?=\()/)],
+        beginScope: { 1: 'title.class nonsystem', 3: 'title.function.invoke' }
       }
     ],
     contains: [
@@ -671,21 +669,11 @@ export default function (hljs) {
       INSTANTIATE,
       'self'
     ],
-    relevance: 0,
-    illegal: [].concat(...MAIN_KEYWORD_LIST)
+    relevance: 0
   };
+
 
   // * TRIGGER DECLARATION
-
-  const TRIGGER_NAMESPACE_CALLS = {
-    match: [
-      /\bTrigger/,
-      /\./,
-      /(isExecuting|isInsert|isUpdate|isDelete|isBefore|isAfter|isUndelete|new|newMap|old|oldMap|size|operationType)\b/
-    ],
-    scope: { 1: 'built_in', 3: 'keyword' },
-    relevance: 10
-  };
 
   const TRIGGER_DECLARATION = {
     begin: [
@@ -701,25 +689,27 @@ export default function (hljs) {
       1: 'keyword',
       3: 'title.class',
       5: 'operator',
-      7: 'type'
+      7: 'title.class'
     },
-    end: '{',
+    end: /(?=\{)/, //'{',
     returnEnd: true,
     scope: 'trigger_declaration',
     contains: [
       COMMENT_LINE,
       COMMENT_BLOCK,
+      //PUNCTUATION_RE,
       {
         begin: /\(/,
-        beginScope: 'punctuation',
+        //beginScope: 'punctuation',
         end: /\)/,
-        endScope: 'punctuation',
+        //endScope: 'punctuation',
         scope: 'trigger_params',
         contains: [
           {
             match: /\b(before|after)\s+(insert|update|delete|merge|undelete)\b/,
             scope: 'built_in'
-          }
+          },
+          //PUNCTUATION_RE
         ]
       }
     ]
@@ -765,10 +755,11 @@ export default function (hljs) {
         ],
         contains: [
           NAMESPACES,
-          {
+          //PUNCTUATION_RE,
+          /* {
             match: /\<|\>/,
             scope: 'punctuation'
-          },
+          }, */
           {
             match: regex.concat(
               /\b/,
@@ -794,8 +785,9 @@ export default function (hljs) {
             scope: 'title.class.inherited'
           },
           {
-            match: regex.concat(/\b/, regex.either(...BUILT_INS), /\b\s*(?!>)/),
-            scope: 'title.class.inherited'
+            match: regex.concat(/\b/, regex.either(...SYSTEM_INTERFACES), /\b\s*(?!>)/),
+            scope: 'title.class.inherited',
+            relevance: 8
           }
         ]
       }
@@ -829,7 +821,6 @@ export default function (hljs) {
     scope: 'keyword'
   };
 
-  // commented for now - too easy to overlap with method_call
   const CONSTRUCTOR_DECLARATION = [
     {
       // Constructor
@@ -873,13 +864,14 @@ export default function (hljs) {
       //returnBegin: true,
       //end: /(?=\))/,
       scope: {
-        2: 'title.function.invoke'
+        2: 'title.function'
       }
       //contains: [METHOD_CALL, PARAMS]
     }
     // * RETURN NEW OBJECT - NO PARAMS BY DEFAULT
   ];
 
+  // may not need
   const SALESFORCE_ID = {
     match: /(?<!\.)\bId\b(?=[\s>])/,
     scope: 'type',
@@ -1076,23 +1068,22 @@ export default function (hljs) {
       NUMBERS,
       METHOD_CALL,
       OPERATOR_RE,
-      PUNCTUATION_RE,
       hljs.APOS_STRING_MODE
     ],
     illegal: '::'
   };
 
   const FOR_LOOP = {
-    begin: [/\bfor\b\s*/, /\(/, APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*:/],
+    begin: [/\bfor\b\s*/, /\(/, APEX_IDENT_RE, /\s+/, APEX_IDENT_RE, /\s*/,/:/],
     beginScope: {
       //1: 'keyword',
       //2: 'punctuation',
       3: 'type',
       5: 'variable for',
-      6: 'operator'
+      7: 'operator'
     },
-    scope: 'for_loop',
-    end: [/\)\s*\{/],
+    //scope: 'for_loop',
+    end: [/\{/],
     endScope: { 1: 'punctuation' },
     //returnEnd: true,
     //endScope: 'punctuation',
@@ -1105,11 +1096,16 @@ export default function (hljs) {
       {
         match: regex.concat(APEX_IDENT_RE, /\b(?!\()/),
         scope: 'variable'
-      }
-    ],
-    METHOD_CALL,
-    PUNCTUATION_RE,
-    OPERATOR_RE
+      },
+      {
+        match: /\{/,
+        endsParent: true,
+      },
+      METHOD_CALL,
+      PUNCTUATION_RE,
+      OPERATOR_RE,
+      NUMBERS
+    ]
   };
 
   // TODO: Do DMLs
@@ -1138,7 +1134,9 @@ export default function (hljs) {
         },
         PUNCTUATION_RE,
         COMMENT_LINE,
-        SOQL_QUERY
+        SOQL_QUERY,
+        NUMBERS,
+        OPERATOR_RE
       ]
     },
     /*
@@ -1154,7 +1152,7 @@ export default function (hljs) {
         /\s*/,
         regex.lookahead(/\(/)
       ],
-      beginScope: { 1: 'built_in', 3: 'built_in' },
+      beginScope: { 1: 'built_in', 3: 'title.function.invoke' },
       end: ';',
       //endScope: 'punctuation',
       scope: 'database_dml',
@@ -1254,7 +1252,7 @@ export default function (hljs) {
     disableAutodetect: false,
     ignoreIllegals: false,
     keywords: {
-      $pattern: APEX_IDENT_RE,
+      $pattern: regex.concat(/\b/,APEX_IDENT_RE, /\.?/),
       keyword: MAIN_KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST),
       'variable.language': LANGUAGE_VAR_LIST,
       built_in: BUILT_INS,
@@ -1264,7 +1262,7 @@ export default function (hljs) {
     illegal: ILLEGALS,
     contains: [
       ANNOTATIONS,
-      ASSIGNMENTS,
+      //,
       COLLECTION_DECLARATION,
       COMMENT_BLOCK,
       COMMENT_LINE,
@@ -1281,7 +1279,7 @@ export default function (hljs) {
       OPERATOR_RE,
       PUNCTUATION_RE,
       RETURNS,
-      SALESFORCE_ID,
+      //SALESFORCE_ID,
       SOQL_QUERY,
       SWITCH_STATEMENT
     ]
