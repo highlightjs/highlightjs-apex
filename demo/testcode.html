@@ -23,7 +23,8 @@
 
 	<body class="hljs">
     <pre><code class="language-apex">
-      
+      Map&lt;Id, CustomObject__c&gt; myMap = new Map&lt;Id, CustomObject__c&gt;([SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()]);
+      &lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d}
 
       delete myAccount;
       Account a;
@@ -63,15 +64,6 @@
 
     public String myString { get; set; }
 
-    /*
-    Copyright (c) 2022, salesforce.com, inc.
-    All rights reserved.
-    SPDX-License-Identifier: BSD-3-Clause
-    For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
-    'This is a string in a comment'
-    @throws DMLException
-    */
-
     List&lt;SObject&gt; mylist = [SELECT Name, StreetAddress__c, COUNT(),
       (SELECT Id FROM Contacts)
       FROM Warehouse__c.Contacts__r
@@ -86,10 +78,13 @@
 				' NULLS LAST LIMIT 1000';
 
     /**
-     * @author {@link [David Schach](https://github.com/dschach)}
-     * @group Visualforce
-     * @since 2022
-     */
+    * Display ControllingTasks column only if there are controlling tasks
+    * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+    * @author {@link [David Schach](https://github.com/dschach)}
+    * @return   `Boolean` is the Controller__c field populated for any Action Plan Tasks?
+    'This is a string in a comment'
+    @throws DMLException
+    */
     public with sharing class ActionPlanDetailController extends APController {
 
       public enum Season {WINTER, SPRING, SUMMER, FALL}
@@ -133,11 +128,7 @@
         return newPage;
       }
     
-      /**
-       * Display ControllingTasks column only if there are controlling tasks
-       * @author {@link [David Schach](https://github.com/dschach)}
-       * @return   `Boolean` is the Controller__c field populated for any Action Plan Tasks?
-       */
+      
       public Custom__c hasControllingTasks {
         get {
           hasControllingTasks = false;
@@ -268,21 +259,12 @@
         }
       }
     
-      /**
-       * If we have no share object, we don't need to show a Share button
-       * @author {@link [David Schach](https://github.com/dschach)}
-       * @return  `Boolean` Does the user have permission to share this Action Plan?
-       */
+      
       public Boolean getCanShare() {
         return ActionPlansUtilities.canShareRecord(actionPlan.Id, actionPlan.OwnerId);
       }
 
   @SuppressWarnings('PMD.AvoidGlobalModifier')
-  /**
-  * @group Invocable
-  * @author {@link [David Schach](https://github.com/dschach)}
-  * @since 2022
-  */
   global without sharing class ActionPlanCreateInvocable {
     @InvocableMethod
     (label='Create Action Plan From Template' description='Takes a Template Name/Id and Record Id and makes an Action Plan for that record.' category=77)
@@ -428,11 +410,6 @@
       return resultIDs;
     }
 
-    /**
-    * Wrapper class for ActionPlan Request for invocable Apex.
-    * @author {@link [David Schach](https://github.com/dschach)}
-    * @since 2022
-    */
     global class CreateActionPlanRequest {
       @InvocableVariable(required=true label='The parent Record ID' description=55)
       /**
@@ -488,11 +465,6 @@ public without sharing class AccountSampleTriggerHandler extends Database.schedu
     }
   }
 
-  /**
-    * @description Constructor using passed-in class name constructor for faster performance
-    * &lt;br&gt;We cast all four trigger collections
-    * @param className The name of this class. Pass in the string to make the handler run faster
-    */
   public AccountSampleTriggerHandler(CustomType a, String className) {
     this.newRecords = (List&lt;Account&gt;) Trigger.new;
     this.newRecordsMap = (Map&lt;Id, Account&gt;) Trigger.newMap;
