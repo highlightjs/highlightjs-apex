@@ -24,7 +24,7 @@
 	<body class="hljs">
     <pre><code class="language-apex">
       Map&lt;Id, CustomObject__c&gt; myMap = new Map&lt;Id, CustomObject__c&gt;([SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()]);
-      &lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d}
+      &lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d};
 
       delete myAccount;
       Account a;
