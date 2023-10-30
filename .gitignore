@@ -113,5 +113,4 @@ typings/
 #PMD file
 .pmdCache
 
-demo/scratchpad.html
-demo/scratchpad.css
+demo/scratchpad.*
