@@ -377,7 +377,7 @@ export default function (hljs) {
      @IsTest
      (Seealldata=true) */
     {
-      begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*\(/],
+      begin: [regex.concat(ANNOTATION_RE, /\b/), PARENS_LOOKAHEAD],
       beginScope: { 1: 'meta' },
       end: /\)/,
       returnEnd: true,
@@ -1140,7 +1140,7 @@ export default function (hljs) {
      *
      */
     {
-      begin: [/\bDatabase\b/, /\./, APEX_IDENT_RE, regex.lookahead(/\s*\(/)],
+      begin: [/\bDatabase\b/, /\./, APEX_IDENT_RE, PARENS_LOOKAHEAD],
       beginScope: { 1: 'built_in', 3: 'title.function.invoke' },
       end: ';',
       //scope: 'database_dml',
