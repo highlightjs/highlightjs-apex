@@ -1,2 +1,7 @@
 assets
 demo
+.github
+.vscode
+node_modules,
+.release-please-manifest.json
+release-please-config.json
