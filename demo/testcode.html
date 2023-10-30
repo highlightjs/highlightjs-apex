@@ -78,11 +78,12 @@
 				' NULLS LAST LIMIT 1000';
 
     /**
-    * Display ControllingTasks column only if there are controlling tasks
     * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
     * @author {@link [David Schach](https://github.com/dschach)}
+    * @param taskIdParam TaskId (for the standard object `Task`)
     * @return   `Boolean` is the Controller__c field populated for any Action Plan Tasks?
-    'This is a string in a comment'
+    * 'This is a string in a comment'
+    * @example
     @throws DMLException
     */
     public with sharing class ActionPlanDetailController extends APController {
@@ -104,11 +105,6 @@
         return null;
       }
     
-      /**
-       * Deletes the current Action Plan loaded and redirects to the AP List
-       * @return   `PageReference` null (required for page actions method)
-       * @return `PageReference` Page to go to after deleting `ActionPlan__c`
-       */
       public PageReference deletePlan() {
         this(DEFAULT_SIZE);
         //delete ap, which will also delete apts via master-detail relationship
@@ -203,7 +199,7 @@
         /**
          * Constructor for the task wrapper
          * @param aptParam  Action Plan Task Template
-         * @param taskIdParam TaskId (for the standard object `Task`)
+         
          */
         public TaskWrapper(APTask__c aptParam, Id taskIdParam) {
           this.apt = aptParam;
@@ -211,10 +207,6 @@
         }
       }
     
-      /**
-       * Checks if Action Plan Template has been changed since the creation of the Action Plan.
-       * @return `Boolean` Was the AP's template modified after the Action Plan was created?
-       */
       public Boolean getVersion() {
         if (actionPlan.Action_Plan_Template__c != null) {
           ActionPlanTemplate__c tempApt = [SELECT LastModifiedDate FROM ActionPlanTemplate__c WHERE Id = :actionPlan.Action_Plan_Template__c];
@@ -225,10 +217,6 @@
         return false;
       }
     
-      /**
-       * The name of the parent record - show a different field based on SObject Type
-       * @return  `String` name of the object related to this Action Plan
-       */
       public String getrelatedRecordName() {
         String objName = '';
         Id objId;
@@ -258,7 +246,6 @@
           }
         }
       }
-    
       
       public Boolean getCanShare() {
         return ActionPlansUtilities.canShareRecord(actionPlan.Id, actionPlan.OwnerId);
@@ -412,9 +399,6 @@
 
     global class CreateActionPlanRequest {
       @InvocableVariable(required=true label='The parent Record ID' description=55)
-      /**
-      * The parent Record ID. Must have a relationship named the related record object name from Action Plan object.
-      */
       global Id relatedRecordID;
     }
   }
