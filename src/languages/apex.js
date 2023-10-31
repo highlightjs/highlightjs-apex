@@ -15,7 +15,6 @@ export default function (hljs) {
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
   const PARENS_LOOKAHEAD = /(?=\s*\()/;
   const SPACE = /\s+/;
-
   /**
  * @param {...(RegExp | string) } args
  * @returns {string}
@@ -594,9 +593,9 @@ export default function (hljs) {
     // Casting
     {
       match: [
-        /(?<=\=\s*)\(/,
+        /(?<=\=\s*\()/,
         APEX_IDENT_RE,
-        '\\)(?=\\s*' + APEX_IDENT_RE + ')'
+        '(?=\\)\\s*' + APEX_IDENT_RE + ')'
       ],
       scope: {
         2: 'type'
