@@ -16,20 +16,20 @@ export default function (hljs) {
   const PARENS_LOOKAHEAD = /(?=\s*\()/;
   const SPACE = /\s+/;
   /**
- * @param {...(RegExp | string) } args
- * @returns {string}
- */
+   * @param {...(RegExp | string) } args
+   * @returns {string}
+   */
   function arrayJoin(...args) {
-    const joined = args.map((x) => source(x)).join("|");
-  return joined;
+    const joined = args.map((x) => source(x)).join('|');
+    return joined;
   }
 
   /**
- * @param {...(RegExp | string) } args
- * @returns {string}
- */
+   * @param {...(RegExp | string) } args
+   * @returns {string}
+   */
   function negLookahead(...list) {
-    return regex.concat("(?!", list.join("|"), ")");
+    return regex.concat('(?!', list.join('|'), ')');
   }
 
   const NUMBERS = {
@@ -275,9 +275,7 @@ export default function (hljs) {
     'operationType'
   ];
 
-  const BUILT_INS = []
-    .concat(...NAMESPACE_LIST)
-    .concat(...SYSTEM_CLASSES);
+  const BUILT_INS = [].concat(...NAMESPACE_LIST).concat(...SYSTEM_CLASSES);
 
   const LITERALS = ['false', 'true', 'null'];
 
@@ -304,10 +302,14 @@ export default function (hljs) {
     /(\<)(?=\w)/,
     /\{|\}/,
     /\(|\)/,
-    /(\,?)-(?=\d)/, // number negative sign
+    /(\,?)-(?=\d)/ // number negative sign
   ];
   const PUNCTUATION = [
-    { match: regex.either(...PUNCTUATION_LIST), scope: 'punctuation', relevance: 0 }
+    {
+      match: regex.either(...PUNCTUATION_LIST),
+      scope: 'punctuation',
+      relevance: 0
+    }
   ];
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
@@ -362,7 +364,7 @@ export default function (hljs) {
     /==|!=/, // comparison
     /=>/, // map assign
     /!(?=\w)/, // negator
-      /\&\&/,
+    /\&\&/,
     /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
     /\?\./, // null-safe operator
     /(?<!\?)\?(?!\?|\.|\[)/ // ternary operator or CONDITIONAL_OPERATOR
@@ -442,7 +444,7 @@ export default function (hljs) {
       beginScope: 'type',
       end: /(?=\>+)/, // use lookahead so we don't scope the punctuation here.
       endScope: 'punctuation',
-//      returnEnd: true,
+      //      returnEnd: true,
       contains: [
         { match: /\<|,/, scope: 'punctuation' },
         {
@@ -516,8 +518,13 @@ export default function (hljs) {
       scope: 'built_in'
     },
     {
-      match: [regex.concat('(?<=', regex.either(...NAMESPACE_LIST),')'), /\./, APEX_IDENT_RE, PARENS_LOOKAHEAD  ],
-      scope: {3: 'keyword'}
+      match: [
+        regex.concat('(?<=', regex.either(...NAMESPACE_LIST), ')'),
+        /\./,
+        APEX_IDENT_RE,
+        PARENS_LOOKAHEAD
+      ],
+      scope: { 3: 'keyword' }
     },
 
     {
@@ -680,9 +687,9 @@ export default function (hljs) {
     begin: /\((?!\s*\[)/,
     //returnBegin: true,
     //beginScope: 'punctuation',
-     end: /\)/,
-     //endsParent: true,
-     returnEnd: true,
+    end: /\)/,
+    //endsParent: true,
+    returnEnd: true,
     relevance: 0,
     keywords: {
       KEYWORDS
@@ -695,20 +702,10 @@ export default function (hljs) {
       COMMENT_BLOCK,
       COLLECTION_REGEX,
       NAMESPACES,
-      {match: /\,/, scope: 'punctuation'},
+      { match: /\,/, scope: 'punctuation' },
       SALESFORCE_ID,
-      /* {
-        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
-        // must be followed by comma or paren
-        match: regex.concat(
-          /(?<=[\s\(])/,
-          APEX_IDENT_RE,
-          regex.lookahead(regex.concat(SPACE, APEX_IDENT_RE, /\s*[,)]/))
-        ),
-        scope: 'variable'
-      }, */
       {
-        // mymethod(Date myDate, Date yourDate); highlights each part of each parameter
+        // mymethod(Date myDate, Date yourDate); highlights second part of each parameter
         // must be followed by comma or paren
         match: [SPACE, APEX_IDENT_RE, /\s*(?=[,)])/],
 
@@ -716,7 +713,6 @@ export default function (hljs) {
       }
     ]
   };
-
 
   const METHOD_DECLARATION = {
     // method declaration
@@ -800,7 +796,6 @@ export default function (hljs) {
       begin: [/\benum\s+/, APEX_IDENT_RE, /\s*(?=\{)/],
       beginScope: { 2: 'type' },
       end: /(?=[\}\n])/,
-      //returnEnd: true,
       //scope: 'enum_declaration',
       relevance: 0,
       contains: [
@@ -959,35 +954,37 @@ export default function (hljs) {
     relevance: 10,
     endsWithParent: true,
     keywords: {
-      keyword: [].concat(...KEYWORDS.keyword).concat(...SOQL_KEYWORDS).concat(...SOQL_OPERATORS), // * orange italic
+      keyword: []
+        .concat(...KEYWORDS.keyword)
+        .concat(...SOQL_KEYWORDS)
+        .concat(...SOQL_OPERATORS), // * orange italic
       type: SOQL_FUNCTIONS, // * blue italic
-      literal: [].concat(...SOQL_DATES).concat(...KEYWORDS.literal), 
-      built_in: BUILT_INS,
-      //attr: SOQL_OPERATORS
+      literal: [].concat(...SOQL_DATES).concat(...KEYWORDS.literal),
+      built_in: BUILT_INS
     },
     contains: [
       {
-      begin: /SELECT\b/,
-      beginScope: 'keyword',
-      //returnBegin: true,
-      ends: /(?=\bFROM\b)/,
-      returnEnd: true,
-      scope: 'select clause',
-       contains: [
-        
-        {
-          match: [SPACE, APEX_IDENT_RE, SPACE],
-          scope: {2: 'variable'},
-        },
-        /* {
-          match: [SPACE, APEX_IDENT_RE, /(?=\,)/],
-        scope: 'params'} */
-      ]
-    },  
+        begin: /SELECT\b/,
+        beginScope: 'keyword',
+        //returnBegin: true,
+        ends: /(?=\bFROM\b)/,
+        returnEnd: true,
+        scope: 'select clause',
+        contains: [
+          /* {
+            match: [SPACE, APEX_IDENT_RE, SPACE],
+            scope: { 2: 'subst' } 
+          }, */
+           {
+          match: [/(?=\s|\,)/, APEX_IDENT_RE, /(?=\s|\,)/],
+        scope: { 2: 'subst' } } // * back to main text color
+        ]
+      },
       {
         begin: [/\bFROM\s/, APEX_IDENT_WORD_RE],
         beginScope: {
-          1: 'keyword',2: 'type'
+          1: 'keyword',
+          2: 'type'
         },
         //scope: 'from_clause',
         end: /(?=\]|\s|\))/,
@@ -1005,7 +1002,7 @@ export default function (hljs) {
       {
         match:
           /(NEXT|LAST|THIS)_(90_DAY|DAY|FISCAL_QUARTER|FISCAL_YEAR|MONTH|QUARTER|WEEK|YEAR)S?\b/,
-        scope: 'variable.language',
+        scope: 'keyword',
         relevance: 10
       },
       {
@@ -1015,8 +1012,8 @@ export default function (hljs) {
           /\d+/
         ],
         scope: {
-          1: 'variable.language',
-          2: 'operator',
+          1: 'keyword',
+          2: 'keyword',
           3: 'number'
         },
         relevance: 10
