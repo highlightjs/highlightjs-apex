@@ -1,0 +1,46 @@
+.hljs-addition{color:#A6E22E;background:#66852880}
+.hljs-attr{color:#F92672;}
+.hljs-attribute{color:#A6E22E;}
+.hljs-built_in{color:#66D9EF;font-style:italic;}
+.hljs-bullet{color:#E6DB74;}
+.hljs-code{color:#FD971F;font-family: monospace;}
+.hljs-comment{color:#75715E;}
+.hljs-deletion{color:#F92672;background:#90274a80}
+.hljs-doctag{font-weight:700;}
+.hljs-emphasis{color:#66D9EF;font-style:italic;}
+.hljs-keyword{color:#F92672;}
+.hljs-link{color:#AE81FF;text-decoration:underline;}
+.hljs-literal{color:#66D9EF;}
+.hljs-meta .hljs-string{color:#CFCFC2;}
+.hljs-meta{color:#E6DB74;}
+.hljs-name{color:#F92672;}
+.hljs-number{color:#AE81FF;}
+.hljs-operator{color:#FD971F;}
+.hljs-params{color:#FD971F;font-style:italic;}
+.hljs-punctuation{color:#E6DB74;}
+.hljs-quote{color:#CFCFC2;}
+.hljs-regexp{color:#AE81FF;}
+.hljs-section{color:#A6E22E;}
+.hljs-selector-attr{color:#66d9ef;}
+.hljs-selector-class{color:#A6E22E;}
+.hljs-selector-id{color:#E6DB74;}
+.hljs-selector-pseudo{color:#F8F8F2;}
+.hljs-selector-tag{color:#F92672;}
+.hljs-string{color:#E6DB74;}
+.hljs-strong{color:#66D9EF;font-style:bold;}
+.hljs-subst{color:#F8F8F2;}
+.hljs-symbol{color:#66D9EF;}
+.hljs-tag{color:#F8F8F2;}
+.hljs-template-variable{color:#E6DB74;}
+.hljs-title.class_{color:#A6E22E;}
+.hljs-title.class_.inherited__{color:#a6e22eff;font-style:italic;text-decoration:underline;}
+.hljs-title.function_{color:#A6E22E;}
+.hljs-title.function_invoke__{color:#66d9efff;}
+.hljs-title{color:#A6E22E;}
+.hljs-type{color:#66D9EF;font-style:italic;}
+.hljs-variable.constant_{color:#AE81FF;}
+.hljs-variable.language_{color:#F92672;}
+.hljs-variable{color:#F8F8F2;}
+.hljs{color:#f8f8f2;background-color:#272822;
+	overflow-x: hidden !important;
+	}

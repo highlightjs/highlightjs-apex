@@ -1,3 +1,10 @@
 {
-	"apexPMD.enableCache": false
+	"apexPMD.enableCache": false,
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[css]": {
+		"editor.formatOnSave": false
+	},
 }
