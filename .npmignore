@@ -1,2 +1,6 @@
-assets
-demo
+*
+
+!dist/**/*
+!package.json
+!src/**/*
+!test/**/*
