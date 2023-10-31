@@ -5,9 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.0...HEAD)
+## [Unreleased](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.1...HEAD)
 
-## [v1.2.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.0...v1.2.0) - 2023-03-29
+### Merged
+
+- build(deps): bump highlight.js from 11.8.0 to 11.9.0 [`#15`](https://github.com/highlightjs/highlightjs-apex/pull/15)
+- ci(deps): bump actions/checkout from 3 to 4 [`#14`](https://github.com/highlightjs/highlightjs-apex/pull/14)
+- build(deps-dev): bump prettier from 3.0.2 to 3.0.3 [`#13`](https://github.com/highlightjs/highlightjs-apex/pull/13)
+- build(deps-dev): bump prettier from 3.0.1 to 3.0.2 [`#12`](https://github.com/highlightjs/highlightjs-apex/pull/12)
+- build: include highlight.js as dependency [`#11`](https://github.com/highlightjs/highlightjs-apex/pull/11)
+- build(deps-dev): bump prettier from 3.0.0 to 3.0.1 [`#10`](https://github.com/highlightjs/highlightjs-apex/pull/10)
+- build(deps-dev): bump prettier from 2.8.8 to 3.0.0 [`#9`](https://github.com/highlightjs/highlightjs-apex/pull/9)
+- build(deps-dev): bump highlight.js from 11.7.0 to 11.8.0 [`#8`](https://github.com/highlightjs/highlightjs-apex/pull/8)
+- build(deps-dev): bump prettier from 2.8.7 to 2.8.8 [`#7`](https://github.com/highlightjs/highlightjs-apex/pull/7)
+
+### Commits
+
+- begin npm setup [`284b7df`](https://github.com/highlightjs/highlightjs-apex/commit/284b7dff2a4008f749b7852d1dad08a04680e9f1)
+- chore: bootstrap releases for path: . [`4b448d9`](https://github.com/highlightjs/highlightjs-apex/commit/4b448d98734b7139ce6433bf4a7ac9a2c865fc74)
+- chore: npm version 1.2.0 [`a5e6378`](https://github.com/highlightjs/highlightjs-apex/commit/a5e637896f9065a3e9d33017ec4afe397da3a9ce)
+
+## [v1.2.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.0...v1.2.1) - 2023-03-29
+
+### Commits
+
+- docs(changelog): update changelog v1.2.0 [`3144fae`](https://github.com/highlightjs/highlightjs-apex/commit/3144faef9f59a5a76ece758a32e9e9ad1c627064)
+- chore: update package.json to v1.2.0 [`e2af1e6`](https://github.com/highlightjs/highlightjs-apex/commit/e2af1e67e63a2645faa9b75eb1fbf47a19b3b79b)
+
+## [v1.2.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.1...v1.2.0) - 2023-03-29
+
+## [v1.1.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.0...v1.1.1) - 2023-03-29
 
 ### Merged
 
@@ -19,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Create codeql.yml [`8f1af08`](https://github.com/highlightjs/highlightjs-apex/commit/8f1af08fa31f515393cc73ae9f29fa53d6b6eb42)
 - Create dependabot.yml [`c5da832`](https://github.com/highlightjs/highlightjs-apex/commit/c5da8326601a3c8feff1fb835ff4011c968a6135)
+- docs(changelog): update changelog v1.2.0 [`3144fae`](https://github.com/highlightjs/highlightjs-apex/commit/3144faef9f59a5a76ece758a32e9e9ad1c627064)
 - Readme typo [`faf2998`](https://github.com/highlightjs/highlightjs-apex/commit/faf2998257fbfa87cbe1a7138b2a0d32b8e7dcfa)
 
 ## [v1.1.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.0.0...v1.1.0) - 2022-06-02
