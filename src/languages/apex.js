@@ -75,7 +75,8 @@ export default function (hljs) {
 
   const LANGUAGE_VARS_RE = {
     match: regex.concat(/\b/, regex.either(...LANGUAGE_VAR_LIST), /\b/),
-    scope: 'variable.language'
+    scope: 'variable.language',
+    relevance: 0
   };
 
   // keyword
@@ -306,7 +307,7 @@ export default function (hljs) {
     /(\,?)-(?=\d)/, // number negative sign
   ];
   const PUNCTUATION = [
-    { match: regex.either(...PUNCTUATION_LIST), scope: 'punctuation' }
+    { match: regex.either(...PUNCTUATION_LIST), scope: 'punctuation', relevance: 0 }
   ];
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
@@ -558,7 +559,6 @@ export default function (hljs) {
     },
     illegal: MAIN_KEYWORD_LIST,
     contains: [
-      NUMBERS,
       hljs.APOS_STRING_MODE,
       COMMENT_LINE,
       COMMENT_BLOCK,
