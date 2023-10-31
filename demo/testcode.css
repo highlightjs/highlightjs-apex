@@ -124,6 +124,9 @@ most signatures will fit on a single lin */
 .attribute-signature {
 	white-space: nowrap;
 }
+.hljs-property{
+  color:#66D9EF;
+}
 
 .attribute-description {
 	font-weight: normal;
@@ -455,89 +458,57 @@ pre code {
 	font-size: 120%;
 	
 }
-
 /*
 
-Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-license.org/
-
+Monokai Sublime Apex style derived from Sublime MavensMate Monokai theme by David Schach https://github.com/dschach
+Sublime MavensMate Monokai theme by SubC4i https://github.com/SubC4i/Sublime-MavensMate-Monokai
+Monokai-Sublime style derived from Monokai by noformnocontent http://nn.mit-license.org/
+Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 */
 
-.hljs {
-	background: #23241f;
-	color: #f8f8f2;
-  }
-  
-  .hljs-tag,
-  .hljs-subst {
-	color: #f8f8f2;
-  }
-  
-  .hljs-strong,
-  .hljs-emphasis {
-	color: #a8a8a2;
-  }
-
-  .hljs-doctag {
-	color: silver;
-  }
-  
-  .hljs-bullet,
-  .hljs-quote,
-  .hljs-number,
-  .hljs-regexp,
-  .hljs-literal,
-  .hljs-link {
-	color: #ae81ff;
-  }
-  
-  .hljs-code,
-  .hljs-title,
-  .hljs-section,
-  .hljs-selector-class {
-	color: #a6e22e;
-  }
-  
-  .hljs-strong {
-	font-weight: bold;
-  }
-  
-  .hljs-emphasis {
-	font-style: italic;
-  }
-  
-  .hljs-keyword,
-  .hljs-selector-tag,
-  .hljs-name,
-  .hljs-attr {
-	color: #f92672;
-  }
-  
-  .hljs-symbol,
-  .hljs-attribute {
-	color: #66d9ef;
-  }
-  
-  .hljs-params,
-  .hljs-title.class_,
-  .hljs-class .hljs-title {
-	color: #f8f8f2;
-  }
-  
-  .hljs-string,
-  .hljs-type,
-  .hljs-built_in,
-  .hljs-selector-id,
-  .hljs-selector-attr,
-  .hljs-selector-pseudo,
-  .hljs-addition,
-  .hljs-variable,
-  .hljs-template-variable {
-	color: #e6db74;
-  }
-  
-  .hljs-comment,
-  .hljs-deletion,
-  .hljs-meta {
-	color: #75715e;
-  }
-  
+.hljs-addition{color:#A6E22E;background:#66852880}
+.hljs-attr{color:#FD971F;}
+.hljs-attribute{color:#66D9EF;}
+.hljs-built_in{color:#66D9EF;font-style:italic;}
+.hljs-bullet{color:#E6DB74;}
+.hljs-code{color:#FD971F;font-family: monospace;}
+.hljs-comment{color:#75715E;}
+.hljs-deletion{color:#F92672;background:#90274a80}
+.hljs-doctag{font-weight:700;}
+.hljs-emphasis{color:#66D9EF;font-style:italic;}
+.hljs-keyword{color:#F92672;}
+.hljs-link{color:#AE81FF;text-decoration:underline;}
+.hljs-literal{color:#66D9EF;}
+.hljs-meta .hljs-string{color:#CFCFC2;}
+.hljs-meta{color:#66D9EF;}
+.hljs-name{color:#F92672;}
+.hljs-number{color:#AE81FF;}
+.hljs-operator{color:#FD971F;}
+.hljs-params{color:#FD971F;font-style:italic;}
+.hljs-punctuation{color:#f8f8f2;}
+.hljs-quote{color:#CFCFC2;}
+.hljs-regexp{color:#AE81FF;}
+.hljs-section{color:#A6E22E;}
+.hljs-selector-attr{color:#66d9ef;}
+.hljs-selector-class{color:#A6E22E;}
+.hljs-selector-id{color:#E6DB74;}
+.hljs-selector-pseudo{color:#F8F8F2;}
+.hljs-selector-tag{color:#F92672;}
+.hljs-string{color:#E6DB74;}
+.hljs-strong{color:#66D9EF;font-style:bold;}
+.hljs-subst{color:#F8F8F2;}
+.hljs-symbol{color:#66D9EF;}
+.hljs-tag{color:#F8F8F2;}
+.hljs-template-variable{color:#E6DB74;}
+.hljs-title.class_{color:#A6E22E;}
+.hljs-title.class_.inherited__{color:#a6e22eff;font-style:italic;text-decoration:underline;}
+.hljs-title.function_{color:#A6E22E;}
+.hljs-title.function_invoke__{color:#66d9efff;}
+.hljs-title{color:#A6E22E;}
+.hljs-type{color:#66D9EF;font-style:italic;}
+.hljs-variable.constant_{color:#AE81FF;}
+.hljs-variable.language_{color:#F92672;}
+.hljs-variable{color:#F8F8F2;}
+.hljs{color:#f8f8f2;background-color:#272822;
+	overflow-x: hidden !important;
+	}

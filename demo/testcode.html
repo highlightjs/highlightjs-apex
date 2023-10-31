@@ -4,10 +4,9 @@
 		<title>TEST APEX CODE</title>
 		<meta charset="UTF-8" />
 		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.js"></script>
-		<!-- <script src="../dist/highlight.js"/> -->
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
-		<!--   <script src="../src/languages/apex.js"/> -->
-		<link rel="stylesheet" href="./testcode.css" />
+		<!-- <link rel="stylesheet" href="./testcode.css" /> -->
+    <link rel="stylesheet" href="/Users/dschach/Documents/VSCode/highlight.js/src/styles/monokai-sublime-apex.css" />"
 		<script>
 			hljs.debugMode();
 			hljs.highlightAll();
@@ -17,20 +16,67 @@
 				white-space: pre-wrap;
 				font-size: 120%;
 			}
+      body {
+        background: #23241f;
+	color: #f8f8f2;
+      }
 		</style>
 	</head>
 
 	<body>
-		<pre><code>
-    /*
-    Copyright (c) 2022, salesforce.com, inc.
-    All rights reserved.
-    SPDX-License-Identifier: BSD-3-Clause
-    For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
-    */
+		<pre><code class="language-apex">
+    Map&lt;Id, CustomObject__c&gt; myMap = new Map&lt;Id, CustomObject__c&gt;([SELECT Id FROM CustomObject__c WHERE Id NOT IN :newRecordsMap.keySet()]);
+    Map&lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d};
+
+    delete myAccount;
+    Account a;
+    String s;
+    delete [SELECT Id FROM Account];
+
+    Integer myInt = 8 - 7++;
+
+    public List&lt;String&gt; myString { get; set; }
+
+    List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
+
+    
+    String queryText = 'SELECT Id, Name, ';
+    acctid = System.currentPageReference().getParameters().get('Id');
+    System.assert(true);
+    System.requestVersion();
+
+    @IsTest
+    private without sharing class myTestClass {
+      myMap?.get('Id');
+    }
+    System.URL.getCurrentRequestUrl();
+    URL.getCurrentRequestUrl();
+
+    public List&lt;SelectOption&gt; recordTypes { get; private set; }
+
+    Database.insert(myAccounts, false, AccessLevel.USER_MODE);
+    delete myAccount;
+    delete [SELECT Id FROM Account];
+    myAcct = (Account)myacct;
+
+    public String myString { get; set; }
+
+    List&lt;SObject&gt; mylist = [SELECT Name, StreetAddress__c, COUNT(),
+      (SELECT Id FROM Contacts)
+      FROM Warehouse__c.Contacts__r
+      WHERE DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi') < 20 
+      AND Date__kav NOT IN LAST_N_DAYS:80
+      ORDER BY DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi')
+      LIMIT 10];
+
+    String queryText = 'SELECT Id, Name, AccountId, FirstName, LastName, mailingcountry, ' +
+				'FROM Contact WHERE AccountId = :acctid ORDER BY ' +
+				String.escapeSingleQuotes(SortFullExp) +
+				' NULLS LAST LIMIT 1000';
 
     /**
      * @author {@link [David Schach](https://github.com/dschach)} test@email.com
+     * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/MIT
      * @group Visualforce
      * @since 2022
      */
@@ -47,6 +93,7 @@
         actionPlan = (ActionPlan__c) stdController.getRecord();
         truestory = req.setHeader('X-Password', '{!$Credential.Password}');
       }
+    }
     
       /**
       * @description Constructor using passed-in class name constructor for faster performance
@@ -109,16 +156,7 @@
           Map&lt;Id, APTask__c&gt; apTaskMap = new Map&lt;Id, APTask__c&gt;(
             [
               SELECT
-                Action_Plan__c,
-                ActivityDate__c,
-                Controller__c,
-                Controller__r.Subject__c,
-                DaysFromStart__c,
-                Dependent__c,
                 Id,
-                IsClosed__c,
-                Minutes_Reminder__c,
-                User__c,
                 User__r.Name
               FROM APTask__c
               WHERE Action_Plan__c = :actionPlan.Id
@@ -162,20 +200,6 @@
           }
         }
         return false;
-      }
-
-      public String getRelatedObjectLabel() {
-        String objLabel = '';
-    
-        for (String f : ActionPlansUtilities.getCustomRelationshipFields()) {
-          if (actionPlan.get(f) != null) {
-            Id objId = (Id) actionPlan.get(f);
-            Schema.DescribeSObjectResult dsr = objId.getSObjectType().getDescribe();
-            objLabel = dsr.getLabel();
-            break;
-          }
-        }
-        return objLabel;
       }
     
       /**
@@ -386,9 +410,7 @@
     ActionPlansTriggerHandlers.triggerhandlerActionPlanAccount(Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap, Trigger.operationType);
       ActionPlansTriggerHandlers.actionPlansSObjectTriggerHandler('Account');
   }
-    </code></pre>
 
-		<pre><code>
   /**
   * SHOULD BE RECOGNIZED AS JAVA
   * @author John Smith 
@@ -406,10 +428,7 @@
       }
     }
   }
-      
-    </code></pre>
-		<p>-------NEW_CODEBLOCK----------</p>
-		<pre><code class="">
+
   public without sharing class AccountSampleTriggerHandler extends TriggerHandler, Database.schedulable, Batchable&lt;SObject&gt; {
     private List&lt;Account&gt; newRecords;
     private List&lt;Account&gt; oldRecords;
@@ -521,15 +540,13 @@
       }
     }
 
-
-
   trigger CTrig on Custom__c (before insert){
     System.debug('inserting a record');
     upsert myRecord__c;
   }
 
     </code></pre>
-		<pre><code>
+		<!-- <pre><code>
   /**
   * @description Account Sample handler
   * @author [David Schach](https://github.com/dschach)
@@ -593,6 +610,6 @@
       // do things here
     }
   }
-</code></pre>
+</code></pre> -->
 	</body>
 </html>
