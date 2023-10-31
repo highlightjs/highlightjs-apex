@@ -1,0 +1,60 @@
+/*
+
+Monokai Sublime Apex style derived from Sublime MavensMate Monokai theme by David Schach https://github.com/dschach
+Sublime MavensMate Monokai theme by SubC4i https://github.com/SubC4i/Sublime-MavensMate-Monokai
+Monokai-Sublime style derived from Monokai by noformnocontent http://nn.mit-license.org/
+Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
+*/
+
+.hljs-addition{color:#A6E22E;background:#66852880}
+.hljs-attr{color:#F92672;}
+.hljs-attribute{color:#66D9EF;}
+.hljs-built_in{color:#66D9EF;font-style:italic;}
+.hljs-bullet{color:#E6DB74;}
+.hljs-code{color:#FD971F;font-family: monospace;}
+.hljs-comment{color:#75715E;}
+.hljs-deletion{color:#F92672;background:#90274a80}
+.hljs-doctag{color:#F92672;font-weight:700;}
+.hljs-emphasis{color:#66D9EF;font-style:italic;}
+.hljs-keyword{color:#F92672;}
+.hljs-link{color:#AE81FF;text-decoration:underline;}
+.hljs-literal{color:#AE81FF;}
+.hljs-meta .hljs-string{color:#CFCFC2;}
+.hljs-meta{color:#66D9EF;}
+.hljs-name{color:#F92672;}
+.hljs-number{color:#AE81FF;font-style: normal;}
+.hljs-operator{color:#F92672;}
+.hljs-params{color:#F8F8F2;}
+.hljs-punctuation{color:#f8f8f2;}
+.hljs-quote{color:#CFCFC2;}
+.hljs-regexp{color:#AE81FF;}
+.hljs-section{color:#A6E22E;}
+.hljs-selector-attr{color:#66d9ef;}
+.hljs-selector-class{color:#A6E22E;}
+.hljs-selector-id{color:#E6DB74;}
+.hljs-selector-pseudo{color:#F8F8F2;}
+.hljs-selector-tag{color:#F92672;}
+.hljs-string{color:#E6DB74;font-style: normal;}
+.hljs-strong{color:#66D9EF;font-style:bold;}
+.hljs-subst{color:#F8F8F2;}
+.hljs-symbol{color:#66D9EF;}
+.hljs-tag{color:#F8F8F2;}
+.hljs-template-variable{color:#E6DB74;}
+.hljs-title.class_{color:#A6E22E;}
+.hljs-title.class_.inherited__{color:#a6e22eff;font-style:italic;}
+.hljs-title.function_{color:#A6E22E;}
+.hljs-title.function_.invoke__{color:#A6E22E;}
+.hljs-title{color:#A6E22E;}
+.hljs-type{color:#66D9EF;font-style:italic;}
+.hljs-variable.constant_{color:#AE81FF;}
+.hljs-variable.language_{color:#F92672;}
+.hljs-variable{color:#F8F8F2;}
+.hljs{color:#f8f8f2;background-color:#272822;overflow-x: hidden !important;}
+
+.hljs-soql {color:#66D9EF;font-style: italic;}
+.hljs-soql .hljs-type{font-style: normal;}
+.hljs-soql .hljs-variable{color:#F8F8F2;font-style: normal;}
+.hljs-soql .hljs-keyword{color:#FD971F;}
+.hljs-soql .hljs-punctuation{font-style: normal;}
+.hljs-soql .hljs-title.function_.invoke__{color:#A6E22E;font-style:normal;}
+.hljs-soql .hljs-operator{font-style: normal;}
