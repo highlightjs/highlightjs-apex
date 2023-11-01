@@ -312,6 +312,14 @@ export default function (hljs) {
     }
   ];
 
+  const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
+    contains: [
+      {match: /\\'/,
+      scope: 'literal'}
+    ],
+    scope: 'string'
+  });
+
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
     relevance: 0
   });
@@ -346,9 +354,11 @@ export default function (hljs) {
         contains: [hljs.BACKSLASH_ESCAPE, PUNCTUATION],
         relevance: 0
       },
-      hljs.inherit(hljs.APOS_STRING_MODE, { scope: 'string' })
+      STRINGS
     ]
   });
+
+  
 
   const OPERATORS_RE = [
     /(?<!=|!)\=(?!=|>)/, // assignment
@@ -411,7 +421,7 @@ export default function (hljs) {
           },
           contains: [OPERATORS]
         },
-        hljs.inherit(hljs.APOS_STRING_MODE, { scope: 'string' }),
+        STRINGS,
         NUMBERS
       ],
       keywords: {
@@ -566,7 +576,7 @@ export default function (hljs) {
     },
     illegal: MAIN_KEYWORD_LIST,
     contains: [
-      hljs.APOS_STRING_MODE,
+      STRINGS,
       COMMENT_LINE,
       COMMENT_BLOCK,
       OPERATORS,
@@ -697,7 +707,7 @@ export default function (hljs) {
     illegal: MAIN_KEYWORD_LIST,
     contains: [
       NUMBERS,
-      hljs.APOS_STRING_MODE,
+      STRINGS,
       COMMENT_LINE,
       COMMENT_BLOCK,
       COLLECTION_REGEX,
@@ -1025,7 +1035,7 @@ export default function (hljs) {
       NUMBERS,
       METHOD_CALL,
       OPERATORS,
-      hljs.APOS_STRING_MODE,
+      STRINGS,
       PUNCTUATION
     ],
     illegal: '::'
@@ -1125,7 +1135,7 @@ export default function (hljs) {
       end: /\)/,
       endScope: 'punctuation',
       //scope: 'database_dml',
-      contains: [PARAMS, hljs.APOS_STRING_MODE, COMMENT_BLOCK, COMMENT_LINE]
+      contains: [PARAMS, STRINGS, COMMENT_BLOCK, COMMENT_LINE]
     }
   ];
 
@@ -1208,7 +1218,7 @@ export default function (hljs) {
       DML_OPERATIONS,
       EXCEPTION,
       FOR_LOOP,
-      hljs.APOS_STRING_MODE,
+      STRINGS,
       INSTANTIATE,
       LANGUAGE_VARS_RE,
       METHOD_CALL,
