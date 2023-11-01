@@ -31,7 +31,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-meta{color:#66D9EF;}
 .hljs-name{color:#F92672;}
 .hljs-number{color:#AE81FF;font-style: normal;}
-.hljs-operator{color:#F92672;font-style: normal;}
+.hljs-operator{color:#F92672;}
 .hljs-params{color:#F8F8F2;}
 .hljs-punctuation{color:#f8f8f2;}
 .hljs-quote{color:#CFCFC2;}
@@ -56,13 +56,13 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-type{color:#66D9EF;font-style:italic;}
 .hljs-variable.constant_{color:#AE81FF;}
 .hljs-variable.language_{color:#F92672;}
-.hljs-variable{color:#FD971F;}
+.hljs-variable{color:#F8F8F2;}
 
 
-.hljs-soql {color:#66D9EF;}
-.hljs-soql .hljs-type{}
-.hljs-soql .hljs-variable{color:#F8F8F2;}
-.hljs-soql .hljs-keyword{color:#FD971F;font-style: italic;}
-.hljs-soql .hljs-punctuation{}
-.hljs-soql .hljs-title.function_.invoke__{color:#A6E22E;}
-.hljs-soql .hljs-operator{}
+.hljs-soql {color:#66D9EF;font-style: italic;}
+.hljs-soql .hljs-type{font-style: normal;}
+.hljs-soql .hljs-variable{color:#F8F8F2;font-style: normal;}
+.hljs-soql .hljs-keyword{color:#FD971F;}
+.hljs-soql .hljs-punctuation{font-style: normal;}
+.hljs-soql .hljs-title.function_.invoke__{color:#A6E22E;font-style:normal;}
+.hljs-soql .hljs-operator{font-style: normal;}

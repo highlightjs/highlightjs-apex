@@ -11,9 +11,8 @@ export default function (hljs) {
 
   const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
   const APEX_IDENT_WORD_RE = '\\b' + APEX_IDENT_RE + '\\b';
-  const WORD_PAREN = APEX_IDENT_RE + '(?=\\s*\\()';
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
-  const PARENS_LOOKAHEAD = /(?=\s*\()/;
+  const PARENS_LOOKAHEAD_RE = /(?=\s*\()/;
   const SPACE = /\s+/;
   /**
    * @param {...(RegExp | string) } args
@@ -49,6 +48,7 @@ export default function (hljs) {
     relevance: 0
   };
 
+  // keyword
   const MAIN_KEYWORD_LIST = [
     'try',
     'catch',
@@ -275,7 +275,7 @@ export default function (hljs) {
     'operationType'
   ];
 
-  const BUILT_INS = [].concat(...NAMESPACE_LIST).concat(...SYSTEM_CLASSES);
+  const BUILT_INS = NAMESPACE_LIST.concat(...SYSTEM_CLASSES);
 
   const LITERALS = ['false', 'true', 'null'];
 
@@ -289,7 +289,7 @@ export default function (hljs) {
     $pattern: regex.concat(/(?<!\.)/, APEX_IDENT_WORD_RE),
     keyword: MAIN_KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST).concat(...DMLS),
     'variable.language': LANGUAGE_VAR_LIST,
-    built_in: BUILT_INS,
+    //built_in: BUILT_INS,
     type: TYPES,
     literal: LITERALS
   };
@@ -479,7 +479,7 @@ export default function (hljs) {
       end: /(?=\(|\{|;)/,
       scope: 'instantiate',
       contains: [
-        { match: WORD_PAREN, scope: 'type' },
+        { match: [APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE], scope: {1: 'type' }},
         COMMENT_LINE,
         OPERATORS,
         COLLECTION_REGEX
@@ -500,7 +500,7 @@ export default function (hljs) {
       scope: { 1: 'built_in', 2: 'punctuation', 3: 'variable.constant' }, // TODO: Find a better scope for the enum value
       relevance: 0
     },
-    {
+    /* {
       match: [
         /\b/,
         regex.either(...SYSTEM_CLASSES),
@@ -508,23 +508,23 @@ export default function (hljs) {
         APEX_IDENT_RE,
         regex.lookahead(/[\.\(\s]/)
       ],
-      scope: { 2: 'built_in', 3: 'punctuation', 4: 'keyword' }
-    },
+      scope: { 2: 'built_in', 3: 'punctuation', 4: 'keyword system' }
+    }, */
     {
       match: regex.concat(
-        regex.either(...NAMESPACE_LIST),
+        regex.either(...BUILT_INS),
         regex.lookahead(/\./)
       ),
-      scope: 'built_in'
+      scope: 'built_in namespace'
     },
     {
       match: [
-        regex.concat('(?<=', regex.either(...NAMESPACE_LIST), ')'),
+        regex.concat('(?<=\\b', regex.either(...BUILT_INS), ')'),
         /\./,
         APEX_IDENT_RE,
-        PARENS_LOOKAHEAD
+        regex.lookahead(/[\.\(\s]/)
       ],
-      scope: { 3: 'keyword' }
+      scope: {2: 'punctuation',3: 'keyword priority' }
     },
 
     {
@@ -540,7 +540,7 @@ export default function (hljs) {
     {
       begin: regex.concat(/\b/, 'Trigger', /\b/),
       beginScope: 'built_in',
-      end: [/\./, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD],
+      end: [/\./, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE],
       endScope: { 1: 'punctuation', 2: 'title.function.invoke' },
       relevance: 0
     },
@@ -634,7 +634,7 @@ export default function (hljs) {
       scope: 'built_in'
     },
     {
-      match: regex.concat(/(?<=\.)\b/, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD),
+      match: regex.concat(/(?<=\.)\b/, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE),
       scope: 'title.function.invoke',
       starts: { contains: [PARAMS] },
       relevance: 0
@@ -716,7 +716,7 @@ export default function (hljs) {
 
   const METHOD_DECLARATION = {
     // method declaration
-    match: [/(?!new)(?<=(\<|\>|\w|_))\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD],
+    match: [/(?!new)(?<=(\<|\>|\w|_))\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD_RE],
     scope: { 2: 'title.function' },
     relevance: 0,
     starts: PARAMS_DECLARATION
@@ -783,7 +783,7 @@ export default function (hljs) {
     {
       // Constructor
       // Matches public/privatE/protected methodname parens
-      match: [/(public|private|protected)\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD],
+      match: [/(public|private|protected)\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD_RE],
       scope: {
         1: 'keyword',
         2: 'constructor'
@@ -853,9 +853,11 @@ export default function (hljs) {
     'SELECT',
     'SNIPPET',
     'SORT',
+    'SPELL_CORRECTION',
     'STANDARD',
     'USER_MODE',
     'WHERE',
+    'PricebookId',
     'WITH',
     'SECURITY_ENFORCED',
     'USING',
@@ -879,30 +881,29 @@ export default function (hljs) {
     'ABOVE',
     'AND',
     'AT',
+    'BY',
+    'CATEGORY',
+    'DATA',
+    'FIRST',
+    'FOR',
+    'GROUP',
     'HAVING',
     'IN',
+    'LAST',
     'LIKE',
     'LIMIT',
     'LISTVIEW',
     'NOT',
+    'NULLS',
     'OFFSET',
     'OR',
+    'REFERENCE',
     'TRACKING',
     'TYPEOF',
     'UPDATE',
-    'VIEWSTAT',
-    'FOR',
-    'REFERENCE',
     'UPDATE',
     'VIEW',
-    'GROUP',
-    'BY',
-    'NULLS',
-    'FIRST',
-    'LAST',
-    'DATA',
-    'CATEGORY',
-    'PricebookId'
+    'VIEWSTAT'
   ];
 
   const SOQL_FUNCTIONS = [
@@ -912,10 +913,6 @@ export default function (hljs) {
     'convertTimezone',
     'COUNT_DISTINCT',
     'COUNT',
-    'DAY_IN_MONTH',
-    'DAY_IN_WEEK',
-    'DAY_IN_YEAR',
-    'DAY_ONLY',
     'DISTANCE',
     'EXCLUDES',
     'FORMAT',
@@ -923,17 +920,19 @@ export default function (hljs) {
     'GROUP BY CUBE',
     'GROUP BY ROLLUP',
     'GROUPING',
-    'HOUR_IN_DAY',
     'INCLUDES',
     'MAX',
     'MIN',
     'SUM',
-    'toLabel',
-    'WEEK_IN_MONTH',
-    'WEEK_IN_YEAR'
+    'toLabel'
   ];
 
-  const SOQL_DATES = [
+  const SOQL_DATE_FUNCTIONS = [
+    'DAY_IN_MONTH',
+    'HOUR_IN_DAY',
+    'DAY_IN_WEEK',
+    'DAY_IN_YEAR',
+    'DAY_ONLY',
     'CALENDAR_MONTH',
     'CALENDAR_QUARTER',
     'CALENDAR_YEAR',
@@ -942,7 +941,9 @@ export default function (hljs) {
     'FISCAL_YEAR',
     'TODAY',
     'TOMORROW',
-    'YESTERDAY'
+    'YESTERDAY',
+    'WEEK_IN_MONTH',
+    'WEEK_IN_YEAR'
   ];
 
   const SOQL_QUERY = {
@@ -959,34 +960,33 @@ export default function (hljs) {
         .concat(...SOQL_KEYWORDS)
         .concat(...SOQL_OPERATORS), // * orange italic
       type: SOQL_FUNCTIONS, // * blue italic
-      literal: [].concat(...SOQL_DATES).concat(...KEYWORDS.literal),
+      'title.function': SOQL_DATE_FUNCTIONS, // * blue normal
+      literal: KEYWORDS.literal,
       built_in: BUILT_INS
     },
     contains: [
       {
-        begin: /SELECT\b/,
+        begin: /\bSELECT\b/,
         beginScope: 'keyword',
-        //returnBegin: true,
-        ends: /(?=\bFROM\b)/,
+        //beginKeyword: 'SELECT',
+        end: /\bFROM\b/,
         returnEnd: true,
         scope: 'select clause',
         contains: [
-          /* {
-            match: [SPACE, APEX_IDENT_RE, SPACE],
-            scope: { 2: 'subst' } 
-          }, */
-           {
-          match: [/(?=\s|\,)/, APEX_IDENT_RE, /(?=\s|\,)/],
-        scope: { 2: 'subst' } } // * back to main text color
+          PUNCTUATION,
+          {
+            match: [/(?=[\s\,])/, APEX_IDENT_RE, /(?=[\s\,])/],
+            scope: { 2: 'subst' }
+          } // * back to main text color
         ]
       },
       {
-        begin: [/\bFROM\s/, APEX_IDENT_WORD_RE],
+        begin: [/\bFROM/, SPACE, APEX_IDENT_WORD_RE],
         beginScope: {
           1: 'keyword',
-          2: 'type'
+          3: 'type'
         },
-        //scope: 'from_clause',
+        scope: 'from_clause',
         end: /(?=\]|\s|\))/,
         contains: [
           {
@@ -1013,7 +1013,7 @@ export default function (hljs) {
         ],
         scope: {
           1: 'keyword',
-          2: 'keyword',
+          2: 'operator',
           3: 'number'
         },
         relevance: 10
@@ -1059,7 +1059,7 @@ export default function (hljs) {
         scope: 'variable'
       },
       {
-        match: regex.concat(APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD),
+        match: regex.concat(APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE),
         scope: 'title.function.invoke'
       },
       {
@@ -1116,7 +1116,7 @@ export default function (hljs) {
      *
      */
     {
-      begin: [/\bDatabase\b/, /\./, APEX_IDENT_RE, PARENS_LOOKAHEAD],
+      begin: [/\bDatabase\b/, /\./, regex.either(...DMLS), PARENS_LOOKAHEAD_RE],
       beginScope: {
         1: 'built_in',
         2: 'punctuation',
