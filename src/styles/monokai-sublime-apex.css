@@ -98,6 +98,9 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-variable {
 	color: #f8f8f2;
 }
+.hljs-params .hljs-variable {
+	color: #fd971f;
+}
 .hljs-string {
 	color: #e6db74;
 	font-style: normal;
