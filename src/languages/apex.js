@@ -12,17 +12,9 @@ export default function (hljs) {
   const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
   const APEX_IDENT_WORD_RE = '\\b' + APEX_IDENT_RE + '\\b';
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
-  const PARENS_LOOKAHEAD_RE = /(?=\s*\()/;
+  const PARENS_LOOKAHEAD = /(?=\s*\()/;
   const SPACE = /\s+/;
-  /**
-   * @param {...(RegExp | string) } args
-   * @returns {string}
-   */
-  function arrayJoin(...args) {
-    const joined = args.map((x) => source(x)).join('|');
-    return joined;
-  }
-
+  
   /**
    * @param {...(RegExp | string) } args
    * @returns {string}
@@ -49,7 +41,7 @@ export default function (hljs) {
   };
 
   // keyword
-  const MAIN_KEYWORD_LIST = [
+  const KEYWORD_LIST = [
     'try',
     'catch',
     'finally',
@@ -287,7 +279,7 @@ export default function (hljs) {
 
   const KEYWORDS = {
     $pattern: regex.concat(/(?<!\.)/, APEX_IDENT_WORD_RE),
-    keyword: MAIN_KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST).concat(...DMLS),
+    keyword: KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST).concat(...DMLS),
     'variable.language': LANGUAGE_VAR_LIST,
     //built_in: BUILT_INS,
     type: TYPES,
@@ -489,7 +481,7 @@ export default function (hljs) {
       end: /(?=\(|\{|;)/,
       scope: 'instantiate',
       contains: [
-        { match: [APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE], scope: {1: 'type' }},
+        { match: [APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD], scope: {1: 'type' }},
         COMMENT_LINE,
         OPERATORS,
         COLLECTION_REGEX
@@ -550,7 +542,7 @@ export default function (hljs) {
     {
       begin: regex.concat(/\b/, 'Trigger', /\b/),
       beginScope: 'built_in',
-      end: [/\./, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE],
+      end: [/\./, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD],
       endScope: { 1: 'punctuation', 2: 'title.function.invoke' },
       relevance: 0
     },
@@ -574,7 +566,7 @@ export default function (hljs) {
     keywords: {
       KEYWORDS
     },
-    illegal: MAIN_KEYWORD_LIST,
+    illegal: KEYWORD_LIST,
     contains: [
       STRINGS,
       COMMENT_LINE,
@@ -644,7 +636,7 @@ export default function (hljs) {
       scope: 'built_in'
     },
     {
-      match: regex.concat(/(?<=\.)\b/, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE),
+      match: regex.concat(/(?<=\.)\b/, APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD),
       scope: 'title.function.invoke',
       starts: { contains: [PARAMS] },
       relevance: 0
@@ -704,7 +696,7 @@ export default function (hljs) {
     keywords: {
       KEYWORDS
     },
-    illegal: MAIN_KEYWORD_LIST,
+    illegal: KEYWORD_LIST,
     contains: [
       NUMBERS,
       STRINGS,
@@ -726,7 +718,7 @@ export default function (hljs) {
 
   const METHOD_DECLARATION = {
     // method declaration
-    match: [/(?!new)(?<=(\<|\>|\w|_))\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD_RE],
+    match: [/(?!new)(?<=(\<|\>|\w|_))\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD],
     scope: { 2: 'title.function' },
     relevance: 0,
     starts: PARAMS_DECLARATION
@@ -781,7 +773,7 @@ export default function (hljs) {
       beginScope: { 2: 'keyword' },
       end: /(?=\{)/,
       //scope: 'class_declaration',
-      keywords: { type: TYPES, keyword: MAIN_KEYWORD_LIST },
+      keywords: { type: TYPES, keyword: KEYWORD_LIST },
       contains: [
         {
           match: [/(?<=\bclass)\s+/, APEX_IDENT_RE],
@@ -793,7 +785,7 @@ export default function (hljs) {
     {
       // Constructor
       // Matches public/privatE/protected methodname parens
-      match: [/(public|private|protected)\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD_RE],
+      match: [/(public|private|protected)\s+/, APEX_IDENT_RE, PARENS_LOOKAHEAD],
       scope: {
         1: 'keyword',
         2: 'constructor'
@@ -1069,7 +1061,7 @@ export default function (hljs) {
         scope: 'variable'
       },
       {
-        match: regex.concat(APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD_RE),
+        match: regex.concat(APEX_IDENT_WORD_RE, PARENS_LOOKAHEAD),
         scope: 'title.function.invoke'
       },
       {
@@ -1126,7 +1118,7 @@ export default function (hljs) {
      *
      */
     {
-      begin: [/\bDatabase\b/, /\./, regex.either(...DMLS), PARENS_LOOKAHEAD_RE],
+      begin: [/\bDatabase\b/, /\./, regex.either(...DMLS), PARENS_LOOKAHEAD],
       beginScope: {
         1: 'built_in',
         2: 'punctuation',
