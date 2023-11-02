@@ -81,8 +81,8 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-params .hljs-variable {
 	color: #fd971f;
 }
-.hljs-comment .hljs-variable{
-	color:#fd971f;
+.hljs-comment .hljs-variable {
+	color: #fd971f;
 	font-style: italic;
 }
 .hljs-meta .hljs-string,
@@ -128,27 +128,31 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 }
 .hljs-hidden,
 .hljs-string .hljs-hidden {
-	display:none;
+	display: none;
 }
 
 .hljs-soql {
-	color:#66d9ef;font-style: italic;
+	color: #66d9ef;
+	font-style: italic;
 }
-.hljs-soql .hljs-variable{
-	color:#f8f8f2;font-style: normal;
-}
-.hljs-soql .hljs-keyword{
-	color:#fd971f;
-}
-.hljs-soql .hljs-punctuation{
+.hljs-soql .hljs-variable {
+	color: #f8f8f2;
 	font-style: normal;
 }
-.hljs-soql .hljs-title.function_.invoke__{
-	color:#a6e22e;font-style:normal;
+.hljs-soql .hljs-keyword {
+	color: #fd971f;
 }
-.hljs-soql .hljs-operator{
+.hljs-soql .hljs-punctuation {
 	font-style: normal;
 }
-.hljs-soql .hljs-title.function_{
-	color:#66d9ef;font-style: italic;
+.hljs-soql .hljs-title.function_.invoke__ {
+	color: #a6e22e;
+	font-style: normal;
+}
+.hljs-soql .hljs-operator {
+	font-style: normal;
+}
+.hljs-soql .hljs-title.function_ {
+	color: #66d9ef;
+	font-style: italic;
 }

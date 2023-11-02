@@ -1,6 +1,6 @@
 {
 	"name": "highlightjs-apex",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Apex Language of Salesforce highlighting plugin for highlight.js",
 	"main": "src/languages/apex.js",
 	"scripts": {
@@ -13,14 +13,6 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/highlightjs/highlightjs-apex.git"
-	},
-	"auto-changelog": {
-		"output": "HISTORY.md",
-		"template": "keepachangelog",
-		"unreleased": true,
-		"hideCredit": true,
-		"tagPrefix": "v",
-		"commitLimit": 1000
 	},
 	"keywords": [
 		"Apex",
