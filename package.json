@@ -6,8 +6,10 @@
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"mocha": "mocha test/markup",
-		"npm-patch": "npm version patch && npm publish",
-		"npm-beta": "npm publish --tag beta"
+		"npm-beta": "npm version patch && npm publish --tag beta",
+    "npm-patch": "npm version patch && npm publish",
+		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
+		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
 	},
 	"repository": {
 		"type": "git",

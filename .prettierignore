@@ -5,3 +5,8 @@
 node_modules
 .localdevserver
 .vscode
+
+*.txt
+
+test/index.js
+*.png

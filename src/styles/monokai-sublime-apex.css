@@ -15,7 +15,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 */
 
 .hljs {
-	background-color: #272822;
+	background-color: #272822 !important;
 	background: #272822;
 	color: #f8f8f2;
 }

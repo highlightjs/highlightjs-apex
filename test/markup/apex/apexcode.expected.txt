@@ -1,50 +1,51 @@
 <span class="hljs-comment">/**
  * <span class="hljs-doctag">@author</span> John Smith
  */</span>
-<span class="hljs-meta">@IsTest</span>(Seealldata<span class="hljs-operator">=</span><span class="hljs-literal">true</span>)
-<span class="hljs-keyword">public</span> <span class="hljs-keyword">with sharing</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">L2Char</span> <span class="hljs-keyword">implements</span> <span class="hljs-built_in">Database</span>.batchable {
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-variable language_">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ERROR</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>x0001;
+<span class="hljs-meta">@IsTest</span><span class="hljs-punctuation">(</span>Seealldata<span class="hljs-operator">=</span><span class="hljs-literal">true</span><span class="hljs-punctuation">)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">with sharing</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">L2Char</span> <span class="hljs-keyword">implements</span> <span class="hljs-built_in">Database</span>.<span class="hljs-title class_ inherited__">batchable</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ERROR</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x0001</span><span class="hljs-punctuation">;</span>
 
-  <span class="hljs-meta">@InvocableApex</span>(label<span class="hljs-operator">=</span><span class="hljs-string">&#x27;my invocable&#x27;</span>)
-  <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">moveTo</span>(
-    <span class="hljs-type">integer</span> x, 
-    <span class="hljs-type">integer</span> y, 
-    <span class="hljs-type">integer</span> z
-  ) {
+  <span class="hljs-meta">@InvocableMethod</span><span class="hljs-punctuation">(</span>label<span class="hljs-operator">=</span><span class="hljs-string">&#x27;my invocable&#x27;</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">moveTo</span><span class="hljs-params declare"><span class="hljs-punctuation">(</span>
+    <span class="hljs-type">Integer</span> <span class="hljs-variable">x</span><span class="hljs-punctuation">,</span> 
+    <span class="hljs-type">Integer</span> <span class="hljs-variable">y</span><span class="hljs-punctuation">,</span> 
+    <span class="hljs-type">Integer</span> <span class="hljs-variable">z</span>
+  <span class="hljs-punctuation">)</span></span> <span class="hljs-punctuation">{</span>
     
     
-    <span class="hljs-type">Account</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Account</span>();
-    a.Custom__c <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;stringvalue&#x27;</span>;
-    <span class="hljs-built_in">insert</span> a;
-    <span class="hljs-type">Boolean</span> <span class="hljs-variable">ai</span> <span class="hljs-operator">=</span> (<span class="hljs-type">Boolean</span>) <span class="hljs-literal">false</span>;
-    <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">debug</span>(<span class="hljs-string">&#x27;Should not be called&#x27;</span>);
-    <span class="hljs-title function_">if</span> (<span class="hljs-number">1</span><span class="hljs-operator"> &gt; </span><span class="hljs-number">5</span>) { <span class="hljs-comment">// wtf!?
-</span>      <span class="hljs-built_in">Database</span>.<span class="hljs-title function_ invoke__">insert</span>(myAccounts);
-    }
-  }
-}
+    Account <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Account</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    a<span class="hljs-punctuation">.</span>Custom__c <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;stringvalue&#x27;</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">insert</span> a<span class="hljs-punctuation">;</span>
+    <span class="hljs-type">Boolean</span> <span class="hljs-variable">ai</span> <span class="hljs-operator">=</span> <span class="hljs-punctuation">(</span><span class="hljs-type">Boolean</span><span class="hljs-punctuation">)</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-built_in">System</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">debug</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#x27;Should not be called&#x27;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator"> &gt; </span><span class="hljs-number">5</span> <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-operator">!</span><span class="hljs-built_in">Test</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">isRunningTest</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span> <span class="hljs-comment">// wtf!?
+</span>      <span class="hljs-built_in">Database</span><span class="hljs-punctuation">.</span><span class="hljs-keyword invoke_database">insert</span>(<span class="hljs-variable">myAccounts</span><span class="hljs-punctuation">,</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
 
 <span class="hljs-meta">@TestSetup</span>
-<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">makeData</span>(<span class="hljs-type">Boolean</span> a){
-  <span class="hljs-type">Custom__c</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Custom__c</span>();
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">makeData</span><span class="hljs-params declare"><span class="hljs-punctuation">(</span><span class="hljs-type">Boolean</span> <span class="hljs-variable">a</span><span class="hljs-punctuation">)</span></span><span class="hljs-punctuation">{</span>
+  <span class="hljs-type">Custom__c</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Custom__c</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
   
-  <span class="hljs-keyword">for</span>(<span class="hljs-type">Account</span> a : <span class="hljs-variable">acctLis</span> ){
-    <span class="hljs-built_in">ConnectApi</span>.<span class="hljs-built_in">insert</span> a;
-  }
-}
+  <span class="hljs-keyword">for</span>(<span class="hljs-type">Account</span> <span class="hljs-variable">a</span> <span class="hljs-operator">:</span> <span class="hljs-variable">acctLis</span> <span class="hljs-punctuation">)</span>{
+    <span class="hljs-built_in">ConnectApi</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">insert</span> a<span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
 
-<span class="hljs-keyword">private</span> <span class="hljs-keyword">testMethod</span> <span class="hljs-type">void</span> <span class="hljs-title function_">testme</span>(){
-  <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">assert</span>(<span class="hljs-literal">true</span>);
-}
+<span class="hljs-meta">@isTest</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">testme</span><span class="hljs-params declare"><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span></span><span class="hljs-punctuation">{</span>
+  <span class="hljs-built_in">System</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">assert</span><span class="hljs-punctuation">(</span><span class="hljs-literal">true</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
 
 <span class="hljs-meta">@testVisible</span>
-<span class="hljs-keyword">private</span> <span class="hljs-type">List</span>&lt;<span class="hljs-type">SelectOption</span>&gt; recordTypes { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>; }
+<span class="hljs-keyword">private</span> <span class="hljs-type">List</span><span class="hljs-punctuation">&lt;</span><span class="hljs-type">SelectOption</span><span class="hljs-punctuation">&gt;</span> recordTypes <span class="hljs-punctuation">{</span> <span class="hljs-keyword">get</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span><span class="hljs-punctuation">;</span> <span class="hljs-punctuation">}</span>
 
-<span class="hljs-keyword">for</span>(<span class="hljs-type">Account</span> a : <span class="hljs-subst">[<span class="hljs-keyword">SELECT</span> Id <span class="hljs-keyword">FROM</span> <span class="hljs-type">Account</span> <span class="hljs-keyword">WHERE</span> LastModifiedDate <span class="hljs-literal">=</span> <span class="hljs-keyword">LAST_N_DAYS</span>:<span class="hljs-number">3</span>]</span>){
-  <span class="hljs-built_in">Assert</span>.<span class="hljs-title function_ invoke__">fail</span>();
-}
+<span class="hljs-keyword">for</span>(<span class="hljs-type">Account</span> <span class="hljs-variable">a</span> <span class="hljs-operator">:</span> <span class="hljs-soql"><span class="hljs-punctuation">[</span><span class="hljs-keyword">SELECT</span> Id <span class="hljs-keyword">FROM</span> <span class="hljs-type">Account</span> <span class="hljs-keyword">WHERE</span> LastModifiedDate <span class="hljs-operator">=</span> <span class="hljs-keyword">LAST_N_DAYS</span><span class="hljs-operator">:</span><span class="hljs-number">3</span><span class="hljs-punctuation">]</span></span><span class="hljs-punctuation">)</span>{
+  <span class="hljs-built_in">Assert</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">fail</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
 
-<span class="hljs-keyword">trigger</span> <span class="hljs-title class_">CTrig</span> on <span class="hljs-type">Custom__c</span> (<span class="hljs-built_in">before insert</span>){
-  <span class="hljs-built_in">System</span>.<span class="hljs-title function_ invoke__">debug</span>(<span class="hljs-string">&#x27;inserting a record&#x27;</span>);
-  <span class="hljs-built_in">upsert</span> myRecord__c;
-}
+<span class="hljs-keyword">trigger</span> <span class="hljs-title class_">CTrig</span> <span class="hljs-operator">on</span> <span class="hljs-type">Custom__c</span> (<span class="hljs-built_in">before insert</span>)<span class="hljs-punctuation">{</span>
+  <span class="hljs-built_in">System</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">debug</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#x27;inserting a record&#x27;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">upsert</span> <span class="hljs-type">myRecord__c</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
