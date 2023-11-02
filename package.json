@@ -4,7 +4,7 @@
 	"description": "Apex Language of Salesforce highlighting plugin for highlight.js",
 	"main": "src/languages/apex.js",
 	"scripts": {
-		"test": "./node_modules/.bin/mocha --reporter spec",
+		"test": "mocha --reporter spec",
 		"mocha": "mocha test/markup",
 		"npm-patch": "npm version patch && npm publish",
 		"npm-beta": "npm publish --tag beta"
