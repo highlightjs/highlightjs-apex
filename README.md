@@ -15,7 +15,7 @@
 
 The screenshot was captured from a [demo webpage](demo/testcode.html) using `highlight.min.js` from the `dist` folder.
 (Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
-![Demo](demo/ApexHighlighting.png)
+![Demo](assets/ApexHighlighting.png)
 
 ## Usage
 
@@ -52,9 +52,7 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
-<script
-	type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 ```
 
 - More info: <https://www.jsdelivr.com/>
