@@ -27,7 +27,7 @@
 - **deps:** bump actions/checkout from 3 to 4 ([#14](https://github.com/highlightjs/highlightjs-apex/issues/14)) ([c237011](https://github.com/highlightjs/highlightjs-apex/commit/c237011d196497504424bad0b4c2f912a21ec323))
 - **release-please:** implement Release-Please for changelog ([#17](https://github.com/highlightjs/highlightjs-apex/issues/17)) ([c81e1ee](https://github.com/highlightjs/highlightjs-apex/commit/c81e1eeea7079f602d7d5799b103ce1cb49546cd))
 
-## [Unreleased](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.1...HEAD)
+## [v1.2.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.1...v1.2.0) - 2023-03-29
 
 ### Merged
 
@@ -44,17 +44,8 @@
 ### Commits
 
 - begin npm setup [`284b7df`](https://github.com/highlightjs/highlightjs-apex/commit/284b7dff2a4008f749b7852d1dad08a04680e9f1)
-- chore: bootstrap releases for path: . [`4b448d9`](https://github.com/highlightjs/highlightjs-apex/commit/4b448d98734b7139ce6433bf4a7ac9a2c865fc74)
-- chore: npm version 1.2.0 [`a5e6378`](https://github.com/highlightjs/highlightjs-apex/commit/a5e637896f9065a3e9d33017ec4afe397da3a9ce)
-
-## [v1.2.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.0...v1.2.1) - 2023-03-29
-
-### Commits
-
 - docs(changelog): update changelog v1.2.0 [`3144fae`](https://github.com/highlightjs/highlightjs-apex/commit/3144faef9f59a5a76ece758a32e9e9ad1c627064)
 - chore: update package.json to v1.2.0 [`e2af1e6`](https://github.com/highlightjs/highlightjs-apex/commit/e2af1e67e63a2645faa9b75eb1fbf47a19b3b79b)
-
-## [v1.2.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.1...v1.2.0) - 2023-03-29
 
 ## [v1.1.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.1.0...v1.1.1) - 2023-03-29
 
