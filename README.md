@@ -13,9 +13,10 @@
 
 ## Demo
 
-The screenshot was captured from a [demo webpage](demo/testcode.html) using `highlight.min.js` from the `dist` folder.
-(Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
+The screenshot was captured from a webpage using `apex.min.js` from the `dist` folder and the main `highlight.min.js` library.
+(Code is from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
 ![Demo](assets/ApexHighlighting.png)
+Feel free to use any css library you'd like!
 
 ## Usage
 
@@ -28,9 +29,10 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 ```html
 <script type="text/javascript" src="/path/to/highlight.min.js"></script>
 <script type="text/javascript" src="/path/to/apex.min.js"></script>
-<!-- Use any stylesheet you'd like - though it's best to choose from 
-	those in highlightjs core repo -->
-<link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" />
+<!-- <link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" /> -->
+<!-- Use any stylesheet you'd like - though Apex developers may want to use the custom theme based on MavensMate's Monokai -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
+
 <script type="text/javascript">
 	hljs.highlightAll();
 </script>
@@ -68,6 +70,11 @@ var hljsApex = require('highlightjs-apex');
 hljs.registerLanguage('apex', hljsApex);
 hljs.highlightAll();
 ```
+
+### Styles
+
+There are many styles to choose from at [https://highlightjs.org/demo](https://highlightjs.org/demo). They can be downloaded from [the GitHub repository](https://github.com/highlightjs/highlight.js/tree/main/src/styles) and referenced from unpkg.com (see sample html above).
+A great stylesheet for Apex is in this repo in the [styles folder](https://github.com/highlightjs/highlightjs-apex/tree/main/src/styles).
 
 ## License
 
