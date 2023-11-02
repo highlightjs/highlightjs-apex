@@ -5,12 +5,17 @@
 		}
 	},
 	"release-type": "node",
+	"prerelease": false,
+	"prerelease-type": "",
+	"initial-version": "1.2.1",
+	"versioning": "default",
 	"bump-minor-pre-major": false,
 	"bump-patch-for-minor-pre-major": false,
-	"prerelease": false,
 	"draft": false,
 	"changelog-path": "CHANGELOG.md",
 	"include-v-in-tag": true,
+	"include-component-in-tag": false,
+
 	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
 	"extra-files": [
 		{
@@ -28,7 +33,7 @@
 		{ "type": "style", "section": "Styles", "hidden": false },
 		{ "type": "docs", "section": "Documentation", "hidden": false },
 		{ "type": "perf", "section": "Performance Improvements", "hidden": false },
-		{ "type": "test", "section": "Tests", "hidden": false },
+		{ "type": "test", "section": "Tests", "hidden": true },
 		{ "type": "build", "section": "Build System", "hidden": false },
 		{ "type": "ci", "section": "Continuous Integration", "hidden": false }
 	]
