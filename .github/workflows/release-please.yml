@@ -29,17 +29,14 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
-      - name: Build Packages
+      - name: Install Dependencies
+        run: npm ci
         if: ${{ steps.release.outputs.releases_created }}
-        run: |
-          npm install
-          npx lerna bootstrap
-
-      # Release Please has already incremented versions and published tags, so we just
-      # need to publish all unpublished versions to NPM here
-      # See: https://github.com/lerna/lerna/tree/main/commands/publish#bump-from-package
-      #- name: Publish to NPM
-      #  if: ${{ steps.release.outputs.releases_created }}
-      #  env:
-      #    NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #  run: npx lerna publish from-package --no-push --no-private --yes
+      - name: Publish to npm
+        # Release Please has already incremented versions and published tags, so we just
+        # need to publish all unpublished versions to NPM here
+        # See: https://github.com/lerna/lerna/tree/main/commands/publish#bump-from-package
+        if: ${{ steps.release.outputs.releases_created }}
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
