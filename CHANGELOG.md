@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.3.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.1...v1.3.0) (2023-11-02)
+
+
+### Features
+
+* API 59.0 update ([#16](https://github.com/highlightjs/highlightjs-apex/issues/16)) ([0616140](https://github.com/highlightjs/highlightjs-apex/commit/061614019923e77b37927faa3943de98194099f9)), closes [#23](https://github.com/highlightjs/highlightjs-apex/issues/23)
+
+
+### Styles
+
+* **CSS:** create Monokai Sublime Apex theme ([#18](https://github.com/highlightjs/highlightjs-apex/issues/18)) ([d8a6ca1](https://github.com/highlightjs/highlightjs-apex/commit/d8a6ca196ea3c557fe8280a97001d5957dfbfa51))
+* Monokai-Sublime-Apex theme has been revised ([0616140](https://github.com/highlightjs/highlightjs-apex/commit/061614019923e77b37927faa3943de98194099f9))
+
+
+### Documentation
+
+* update README ([56651b3](https://github.com/highlightjs/highlightjs-apex/commit/56651b3aeef2246b8cac89b5361b364fbfbd6be4))
+* update sample code image ([e71c1b9](https://github.com/highlightjs/highlightjs-apex/commit/e71c1b95c36b500bbbf14e572fe6ae8a24eb5b56))
+
+
+### Build System
+
+* **changelog:** remove auto-changelog ([#21](https://github.com/highlightjs/highlightjs-apex/issues/21)) ([4c82447](https://github.com/highlightjs/highlightjs-apex/commit/4c82447cd030b3022157783573586ab22355467d))
+
+
+### Continuous Integration
+
+* **codeql:** limit run to js updates ([d8d11f8](https://github.com/highlightjs/highlightjs-apex/commit/d8d11f8c185a9b6253d279949c5506a044b75386))
+* **npm:** add npm upload to release script ([#22](https://github.com/highlightjs/highlightjs-apex/issues/22)) ([372d827](https://github.com/highlightjs/highlightjs-apex/commit/372d827700ec50470f0aab1a530935aede88e944))
+* **npm:** configure npm ([#24](https://github.com/highlightjs/highlightjs-apex/issues/24)) ([56651b3](https://github.com/highlightjs/highlightjs-apex/commit/56651b3aeef2246b8cac89b5361b364fbfbd6be4))
+
 ## [1.2.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.0...v1.2.1) (2023-11-02)
 
 ### Miscellaneous Chores
