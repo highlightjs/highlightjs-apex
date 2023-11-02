@@ -6,7 +6,8 @@
 	"scripts": {
 		"test": "./node_modules/.bin/mocha --reporter spec",
 		"mocha": "mocha test/markup",
-		"npm-patch": "npm version patch && npm publish"
+		"npm-patch": "npm version patch && npm publish",
+		"npm-beta": "npm publish --tag beta"
 	},
 	"repository": {
 		"type": "git",
@@ -18,6 +19,13 @@
 		"hljs",
 		"highlightjs",
 		"highlight.js"
+	],
+	"files": [
+		"assets",
+		"dist",
+		"src",
+		"test",
+		"CHANGELOG.md"
 	],
 	"author": "David Schach (https://github.com/dschach)",
 	"license": "MIT",

@@ -13,9 +13,9 @@
 
 ## Demo
 
-The screenshot was captured from a [demo webpage](demo/testcode.html) using `highlight.min.js` from the `dist` folder.
-(Code taken from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
-![Demo](demo/ApexHighlighting.png)
+The screenshot was captured from a webpage using `apex.min.js` from the `dist` folder and the main `highlight.min.js` library.
+(Code is from [Salesforce Trigger Framework](https://dschach.github.io/salesforce-trigger-framework/))
+![Demo](assets/ApexHighlighting.png)
 
 ## Usage
 
@@ -28,9 +28,9 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 ```html
 <script type="text/javascript" src="/path/to/highlight.min.js"></script>
 <script type="text/javascript" src="/path/to/apex.min.js"></script>
-<!-- Use any stylesheet you'd like - though it's best to choose from 
-	those in highlightjs core repo -->
-<link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" />
+<!-- Use any stylesheet you'd like - though Apex developers may want to use the custom theme based on MavensMate's Monokai -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
+<!-- <link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" /> -->
 <script type="text/javascript">
 	hljs.highlightAll();
 </script>
@@ -52,9 +52,7 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
-<script
-	type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 ```
 
 - More info: <https://www.jsdelivr.com/>
