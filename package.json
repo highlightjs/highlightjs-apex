@@ -6,7 +6,6 @@
 	"scripts": {
 		"test": "./node_modules/.bin/mocha --reporter spec",
 		"mocha": "mocha test/markup",
-		"changelog": "auto-changelog",
 		"npm-patch": "npm version patch && npm publish",
 		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
 		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
@@ -40,7 +39,6 @@
 		"highlight.js": "11.9.0"
 	},
 	"devDependencies": {
-		"auto-changelog": "^2.4.0",
 		"minimist": "^1.2.8",
 		"mocha": "^10.2.0",
 		"prettier": "3.0.3",
