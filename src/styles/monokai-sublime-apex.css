@@ -57,7 +57,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 }
 .hljs-code {
 	color: #fd971f;
-	font-family: monospace;
 }
 .hljs-comment {
 	color: #75715e;
@@ -78,8 +77,13 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #ae81ff;
 	text-decoration: underline;
 }
-.hljs-meta .hljs-keyword {
+.hljs-meta .hljs-keyword,
+.hljs-params .hljs-variable {
 	color: #fd971f;
+}
+.hljs-comment .hljs-variable{
+	color:#fd971f;
+	font-style: italic;
 }
 .hljs-meta .hljs-string,
 .hljs-quote {
@@ -97,9 +101,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-tag,
 .hljs-variable {
 	color: #f8f8f2;
-}
-.hljs-params .hljs-variable {
-	color: #fd971f;
 }
 .hljs-string {
 	color: #e6db74;
@@ -122,68 +123,32 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #a6e22eff;
 	font-style: italic;
 }
+.hljs-comment .hljs-code {
+	font-family: monospace, monospace;
+}
+.hljs-hidden,
+.hljs-string .hljs-hidden {
+	display:none;
+}
 
-/* prettier-ignore */
-.hljs-soql {color:#66d9ef;font-style: italic;}
-/* prettier-ignore */
-.hljs-soql .hljs-variable{color:#f8f8f2;font-style: normal;}
-/* prettier-ignore */
-.hljs-soql .hljs-keyword{color:#fd971f;}
-/* prettier-ignore */
-.hljs-soql .hljs-punctuation{font-style: normal;}
-/* prettier-ignore */
-.hljs-soql .hljs-title.function_.invoke__{color:#a6e22e;font-style:normal;}
-/* prettier-ignore */
-.hljs-soql .hljs-operator{font-style: normal;}
-/* prettier-ignore */
-.hljs-soql .hljs-title.function_{color:#66d9ef;font-style: italic;}
-
-/* .hljs-addition{color:#a6e22e;background:#66852880}
-.hljs-attr{color:#f92672;}
-.hljs-attribute{color:#66d9ef;}
-.hljs-built_in{color:#66d9ef;font-style:italic;}
-.hljs-bullet{color:#e6db74;}
-.hljs-char.escape_{color:#ae81ff;}
-.hljs-code{color:#fd971f;font-family: monospace;}
-.hljs-comment{color:#75715e;}
-.hljs-deletion{color:#f92672;background:#90274a80}
-.hljs-doctag{color:#f92672;font-style:bold;}
-.hljs-emphasis{color:#66d9ef;font-style:italic;}
-.hljs-formula{color:#fd971f;font-style:italic;}
-.hljs-keyword{color:#f92672;}
-.hljs-link{color:#ae81ff;text-decoration:underline;}
-.hljs-literal{color:#ae81ff;}
-.hljs-meta .hljs-string{color:#cfcfc2;}
-.hljs-meta{color:#66d9ef;}
-.hljs-meta .hljs-keyword{color:#fd971f;}
-.hljs-meta .hljs-string{color:#e6db74;}
-.hljs-name{color:#f92672;}
-.hljs-number{color:#ae81ff;font-style: normal;}
-.hljs-operator{color:#f92672;}
-.hljs-params{color:#f8f8f2;}
-.hljs-property{color:#f8f8f2;}
-.hljs-punctuation{color:#f8f8f2;}
-.hljs-quote{color:#cfcfc2;}
-.hljs-regexp{color:#ae81ff;}
-.hljs-section{color:#a6e22e;}
-.hljs-selector-attr{color:#66d9ef;}
-.hljs-selector-class{color:#a6e22e;}
-.hljs-selector-id{color:#e6db74;}
-.hljs-selector-pseudo{color:#f8f8f2;}
-.hljs-selector-tag{color:#f92672;}
-.hljs-string{color:#e6db74;font-style: normal;}
-.hljs-strong{color:#66d9ef;font-style:bold;}
-.hljs-subst{color:#f8f8f2;}
-.hljs-symbol{color:#66d9ef;}
-.hljs-tag{color:#f8f8f2;}
-.hljs-template-tag{color:#a6e22e}
-.hljs-template-variable{color:#e6db74;}
-.hljs-title.class_{color:#a6e22e;}
-.hljs-title.class_.inherited__{color:#a6e22eff;font-style:italic;}
-.hljs-title.function_{color:#a6e22e;}
-.hljs-title.function_.invoke__{color:#a6e22e;}
-.hljs-title{color:#a6e22e;}
-.hljs-type{color:#66d9ef;font-style:italic;}
-.hljs-variable.constant_{color:#ae81ff;}
-.hljs-variable.language_{color:#f92672;}
-.hljs-variable{color:#f8f8f2;} */
+.hljs-soql {
+	color:#66d9ef;font-style: italic;
+}
+.hljs-soql .hljs-variable{
+	color:#f8f8f2;font-style: normal;
+}
+.hljs-soql .hljs-keyword{
+	color:#fd971f;
+}
+.hljs-soql .hljs-punctuation{
+	font-style: normal;
+}
+.hljs-soql .hljs-title.function_.invoke__{
+	color:#a6e22e;font-style:normal;
+}
+.hljs-soql .hljs-operator{
+	font-style: normal;
+}
+.hljs-soql .hljs-title.function_{
+	color:#66d9ef;font-style: italic;
+}
