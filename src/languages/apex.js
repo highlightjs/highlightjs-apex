@@ -757,7 +757,7 @@ export default function (hljs) {
       ],
       scope: {
         1: 'keyword',
-        2: 'constructor'
+        2: 'title.function'
       },
       starts: PARAMS_DECLARATION,
       relevance: 0
