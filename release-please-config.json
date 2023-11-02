@@ -7,7 +7,6 @@
 	"release-type": "node",
 	"prerelease": false,
 	"prerelease-type": "",
-	"initial-version": "1.2.1",
 	"versioning": "default",
 	"bump-minor-pre-major": false,
 	"bump-patch-for-minor-pre-major": false,
