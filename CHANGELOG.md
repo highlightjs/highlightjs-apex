@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.0...v1.3.1) (2023-11-02)
+
+
+### Continuous Integration
+
+* **npm:** give proper permission to upload provenance ([50fe2be](https://github.com/highlightjs/highlightjs-apex/commit/50fe2be288218c70aefe8d42c3b3750e40bbd8a1))
+
 ## [1.3.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.2.1...v1.3.0) (2023-11-02)
 
 
