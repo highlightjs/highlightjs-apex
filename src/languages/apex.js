@@ -5,50 +5,18 @@ Category: Salesforce, Force.com, Salesforce Platform, Einstein 1 Platform
 Website: https://developer.salesforce.com/
 */
 
-import * as apex from './apexlib.js';
+//import * as apex from '../../scripts/apexlib.js';
 
 /** @type LanguageFn */
 export default function (hljs) {
   const regex = hljs.regex;
-  const APEX_IDENT_RE = apex.APEX_IDENT_RE;
-  const APEX_IDENT_WORD_RE = apex.APEX_IDENT_WORD_RE;
+  const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
+  const APEX_IDENT_WORD_RE =  '\\b' + APEX_IDENT_RE + '\\b';
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
   const SPACEPARENS_LOOKAHEAD = '(?=\\s*\\()'; //(?=\s*\()/;
   const PARENS_LOOKAHEAD = /(?=\()/; //'(?=\\()';
   const SPACE = /\s+/;
 
-  const PUNCTUATION = {
-    match: regex.either(...apex.PUNCTUATION_LIST),
-    scope: 'punctuation',
-    relevance: 0
-  };
-
-  const OPERATORS = {
-    match: regex.concat(
-      /(?<=\W|\b|\s)/,
-      regex.either(...apex.OPERATORS_RE),
-      //negLookaheadAny(...apex.OPERATORS_RE)
-      /(?=\W|\b|\s)/
-    ),
-    scope: 'operator',
-    relevance: 0
-  };
-  const NUMBERS = {
-    scope: 'number',
-    match: regex.either(...apex.NUMBERS_RE),
-    relevance: 0
-  };
-
-  const KEYWORDS = {
-    $pattern: '(?<!\\.)' + APEX_IDENT_WORD_RE,
-    keyword: apex.KEYWORD_LIST.concat(...apex.STORAGE_MODIFIER_LIST).concat(
-      ...apex.DMLS
-    ),
-    'variable.language': apex.LANGUAGE_VAR_LIST,
-    built_in: apex.BUILT_INS,
-    type: apex.TYPES,
-    literal: apex.LITERALS
-  };
 
   /**
    * @param {...(RegExp | string) } args
@@ -58,16 +26,73 @@ export default function (hljs) {
     return regex.concat('(?!', list.join('|'), ')');
   }
 
-  const LANGUAGE_VARS_RE = {
-    match: regex.concat(/\b/, regex.either(...apex.LANGUAGE_VAR_LIST), /\b/),
+  let BUILT_INS = [];
+  let CLASS_SHARING = {};
+  let DMLS = [];
+  let EXCEPTION = {};
+  let ILLEGALS = [];
+  let INSTANTIATE_TYPE = {};
+  let KEYWORD_LIST = [];
+  let LANGUAGE_VAR_LIST = [];
+  let LITERALS = [];
+  let NAMESPACE_LIST = [];
+  let NUMBERS_RE = [];
+  let OPERATORS_RE = [];
+  let PUNCTUATION_LIST = [];
+  let SALESFORCE_ID = {};
+  let SOQL_DATE_FUNCTIONS = [];
+  let SOQL_FUNCTIONS = [];
+  let SOQL_OPERATORS = [];
+  let SOQL_RESERVED = [];
+  let STORAGE_MODIFIER_LIST = [];
+  let SWITCH_STATEMENT = {};
+  let SYSTEM_CLASSES = [];
+  let SYSTEM_ENUMS = [];
+  let SYSTEM_INTERFACES = [];
+  let TYPES = [];
+  let KEYWORDS = {
+    $pattern: '(?<!\\.)' + APEX_IDENT_WORD_RE,
+    keyword: KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST).concat(...DMLS),
+    'variable.language': LANGUAGE_VAR_LIST,
+    built_in: BUILT_INS,
+    type: TYPES,
+    literal: LITERALS
+  };
+
+  let PUNCTUATION = {
+    match: regex.either(...PUNCTUATION_LIST),
+    scope: 'punctuation',
+    relevance: 0
+  };
+
+  let OPERATORS = {
+    match: regex.concat(
+      /(?<=\W|\b|\s)/,
+      regex.either(...OPERATORS_RE),
+      //negLookaheadAny(...OPERATORS_RE)
+      /(?=\W|\b|\s)/
+    ),
+    scope: 'operator',
+    relevance: 0
+  };
+  let NUMBERS = {
+    scope: 'number',
+    match: regex.either(...NUMBERS_RE),
+    relevance: 0
+  };
+
+
+
+  let LANGUAGE_VARS_RE = {
+    match: regex.concat(/\b/, regex.either(...LANGUAGE_VAR_LIST), /\b/),
     scope: 'variable.language',
     relevance: 0
   };
 
-  const NAMESPACES = [
+  let NAMESPACES = [
     {
       match: [
-        regex.concat(/\b/, regex.either(...apex.SYSTEM_ENUMS)),
+        regex.concat(/\b/, regex.either(...SYSTEM_ENUMS)),
         /\./,
         APEX_IDENT_RE,
         /(?![\.\(])/
@@ -78,8 +103,8 @@ export default function (hljs) {
     {
       match: regex.concat(
         /\b/,
-        regex.either(...apex.NAMESPACE_LIST),
-        regex.concat('\b(?!\\.', regex.either(...apex.SYSTEM_CLASSES), ')')
+        regex.either(...NAMESPACE_LIST),
+        regex.concat('\b(?!\\.', regex.either(...SYSTEM_CLASSES), ')')
       ),
       scope: 'built_in',
       relevance: 0
@@ -90,7 +115,7 @@ export default function (hljs) {
         /\b/,
         'System',
         /\./,
-        regex.either(...apex.SYSTEM_CLASSES),
+        regex.either(...SYSTEM_CLASSES),
         /(?=\.)/
       ],
       scope: { 2: 'built_in', 3: 'punctuation', 4: 'built_in' },
@@ -98,7 +123,7 @@ export default function (hljs) {
     },
     {
       match: [
-        regex.concat('(?<=\\b', regex.either(...apex.BUILT_INS), ')'),
+        regex.concat('(?<=\\b', regex.either(...BUILT_INS), ')'),
         /\./,
         APEX_IDENT_RE,
         regex.lookahead(/[\(\s]/)
@@ -132,17 +157,17 @@ export default function (hljs) {
     }
   ];
 
-  const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
+  let STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
     contains: [{ match: /\\'/, scope: 'literal' }],
     scope: 'string',
     relevance: 0
   });
 
-  const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
+  let COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
     relevance: 0
   });
 
-  const COMMENT_BLOCK = hljs.COMMENT('/\\*', '\\*/', {
+  let COMMENT_BLOCK = hljs.COMMENT('/\\*', '\\*/', {
     relevance: 0,
     contains: [
       {
@@ -168,58 +193,52 @@ export default function (hljs) {
       {
         begin: '`',
         end: '`',
-        beginScope: 'hidden',
-        endScope: 'hidden',
-        scope: 'string',
-        contains: [hljs.BACKSLASH_ESCAPE],
+        //beginScope: 'hidden',
+        //endScope: 'hidden',
+        scope: 'code',
+        //contains: [hljs.BACKSLASH_ESCAPE],
         relevance: 0
       }
     ]
   });
 
-  const COMMENTS = [COMMENT_BLOCK, COMMENT_LINE];
+  let COMMENTS = [COMMENT_BLOCK, COMMENT_LINE];
 
-  const ANNOTATIONS = [
+  let ANNOTATIONS = [
     // We allow any annotation, so we do not need to maintain a list
     {
-      /* 
-      Type 1: one annotation
-      @isTest 
-      */
+      // Type 1: one annotation
+      // @isTest
       match: regex.concat(ANNOTATION_RE, /\b(?!\s*\()/),
       scope: 'meta'
     },
-    /* 
-    Type 2: annotation and parentheses
-    @SuppressWarnings('PMD.AvoidGlobalModifier'))
-    Type 3: annotation on one line and parentheses on next
-    @IsTest
-    (Seealldata=true) 
-    */
+    // Type 2: annotation and parentheses
+    // @SuppressWarnings('PMD.AvoidGlobalModifier'))
+    // Type 3: annotation on one line and parentheses on next
+   //  @IsTest
+   //  (Seealldata=true) 
     {
       begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*/, /\(/],
       beginScope: { 1: 'meta', 3: 'punctuation' },
-      end: /(?=\))/,
+      end: /\)/,
+      endScope: 'punctuation',
       //scope: 'clause: annotation',
       contains: [
         {
           match: [APEX_IDENT_WORD_RE, /\s*=/],
-          scope: {
-            1: 'variable',
-            2: 'operator'
-          },
-          contains: [OPERATORS]
+          scope: { 1: 'variable',      2: 'operator' }
+          //,contains: [OPERATORS]
         },
         STRINGS,
         NUMBERS
       ],
-      keywords: {
-        literal: apex.LITERALS
-      }
+/*       keywords: {
+        literal: LITERALS
+      } */
     }
   ];
 
-  const COLLECTIONS = [
+  let COLLECTIONS = [
     {
       //scope: 'clause: collection',
       begin: /\b(list|set|map)(?=\s*<)/,
@@ -256,51 +275,33 @@ export default function (hljs) {
     }
   ];
 
-  const MISCELLANEOUS = [
-    {
-      // mynum =
-      // could also be a collection variable
-      match: [/(?<!\.)\b/, APEX_IDENT_RE, /\s*(?=\=[^\>])/],
-      scope: { 2: 'variable' },
-      relevance: 0
-    },
-    // Casting
-    {
-      match: [/(?<=\=\s*\()/, APEX_IDENT_RE, '(?=\\)\\s*' + APEX_IDENT_RE + ')'],
-      scope: {
-        2: 'type'
-      },
-      relevance: 0
-    }
-  ];
 
-  const PARAMS_CALL = {
+
+  let PARAMS_CALL = {
     //scope: 'clause: params call',
     begin: /\((?!(\s*\[))/,
     beginScope: 'punctuation',
     end: /\)/,
     endScope: 'punctuation',
     relevance: 0,
-    keywords: {
-      KEYWORDS
-    },
-    illegal: apex.KEYWORD_LIST,
+    keywords: KEYWORDS,
+    illegal: KEYWORD_LIST,
     contains: [
       STRINGS,
-      apex.INSTANTIATE_TYPE,
+      INSTANTIATE_TYPE,
       COMMENTS,
       OPERATORS,
       COLLECTIONS,
       NAMESPACES,
       NUMBERS,
-      apex.SALESFORCE_ID,
+      SALESFORCE_ID,
       {
-        keywords: { KEYWORDS },
+        keywords:  KEYWORDS ,
         // mymethod(var1, var2); comma-separated list
         // must be followed by comma or paren
         match: regex.concat(
           /(?<=\s|\(|\,)/,
-          negLookaheadAny(...apex.LITERALS),
+          negLookaheadAny(...LITERALS),
           APEX_IDENT_RE,
           /\b/,
           /(?!\.)/
@@ -311,7 +312,7 @@ export default function (hljs) {
     ]
   };
 
-  const EXTEND_IMPLEMENT = {
+  let EXTEND_IMPLEMENT = {
     returnEnd: true,
     endsWithParent: true,
     variants: [
@@ -343,7 +344,7 @@ export default function (hljs) {
       {
         match: regex.concat(
           /\b/,
-          regex.either(...apex.SYSTEM_INTERFACES),
+          regex.either(...SYSTEM_INTERFACES),
           /\b\s*(?!>)/
         ),
         scope: 'title.class.inherited',
@@ -353,18 +354,16 @@ export default function (hljs) {
     relevance: 0
   };
 
-  const PARAMS_DECLARATION = {
+  let PARAMS_DECLARATION = {
     scope: 'params declare', // NOTE: declaration
     end: /\)/,
     endScope: 'punctuation',
     relevance: 0,
-    keywords: {
-      KEYWORDS
-    },
-    illegal: apex.KEYWORD_LIST,
+    keywords: KEYWORDS,
+    illegal: KEYWORD_LIST,
     contains: [
       NUMBERS,
-      apex.SALESFORCE_ID,
+      SALESFORCE_ID,
       STRINGS,
       COMMENTS,
       COLLECTIONS,
@@ -384,7 +383,7 @@ export default function (hljs) {
     ]
   };
 
-  const DECLARATIONS = [
+  let DECLARATIONS = [
     {
       // trigger declaration
       begin: [/\btrigger/, SPACE, APEX_IDENT_RE, SPACE, 'on', SPACE, APEX_IDENT_RE],
@@ -395,7 +394,7 @@ export default function (hljs) {
         7: 'type'
       },
       end: /(?=\{)/,
-      returnEnd: true,
+      //returnEnd: true,
       //scope: 'clause: trigger_declaration',
       contains: [
         COMMENTS,
@@ -415,7 +414,7 @@ export default function (hljs) {
         }
       ]
     },
-    apex.CLASS_SHARING,
+    CLASS_SHARING,
     {
       // class declaration
       begin: [/[^\.]/, /\bclass\b/],
@@ -423,7 +422,7 @@ export default function (hljs) {
       end: /(?=\{)/,
       relevance: 0,
       //scope: 'clause: class_declaration',
-      keywords: { type: apex.TYPES, keyword: apex.KEYWORD_LIST },
+      keywords: { type: TYPES, keyword: KEYWORD_LIST },
       contains: [
         {
           match: [/(?<=\bclass)\s+/, APEX_IDENT_RE],
@@ -477,10 +476,10 @@ export default function (hljs) {
     }
   ];
 
-  const METHOD_CALL = [
+  let METHOD_CALL = [
     {
       match: regex.concat(
-        negLookaheadAny(...apex.KEYWORD_LIST),
+        negLookaheadAny(...KEYWORD_LIST),
         /\b/,
         APEX_IDENT_RE,
         SPACEPARENS_LOOKAHEAD
@@ -491,7 +490,7 @@ export default function (hljs) {
     },
     {
       match: [
-        regex.concat('(?<!\\b', regex.either(...apex.BUILT_INS), ')'),
+        regex.concat('(?<!\\b', regex.either(...BUILT_INS), ')'),
         /\./,
         APEX_IDENT_RE,
         SPACEPARENS_LOOKAHEAD
@@ -502,11 +501,29 @@ export default function (hljs) {
     }
   ];
 
+  let MISCELLANEOUS = [
+    {
+      // mynum =
+      // could also be a collection variable
+      match: [/(?<!\.)\b/, APEX_IDENT_RE, /\s*(?=\=[^\>])/],
+      scope: { 2: 'variable' },
+      relevance: 0
+    },
+    // Casting
+    {
+      match: [/(?<=\=\s*\()/, APEX_IDENT_RE, '(?=\\)\\s*' + APEX_IDENT_RE + ')'],
+      scope: {
+        2: 'type'
+      },
+      relevance: 0
+    }
+  ];
+
   /**
    * SOQL SECTION
    */
 
-  const SOQL_QUERY = {
+  let SOQL_QUERY = {
     begin: [/\[/, /\s*/, /(?=(SELECT|FIND)\b)/],
     beginScope: { 1: 'punctuation' },
     end: /\]/,
@@ -517,12 +534,12 @@ export default function (hljs) {
     keywords: {
       keyword: []
         .concat(...KEYWORDS.keyword)
-        .concat(...apex.SOQL_RESERVED)
-        .concat(...apex.SOQL_OPERATORS), // * orange italic
-      type: apex.SOQL_FUNCTIONS, // * blue italic
-      'title.function': apex.SOQL_DATE_FUNCTIONS, // * blue normal
+        .concat(...SOQL_RESERVED)
+        .concat(...SOQL_OPERATORS), // * orange italic
+      type: SOQL_FUNCTIONS, // * blue italic
+      'title.function': SOQL_DATE_FUNCTIONS, // * blue normal
       literal: KEYWORDS.literal,
-      built_in: apex.BUILT_INS
+      built_in: BUILT_INS
     },
     contains: [
       {
@@ -591,7 +608,7 @@ export default function (hljs) {
     illegal: '::'
   };
 
-  const FOR_LOOP = {
+  let FOR_LOOP = {
     begin: [/\bfor\b\s*/, /\(/, APEX_IDENT_RE, SPACE, APEX_IDENT_RE, /\s*/, /:/],
     beginScope: {
       2: 'punctuation',
@@ -624,7 +641,7 @@ export default function (hljs) {
     ]
   };
 
-  const DML_OPERATIONS = [
+  let DML_OPERATIONS = [
     /*
      * DML types
      * naked - delete as system [SELECT Id FROM Account];
@@ -632,7 +649,7 @@ export default function (hljs) {
      */
     {
       match: [
-        regex.concat(/\b/, regex.either(...apex.DMLS)),
+        regex.concat(/\b/, regex.either(...DMLS)),
         /\s+(?!\()/,
         regex.optional(/as\s+(user|system)\b/)
       ],
@@ -647,7 +664,7 @@ export default function (hljs) {
       begin: [
         /\bDatabase\b/,
         /\./,
-        regex.either(...apex.DMLS),
+        regex.either(...DMLS),
         SPACEPARENS_LOOKAHEAD
       ],
       beginScope: {
@@ -659,6 +676,547 @@ export default function (hljs) {
     }
   ];
 
+  let BASICS = [
+    COMMENTS,
+    COLLECTIONS,
+    OPERATORS,
+    STRINGS,
+    NUMBERS,
+    LANGUAGE_VARS_RE,
+    MISCELLANEOUS,
+    SALESFORCE_ID,
+  ];
+
+  
+  let CONTAINS_ITEMS = [
+    ANNOTATIONS,
+    EXCEPTION,
+    INSTANTIATE_TYPE,
+    SWITCH_STATEMENT,
+    BASICS,
+    DECLARATIONS,
+    DML_OPERATIONS,
+    FOR_LOOP,
+    METHOD_CALL,
+    NAMESPACES,
+    PUNCTUATION,
+    SOQL_QUERY
+  ];
+
+
+  KEYWORD_LIST = [
+    'try',
+    'catch',
+    'finally',
+    'get',
+    'set',
+    'put',
+    'if',
+    'for',
+    'else',
+    'do',
+    'while',
+    'continue',
+    'break',
+    'implements',
+    'extends',
+    'return',
+    'throw',
+    'when',
+    'new'
+  ];
+
+  LANGUAGE_VAR_LIST = ['instanceof', 'super', 'this'];
+
+LITERALS = ['false', 'true', 'null'];
+
+STORAGE_MODIFIER_LIST = [
+  'abstract',
+  'final',
+  'global',
+  'interface',
+  'override',
+  'private',
+  'protected',
+  'public',
+  'static',
+  'testMethod',
+  'transient',
+  'virtual',
+  'webservice'
+];
+
+TYPES = [
+  'anytype',
+  'blob',
+  'boolean',
+  'byte',
+  'currency',
+  'date',
+  'datetime',
+  'decimal',
+  'double',
+  'enum',
+  'float',
+  'integer',
+  'long',
+  'object',
+  'pagereference',
+  'selectoption',
+  'short',
+  'sobject',
+  'string',
+  'time',
+  'void',
+  'float'
+  /*     'map',
+  'list',
+  'set' */
+];
+
+DMLS = [
+  'insert',
+  'update',
+  'upsert',
+  'delete',
+  'undelete',
+  'merge',
+  'convertLead'
+];
+
+SYSTEM_INTERFACES = [
+  'schedulable',
+  'batchable',
+  'queueable',
+  'comparable',
+  'callable'
+];
+
+NAMESPACE_LIST = [
+  //'ApexPages', // also a System class
+  'AppLauncher',
+  'Approval',
+  'Auth',
+  'Cache',
+  'Canvas',
+  'ChatterAnswers',
+  'CommercePayments',
+  'ConnectApi',
+  'Database',
+  'Datacloud',
+  'Dataweave',
+  'DataSource',
+  'Dom',
+  'EventBus',
+  'ExternalService',
+  'Flow',
+  'Functions',
+  'Invocable',
+  'KbManagement',
+  'LxScheduler',
+  'Messaging',
+  'Metadata',
+  'Pref_center',
+  'Process',
+  'QuickAction',
+  'Reports',
+  'RichMessageing',
+  //'Schema', // also a System class
+  'Search',
+  'Sfc',
+  'Sfdc_Checkout',
+  'sfdc_surveys',
+  'Site',
+  'Support',
+  'System',
+  'TerritoryMgmt',
+  'TxnSecurity',
+  'UserProvisioning',
+  'VisualEditor',
+  'Wave'
+];
+// TODO: Check if these are necessary
+SYSTEM_CLASSES = [
+  'AccessLevel',
+  'Address',
+  'Answers',
+  'ApexPages',
+  'Approval',
+  'Assert',
+  'AsyncInfo',
+  'AsyncOptions',
+  'BusinessHours',
+  'Cases',
+  'Collator',
+  'Continuation',
+  'Cookie',
+  'Crypto',
+  'Database',
+  'Date',
+  'Datetime',
+  'Decimal',
+  'Domain',
+  'DomainCreator',
+  'DomainParser',
+  'EmailMessages',
+  'EncodingUtil',
+  'EventBus',
+  'Exception',
+  'FeatureManagement',
+  'FlexQueue',
+  'Formula',
+  'FormulaRecalcFieldError',
+  'FormulaRecalcResult',
+  'Http',
+  'HttpRequest',
+  'HttpResponse',
+  'Ideas',
+  'JSON',
+  'JSONGenerator',
+  'JSONParser',
+  'Label',
+  'Limits',
+  'Location',
+  'Matcher',
+  'Math',
+  'Messaging',
+  'MultiStaticResourceCalloutMock',
+  'Network',
+  'OrgLimit',
+  'OrgLimits',
+  'Packaging',
+  'PageReference',
+  'Pattern',
+  'QueueableDuplicateSignature',
+  'QueueableDuplicateSignature.Builder',
+  'QuickAction',
+  'Request',
+  'ResetPasswordResult',
+  'RestContext',
+  'RestRequest',
+  'RestResponse',
+  'Schema',
+  'Search',
+  'Security',
+  'SelectOption',
+  'Site',
+  'SObject',
+  'SObjectAccessDecision',
+  'StaticResourceCalloutMock',
+  'Test',
+  'TimeZone',
+  //'Trigger', // handled separately
+  'Type',
+  'URL',
+  'UserInfo',
+  'UserManagement',
+  'Version',
+  'WebServiceCallout',
+  'XmlStreamReader',
+  'XmlStreamWriter'
+];
+SYSTEM_ENUMS = [
+  'AccessType',
+  'AccessLevel',
+  'DomainType',
+  'JSONToken',
+  'LoggingLevel',
+  'Quiddity',
+  'TriggerOperation',
+  'operationType'
+];
+
+BUILT_INS = NAMESPACE_LIST.concat(...SYSTEM_CLASSES);
+
+
+
+PUNCTUATION_LIST = [
+  ',',
+  /(?<!=\?)(\.)/,
+  ';',
+  /(?<=\w)(\>)/,
+  /(\<)(?=\w)/,
+  /\{|\}/,
+  /\(|\)/,
+  /\{|\}/
+];
+
+OPERATORS_RE = [
+  /--/, // decrement
+  /\+\+/, // increment
+  /\&\&|\|\|/, // logical
+  /\*\=|\/\=|\%\=|\+\=|-\=/, // assignment.compound
+  /\&\=|\^\=|<<\=|>>\=|>>>\=|\|\=/, // assignment.compound.bitwise
+  /\&|~|\^|\|/, // bitwise
+  /<<|>>/, // bitwise.shift
+  /<\=|>\=|\s(<|>)\s/, // relational
+  /\=\=|!\=/, // comparison
+  /\=>/, // map assign
+  /!(?=\w)/, // negator
+  /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
+  /\?\./, // null-safe operator
+  /(?<!\?)\?(?!\?|\.|\[)/, // ternary operator or CONDITIONAL_OPERATOR
+  /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
+  /(?<!\=|!)\=(?!\=|>)/ // assignment
+];
+
+NUMBERS_RE = [
+  /\b(\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}(\.\d{1,3})?(\-|\+)\d{2}\:\d{2})\b/, //datetime
+  /\b(\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}(\.\d{1,3})?(Z)?)\b/, //datetime
+  /\b(\d{4}\-\d{2}\-\d{2})\b/, //date
+  /\b0(x|X)[0-9a-fA-F_]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //hex
+  /\b0(b|B)[01_]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //binary
+  /\b([0-9]+)?\.[0-9]+((e|E)[0-9]+)?(F|f|D|d|M|m)?\b/, //decimal
+  /(-?)\b[0-9]+(e|E)[0-9]+(F|f|D|d|M|m)?\b/, //decimal
+  /(-?)\b[0-9]+(F|f|D|d|M|m)\b/, //decimal
+  /(-?)\b[0-9]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //decimal
+  /(-?)(\b0[0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/ // C_NUMBER_MODE
+];
+
+SALESFORCE_ID = {
+  match: /(?<!\.)\bId\b/,
+  scope: 'type',
+  relevance: 8
+};
+
+SWITCH_STATEMENT = {
+  match: [/\bswitch\s+on\s+/, APEX_IDENT_RE],
+  scope: { 1: 'keyword', 2: 'variable' }
+};
+
+EXCEPTION = {
+  // Various Apex Exception types
+  match: [/\b[a-zA-Z0-9\.]*Exception/, /\s+/, APEX_IDENT_RE],
+  scope: { 1: 'title.class', 3: 'variable' },
+  relevance: 0
+};
+
+CLASS_SHARING = {
+  // class sharing
+  relevance: 5,
+  match: /\b(with|without|inherited)\s+sharing\b/,
+  scope: 'keyword'
+};
+
+INSTANTIATE_TYPE = {
+  // Account a = new Account(Name = 'test account);
+  match: [/\bnew\s+/, APEX_IDENT_RE, /(?=\s*\()/],
+  scope: { 2: 'type' },
+  relevance: 0
+};
+
+/**
+ * SOQL SECTION
+ */
+
+SOQL_RESERVED = [
+  // * orange italic
+  'ABOVE_OR_BELOW',
+  'ACTIVE',
+  'ADVANCED',
+  'ALL',
+  'ANY',
+  'ARRAY',
+  'AS',
+  'ASC',
+  'BY',
+  'CATEGORY',
+  'CONTAINS',
+  'CUSTOM',
+  'DATA',
+  'DESC',
+  'DIVISION',
+  'END',
+  'FIELDS',
+  'FIND',
+  'FROM',
+  'LAST',
+  'METADATA',
+  'NETWORK',
+  'ON',
+  'ORDER',
+  'RETURNING',
+  'ROLLUP',
+  'ROWS',
+  'SEARCH',
+  'SELECT',
+  'SNIPPET',
+  'SORT',
+  'SPELL_CORRECTION',
+  'STANDARD',
+  'USER_MODE',
+  'WHERE',
+  'PricebookId',
+  'WITH',
+  'SECURITY_ENFORCED',
+  'USING',
+  'SCOPE',
+  'Delegated',
+  'Everything',
+  'Mine',
+  'My_Territory',
+  'My_Team_Territory',
+  'Team',
+  'TYPEOF',
+  'ELSE',
+  'END',
+  'THEN',
+  'WHEN'
+  /* /USING\s+SCOPE\s*(Delegated|Everything|Mine|My_Territory|My_Team_Territory|Team)/, */
+];
+
+SOQL_OPERATORS = [
+  // * orange italic
+  'ABOVE',
+  'AND',
+  'AT',
+  'BY',
+  'CATEGORY',
+  'DATA',
+  'FIRST',
+  'FOR',
+  'GROUP',
+  'HAVING',
+  'IN',
+  'LAST',
+  'LIKE',
+  'LIMIT',
+  'LISTVIEW',
+  'NOT',
+  'NULLS',
+  'OFFSET',
+  'OR',
+  'REFERENCE',
+  'TRACKING',
+  'TYPEOF',
+  'UPDATE',
+  'UPDATE',
+  'VIEW',
+  'VIEWSTAT'
+];
+
+SOQL_FUNCTIONS = [
+  // * blue italic
+  'AVG',
+  'convertCurrency',
+  'convertTimezone',
+  'COUNT_DISTINCT',
+  'COUNT',
+  'DISTANCE',
+  'EXCLUDES',
+  'FORMAT',
+  'GEOLOCATION',
+  'GROUP BY CUBE',
+  'GROUP BY ROLLUP',
+  'GROUPING',
+  'INCLUDES',
+  'MAX',
+  'MIN',
+  'SUM',
+  'toLabel'
+];
+
+SOQL_DATE_FUNCTIONS = [
+  'DAY_IN_MONTH',
+  'HOUR_IN_DAY',
+  'DAY_IN_WEEK',
+  'DAY_IN_YEAR',
+  'DAY_ONLY',
+  'CALENDAR_MONTH',
+  'CALENDAR_QUARTER',
+  'CALENDAR_YEAR',
+  'FISCAL_MONTH',
+  'FISCAL_QUARTER',
+  'FISCAL_YEAR',
+  'TODAY',
+  'TOMORROW',
+  'YESTERDAY',
+  'WEEK_IN_MONTH',
+  'WEEK_IN_YEAR'
+];
+
+ILLEGALS = [
+  '</',
+  '<#',
+  '<]',
+  '<div>',
+  '<!--',
+  '!DOCTYPE',
+  /<iframe\b/,
+  /^#/,
+  /^import \.[a-zA-Z]+\./,
+  /^import [\w]+/,
+  /^import$/,
+  /^include </,
+  /^use\s+</,
+  /\b(const|var|let)\s+\w+\s*=/,
+  /\bstruct\b/,
+  'System.log',
+  'console.log',
+  /\bfor\s+\w+\s+IN\s+/,
+  /\bif\s+\w+\s+IN\s+/,
+  /\bend\s+if\b/,
+  /\bend\s+select\b/,
+  /\b(int|var)\s+\w+\s+=/,
+  /\b(int[0-9]+|bool)\b/,
+  /\b\$/,
+  '::=',
+  /\s#[a-zA-Z]/,
+  /\s_[a-zA-Z]/,
+  /\s\$[a-zA-Z]/,
+  '#if',
+  '%if',
+  /\bif(?!\s+\()/, //coffeescript
+  '%endif',
+  '#endif',
+  /\w::\w/,
+  /\bint\b/,
+  /import\s+\w+\s+=\s+require\("\w+"\)/,
+  '/^include\b/',
+  /\buse\s+strict\b/,
+  /\w+\s+=\s+"\S*";/,
+  /\/include\//,
+  /\Anamespace\b/,
+  /\bend(\.)?\n/,
+  '"""',
+  /\+\+\+/,
+  /<%/,
+  '<%#',
+  '%%>',
+  '<%%',
+  ':-',
+  /\bmergesort\(/,
+  /\bvar\s+env\b/,
+  /\bdef\b\s\W:/,
+  /"[^"]+"/, // Quote_string_mode
+  // /@\w+\[\w+\]/ //moonscript
+  /^default/, // lsl
+  /\/ ;$/, // gams
+  /\/\n/ // gams
+];
+
+// * Can use later; omitted for now
+/*   CUSTOM_METADATA = {
+    // Custom fields, types, etc.
+    match: [
+      /(?<=[^\w\.])/,
+      regex.concat(
+        /\b/,
+        APEX_IDENT_RE,
+        /__(c|pc|r|b|e|mdt|x|share|kav|ka|history|del|s)/,
+        /\b/
+      ),
+      /(?=[\(\s;,])/
+    ],
+    scope: {
+      2: 'type'
+    },
+    relevance: 10
+  }; */
+
+
+
+
   return {
     name: 'Apex',
     aliases: ['apex', 'lightning', 'soql'],
@@ -666,27 +1224,9 @@ export default function (hljs) {
     disableAutodetect: false,
     ignoreIllegals: false,
     keywords: KEYWORDS,
-    illegal: apex.ILLEGALS,
+    illegal: ILLEGALS,
     contains: [
-      ANNOTATIONS,
-      MISCELLANEOUS,
-      COLLECTIONS,
-      COMMENTS,
-      DECLARATIONS,
-      DML_OPERATIONS,
-      apex.EXCEPTION,
-      FOR_LOOP,
-      STRINGS,
-      apex.INSTANTIATE_TYPE,
-      LANGUAGE_VARS_RE,
-      METHOD_CALL,
-      NAMESPACES,
-      NUMBERS,
-      OPERATORS,
-      PUNCTUATION,
-      apex.SALESFORCE_ID,
-      SOQL_QUERY,
-      apex.SWITCH_STATEMENT
+      CONTAINS_ITEMS
     ]
   };
 }

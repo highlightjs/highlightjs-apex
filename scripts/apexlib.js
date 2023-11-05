@@ -1,9 +1,9 @@
-//import * as hljs from '../../../../src/highlight.js';
+
+function (hljs) {}
+
 
 export const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
 export const APEX_IDENT_WORD_RE = '\\b' + APEX_IDENT_RE + '\\b';
-
-
 
 export const KEYWORD_LIST = [
   'try',
@@ -27,7 +27,7 @@ export const KEYWORD_LIST = [
   'new'
 ];
 
-export const KEYWORD_RE = [
+/* export const KEYWORD_RE = [
   /try\b/,
   /catch\b/,
   /finally\b/,
@@ -47,11 +47,9 @@ export const KEYWORD_RE = [
   /throw\b/,
   /when\b/,
   /new\b/
-];
+]; */
 
 export const LANGUAGE_VAR_LIST = ['instanceof', 'super', 'this'];
-
-
 
 export const LITERALS = ['false', 'true', 'null'];
 
@@ -273,8 +271,6 @@ export const PUNCTUATION_LIST = [
   /\{|\}/
 ];
 
-
-
 export const OPERATORS_RE = [
   /--/, // decrement
   /\+\+/, // increment
@@ -294,7 +290,6 @@ export const OPERATORS_RE = [
   /(?<!\=|!)\=(?!\=|>)/ // assignment
 ];
 
-
 export const NUMBERS_RE = [
   /\b(\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}(\.\d{1,3})?(\-|\+)\d{2}\:\d{2})\b/, //datetime
   /\b(\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}(\.\d{1,3})?(Z)?)\b/, //datetime
@@ -307,7 +302,6 @@ export const NUMBERS_RE = [
   /(-?)\b[0-9]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //decimal
   /(-?)(\b0[0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/ // C_NUMBER_MODE
 ];
-
 
 export const SALESFORCE_ID = {
   match: /(?<!\.)\bId\b/,
