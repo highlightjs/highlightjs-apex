@@ -184,15 +184,6 @@ export default function (hljs) {
     }
   ];
 
-  const EXCEPTION = [
-    {
-      // Various Apex Exception types
-      match: [/\b[a-zA-Z0-9\.]*Exception/, SPACE, APEX_IDENT_RE],
-      scope: { 1: 'title.class', 3: 'variable' },
-      relevance: 0
-    }
-  ];
-
   const COLLECTIONS = [
     {
       //scope: 'clause: collection',
@@ -252,15 +243,6 @@ export default function (hljs) {
     }
   ];
 
-  const INSTANTIATE_TYPE = [
-    {
-      // Account a = new Account(Name = 'test account);
-      match: [/\bnew\s+/, APEX_IDENT_RE, SPACEPARENS_LOOKAHEAD],
-      scope: { 2: 'type' },
-      relevance: 0
-    }
-  ];
-
   const PARAMS_CALL = {
     //scope: 'clause: params call',
     begin: /\((?!(\s*\[))/,
@@ -274,7 +256,7 @@ export default function (hljs) {
     illegal: apex.KEYWORD_LIST,
     contains: [
       STRINGS,
-      INSTANTIATE_TYPE,
+      apex.INSTANTIATE_TYPE,
       COMMENTS,
       OPERATORS,
       COLLECTIONS,
@@ -396,7 +378,9 @@ export default function (hljs) {
         COMMENTS,
         {
           begin: /\(/,
+          beginScope: 'punctuation',
           end: /\)/,
+          endScope: 'punctuation',
           contains: [
             {
               match:
@@ -408,12 +392,7 @@ export default function (hljs) {
         }
       ]
     },
-    {
-      // class sharing
-      relevance: 5,
-      match: /\b(with|without|inherited)\s+sharing\b/,
-      scope: 'keyword'
-    },
+    apex.CLASS_SHARING,
     {
       // class declaration
       begin: [/[^\.]/, /\bclass\b/],
@@ -499,11 +478,6 @@ export default function (hljs) {
       relevance: 0
     }
   ];
-
-  const SWITCH_STATEMENT = {
-    match: [/\bswitch\s+on\s+/, APEX_IDENT_RE],
-    scope: { 1: 'keyword', 2: 'variable' }
-  };
 
   /**
    * SOQL SECTION
@@ -605,6 +579,7 @@ export default function (hljs) {
       /:/
     ],
     beginScope: {
+      2: 'punctuation',
       3: 'type',
       5: 'variable',
       7: 'operator'
@@ -684,10 +659,10 @@ export default function (hljs) {
       COMMENTS,
       DECLARATIONS,
       DML_OPERATIONS,
-      EXCEPTION,
+      apex.EXCEPTION,
       FOR_LOOP,
       STRINGS,
-      INSTANTIATE_TYPE,
+      apex.INSTANTIATE_TYPE,
       apex.LANGUAGE_VARS_RE,
       METHOD_CALL,
       NAMESPACES,
@@ -696,7 +671,7 @@ export default function (hljs) {
       PUNCTUATION,
       apex.SALESFORCE_ID,
       SOQL_QUERY,
-      SWITCH_STATEMENT
+      apex.SWITCH_STATEMENT
     ]
   };
 }
