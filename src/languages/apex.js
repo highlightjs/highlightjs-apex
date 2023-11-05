@@ -19,7 +19,7 @@ export default function (hljs) {
   const KEYWORDS = apex.KEYWORDS;
   const PUNCTUATION = apex.PUNCTUATION;
   const OPERATORS = apex.OPERATORS;
-  
+
   /**
    * @param {...(RegExp | string) } args
    * @returns {string}
@@ -51,7 +51,13 @@ export default function (hljs) {
     },
     {
       // System and its classes
-      match: [/\b/, 'System', /\./, regex.either(...apex.SYSTEM_CLASSES), /(?=\.)/],
+      match: [
+        /\b/,
+        'System',
+        /\./,
+        regex.either(...apex.SYSTEM_CLASSES),
+        /(?=\.)/
+      ],
       scope: { 2: 'built_in', 3: 'punctuation', 4: 'built_in' },
       relevance: 5
     },
@@ -90,8 +96,6 @@ export default function (hljs) {
       ]
     }
   ];
-
-  
 
   const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
     contains: [{ match: /\\'/, scope: 'literal' }],
@@ -140,7 +144,6 @@ export default function (hljs) {
 
   const COMMENTS = [COMMENT_BLOCK, COMMENT_LINE];
 
-  
   const ANNOTATIONS = [
     // We allow any annotation, so we do not need to maintain a list
     {
@@ -679,7 +682,6 @@ export default function (hljs) {
       MISCELLANEOUS,
       COLLECTIONS,
       COMMENTS,
-     
       DECLARATIONS,
       DML_OPERATIONS,
       EXCEPTION,
@@ -697,5 +699,4 @@ export default function (hljs) {
       SWITCH_STATEMENT
     ]
   };
-
 }
