@@ -16,9 +16,39 @@ export default function (hljs) {
   const SPACEPARENS_LOOKAHEAD = '(?=\\s*\\()'; //(?=\s*\()/;
   const PARENS_LOOKAHEAD = /(?=\()/; //'(?=\\()';
   const SPACE = /\s+/;
-  const KEYWORDS = apex.KEYWORDS;
-  const PUNCTUATION = apex.PUNCTUATION;
-  const OPERATORS = apex.OPERATORS;
+
+  const PUNCTUATION = {
+    match: regex.either(...apex.PUNCTUATION_LIST),
+    scope: 'punctuation',
+    relevance: 0
+  };
+
+  const OPERATORS = {
+    match: regex.concat(
+      /(?<=\W|\b|\s)/,
+      regex.either(...apex.OPERATORS_RE),
+      //negLookaheadAny(...apex.OPERATORS_RE)
+      /(?=\W|\b|\s)/
+    ),
+    scope: 'operator',
+    relevance: 0
+  };
+  const NUMBERS = {
+    scope: 'number',
+    match: regex.either(...apex.NUMBERS_RE),
+    relevance: 0
+  };
+
+  const KEYWORDS = {
+    $pattern: '(?<!\\.)' + APEX_IDENT_WORD_RE,
+    keyword: apex.KEYWORD_LIST.concat(...apex.STORAGE_MODIFIER_LIST).concat(
+      ...apex.DMLS
+    ),
+    'variable.language': apex.LANGUAGE_VAR_LIST,
+    built_in: apex.BUILT_INS,
+    type: apex.TYPES,
+    literal: apex.LITERALS
+  };
 
   /**
    * @param {...(RegExp | string) } args
@@ -27,7 +57,12 @@ export default function (hljs) {
   function negLookaheadAny(...list) {
     return regex.concat('(?!', list.join('|'), ')');
   }
-  const NUMBERS = apex.NUMBERS;
+
+  const LANGUAGE_VARS_RE = {
+    match: regex.concat(/\b/, regex.either(...apex.LANGUAGE_VAR_LIST), /\b/),
+    scope: 'variable.language',
+    relevance: 0
+  };
 
   const NAMESPACES = [
     {
@@ -231,11 +266,7 @@ export default function (hljs) {
     },
     // Casting
     {
-      match: [
-        /(?<=\=\s*\()/,
-        APEX_IDENT_RE,
-        '(?=\\)\\s*' + APEX_IDENT_RE + ')'
-      ],
+      match: [/(?<=\=\s*\()/, APEX_IDENT_RE, '(?=\\)\\s*' + APEX_IDENT_RE + ')'],
       scope: {
         2: 'type'
       },
@@ -356,15 +387,7 @@ export default function (hljs) {
   const DECLARATIONS = [
     {
       // trigger declaration
-      begin: [
-        /\btrigger/,
-        SPACE,
-        APEX_IDENT_RE,
-        SPACE,
-        'on',
-        SPACE,
-        APEX_IDENT_RE
-      ],
+      begin: [/\btrigger/, SPACE, APEX_IDENT_RE, SPACE, 'on', SPACE, APEX_IDENT_RE],
       beginScope: {
         1: 'keyword',
         3: 'title.class',
@@ -569,15 +592,7 @@ export default function (hljs) {
   };
 
   const FOR_LOOP = {
-    begin: [
-      /\bfor\b\s*/,
-      /\(/,
-      APEX_IDENT_RE,
-      SPACE,
-      APEX_IDENT_RE,
-      /\s*/,
-      /:/
-    ],
+    begin: [/\bfor\b\s*/, /\(/, APEX_IDENT_RE, SPACE, APEX_IDENT_RE, /\s*/, /:/],
     beginScope: {
       2: 'punctuation',
       3: 'type',
@@ -663,7 +678,7 @@ export default function (hljs) {
       FOR_LOOP,
       STRINGS,
       apex.INSTANTIATE_TYPE,
-      apex.LANGUAGE_VARS_RE,
+      LANGUAGE_VARS_RE,
       METHOD_CALL,
       NAMESPACES,
       NUMBERS,

@@ -51,11 +51,7 @@ export const KEYWORD_RE = [
 
 export const LANGUAGE_VAR_LIST = ['instanceof', 'super', 'this'];
 
-export const LANGUAGE_VARS_RE = {
-    match: regex.concat(/\b/, regex.either(...LANGUAGE_VAR_LIST), /\b/),
-    scope: 'variable.language',
-    relevance: 0
-  };
+
 
 export const LITERALS = ['false', 'true', 'null'];
 
@@ -257,7 +253,7 @@ export const SYSTEM_ENUMS = [
 
 export const BUILT_INS = NAMESPACE_LIST.concat(...SYSTEM_CLASSES);
 
-export const KEYWORDS = {
+const KEYWORDS = {
   $pattern: '(?<!\\.)' + APEX_IDENT_WORD_RE,
   keyword: KEYWORD_LIST.concat(...STORAGE_MODIFIER_LIST).concat(...DMLS),
   'variable.language': LANGUAGE_VAR_LIST,
@@ -277,11 +273,7 @@ export const PUNCTUATION_LIST = [
   /\{|\}/
 ];
 
-export const PUNCTUATION = {
-	match: regex.either(...PUNCTUATION_LIST),
-	scope: 'punctuation',
-	relevance: 0
-  };
+
 
 export const OPERATORS_RE = [
   /--/, // decrement
@@ -301,16 +293,7 @@ export const OPERATORS_RE = [
   /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
   /(?<!\=|!)\=(?!\=|>)/ // assignment
 ];
-export const OPERATORS = {
-  match: regex.concat(
-    /(?<=\W|\b|\s)/,
-    regex.either(...apex.OPERATORS_RE),
-    //negLookaheadAny(...apex.OPERATORS_RE)
-    /(?=\W|\b|\s)/
-  ),
-  scope: 'operator',
-  relevance: 0
-};
+
 
 export const NUMBERS_RE = [
   /\b(\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}(\.\d{1,3})?(\-|\+)\d{2}\:\d{2})\b/, //datetime
@@ -324,11 +307,7 @@ export const NUMBERS_RE = [
   /(-?)\b[0-9]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //decimal
   /(-?)(\b0[0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/ // C_NUMBER_MODE
 ];
-export const NUMBERS = {
-    scope: 'number',
-    match: regex.either(...NUMBERS_RE),
-    relevance: 0
-  };
+
 
 export const SALESFORCE_ID = {
   match: /(?<!\.)\bId\b/,
@@ -554,7 +533,7 @@ export const ILLEGALS = [
 
 // * Can use later; omitted for now
 /*   export const CUSTOM_METADATA = {
-    // Custom fields, apex.TYPES, etc.
+    // Custom fields, apex.types, etc.
     match: [
       /(?<=[^\w\.])/,
       regex.concat(
