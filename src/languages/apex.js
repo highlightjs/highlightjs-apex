@@ -407,10 +407,9 @@ export default function (hljs) {
   ];
 
   const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
-    
     scope: 'string',
     relevance: 0,
-    contains: [{match: /\\'/, scope: 'literal', relevance: 0 }]
+    contains: [{ match: /\\'/, scope: 'literal', relevance: 0 }]
   });
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, {
@@ -612,7 +611,12 @@ export default function (hljs) {
       relevance: 0
     },
     {
-      match: [/^\s*/, noneOf(...KEYWORD_LIST),   APEX_IDENT_RE, SPACEPARENS_LOOKAHEAD],
+      match: [
+        /^\s*/,
+        noneOf(...KEYWORD_LIST),
+        APEX_IDENT_RE,
+        SPACEPARENS_LOOKAHEAD
+      ],
       scope: { 3: 'title.function.invoke' },
       relevance: 0
     }
@@ -762,9 +766,13 @@ export default function (hljs) {
     CLASS_DECLARATION,
     ENUM_DECLARATION,
     {
-      // * Constructor DECLARATION
+      // * Constructor
       // Matches public/private/protected methodname parens
-      match: [/(public|private|protected)\s+/, APEX_IDENT_RE, SPACEPARENS_LOOKAHEAD],
+      match: [
+        /(public|private|protected)\s+/,
+        APEX_IDENT_RE,
+        SPACEPARENS_LOOKAHEAD
+      ],
       scope: {
         1: 'keyword',
         2: 'title.function'
@@ -996,7 +1004,7 @@ export default function (hljs) {
       OPERATORS,
       STRINGS,
       PUNCTUATION_COMMA,
-      { match: /\(|\)/, scope: 'punctuation', relevance: 0},
+      { match: /\(|\)/, scope: 'punctuation', relevance: 0 },
       ...DOT_NOTATION,
       {
         begin: [/\bFROM\b/, SPACE],
@@ -1010,7 +1018,8 @@ export default function (hljs) {
       SOQL_DATE_LITERALS_W_PARAMS,
       {
         match: [/(?<=:)/, /\s*/, APEX_IDENT_WORD_RE, /(?!\()/],
-        scope: { 3: 'variable' }, relevance: 0
+        scope: { 3: 'variable' },
+        relevance: 0
       },
       {
         match: [/(?<=:|\.)/, APEX_IDENT_RE, /(?=\s*\()/],
@@ -1018,7 +1027,7 @@ export default function (hljs) {
         relevance: 0
       },
       //PARAMS_CALL,
-      { match: /:/, scope: 'operator' , relevance: 0}
+      { match: /:/, scope: 'operator', relevance: 0 }
     ],
     illegal: '::'
   };
@@ -1039,42 +1048,6 @@ export default function (hljs) {
       7: 'operator'
     }
   };
-
-  /* const FOR_LOOP = {
-    begin: [
-      /\bfor\b\s* /,
-      /\(/,
-      APEX_IDENT_RE,
-      SPACE,
-      APEX_IDENT_RE,
-      /\s* /,
-      /:/
-    ],
-    beginScope: {
-      3: 'type',
-      5: 'variable',
-      7: 'operator'
-    },
-    end: /(?=\{)/,
-    //scope: 'clause: for_loop',
-
-    contains: [
-      COMMENTS,
-      FUNCTION_CALL,
-      NUMBERS,
-      OPERATORS,
-      SOQL_QUERY,
-      {
-        match: regex.concat(APEX_IDENT_RE, /\b(?!\()/),
-        scope: 'variable'
-      },
-      {
-        match: /\{/,
-        endsParent: true,
-        scope: 'punctution'
-      }
-    ]
-  }; */
 
   const ILLEGALS = [
     '</',
@@ -1138,7 +1111,7 @@ export default function (hljs) {
     /\bdef\b\s\W:/,
     /"[^"]+"/, // Quote_string_mode
     // /@\w+\[\w+\]/ //moonscript
-    /\(\*|\*\)/, //mathematica, ocaml
+    /\(\*|\*\)/ //mathematica, ocaml
   ];
 
   return {
