@@ -1,3 +1,5 @@
+/* monokai-sublime-apex.css */
+
 pre code.hljs {
 	display: block;
 	overflow-x: auto;
@@ -44,7 +46,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	font-style: italic;
 }
 .hljs-bullet,
-.hljs-meta .hljs-string,
+
 .hljs-selector-id,
 .hljs-template-variable {
 	color: #e6db74;
@@ -77,7 +79,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #ae81ff;
 	text-decoration: underline;
 }
-.hljs-meta .hljs-keyword,
 .hljs-params .hljs-variable {
 	color: #fd971f;
 }
@@ -93,6 +94,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #ae81ff;
 	font-style: normal;
 }
+.hljs-meta .hljs-keyword,
 .hljs-params,
 .hljs-property,
 .hljs-punctuation,
@@ -102,6 +104,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-variable {
 	color: #f8f8f2;
 }
+.hljs-meta .hljs-string,
 .hljs-string {
 	color: #e6db74;
 	font-style: normal;
@@ -135,6 +138,7 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #66d9ef;
 	font-style: italic;
 }
+.hljs-soql .hljs-params,
 .hljs-soql .hljs-variable {
 	color: #f8f8f2;
 	font-style: normal;
