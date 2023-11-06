@@ -114,3 +114,6 @@ typings/
 .pmdCache
 
 demo/scratchpad.*
+
+# temp directory
+temp
