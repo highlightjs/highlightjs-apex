@@ -1,0 +1,60 @@
+[SELECT
+   Account.Name, 
+   (SELECT FIELDS(ALL) FROM Account.Contacts LIMIT 200)
+FROM Account]
+
+[SELECT Id, FIELDS(ALL) FROM User LIMIT 200]
+[SELECT 
+    TYPEOF What
+        WHEN Account THEN Phone
+        ELSE Name
+    END
+FROM Event
+WHERE CreatedById IN
+    (
+    SELECT CreatedById
+    FROM Case
+    )]
+[SELECT
+    TYPEOF What
+        WHEN Account THEN Id, LastModifiedDate
+        WHEN Opportunity THEN Id
+    END
+FROM Task]
+[SELECT 
+  TYPEOF What
+    WHEN Account THEN Phone, NumberOfEmployees
+    WHEN Opportunity THEN Amount, CloseDate
+    ELSE Name, Email
+  END
+FROM Event]
+[SELECT Id, (SELECT Id from OpportunityLineItems) 
+FROM Opportunity 
+WHERE Id IN
+  (
+    SELECT OpportunityId
+    FROM OpportunityLineItem
+    WHERE totalPrice > 10000
+  )]
+[SELECT Id FROM Account WHERE CreatedDate = NEXT_N_FISCAL_QUARTERS:6]
+[SELECT Id FROM Opportunity WHERE CloseDate = N_WEEKS_AGO:3]
+[SELECT Id FROM Account WHERE CreatedDate = YESTERDAY]
+[SELECT Id, MSP1__c from CustObj__c WHERE MSP1__c includes ('AAA;BBB','CCC')]
+[SELECT Id
+FROM Case
+WHERE Contact.LastName = null]
+[SELECT Title FROM Question WHERE LastReplyDate > 2005-10-08T01:02:03Z WITH DATA CATEGORY Geography__c AT (usa__c, uk__c)]
+[SELECT LeadSource, COUNT(Name) cnt
+FROM Lead
+GROUP BY ROLLUP(LeadSource)]
+[SELECT LeadSource, COUNT(Name) cnt
+FROM Lead
+GROUP BY ROLLUP(LeadSource)]
+[SELECT Name, MAX(Amount), MIN(Amount) min, SUM(Amount)
+FROM Opportunity
+GROUP BY Name]
+[SELECT LeadSource, Rating,
+    GROUPING(LeadSource) grpLS, GROUPING(Rating) grpRating,
+    COUNT(Name) cnt
+FROM Lead
+GROUP BY ROLLUP(LeadSource, Rating)]

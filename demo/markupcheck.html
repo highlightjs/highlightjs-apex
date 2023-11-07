@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Apex Markup Check</title>
+		<meta charset="UTF-8" />
+		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.js"></script>
+		<script charset="UTF-8" src="../dist/apex.min.js"></script>
+		<link rel="stylesheet" href="./testcode.css" />
+		<!-- <link rel="stylesheet" href="../src/styles/monokai-sublime-apex.css" /> -->
+    <link rel="stylesheet" href="vs.css" />
+		<script>
+			hljs.debugMode();
+			hljs.highlightAll();
+		</script>
+		<style>
+			pre code {
+				white-space: pre-wrap;
+				font-size: 120%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<pre><code class="language-apex">
+/**
+ * @author John Smith
+ */
+@IsTest(Seealldata=true)
+public with sharing class L2Char implements Database.batchable {
+  public static final String ERROR = 0x0001;
+
+  @InvocableMethod(label='my invocable')
+  public static void moveTo(
+    Integer x, 
+    Integer y, 
+    Integer z
+  ) {
+    
+    
+    Account a = new Account();
+    a.Custom__c = 'stringvalue';
+    insert a;
+    Boolean ai = (Boolean) false;
+    System.debug('Should not be called');
+    if (1 &gt; 5 && !Test.isRunningTest()) { // wtf!?
+      Database.insert(myAccounts, false);
+    }
+  }
+
+  @TestSetup
+  private static void makeData(Boolean a){
+    Custom__c c = new Custom__c();
+    
+    for(Account a : acctLis ){
+      ConnectApi.insert a;
+    }
+  }
+
+  @isTest
+  private static void testme(){
+    System.assert(true);
+  }
+
+  @testVisible
+  private List&lt;SelectOption&gt; recordTypes { get; private set; }
+
+  for(Account a : [SELECT Id FROM Account WHERE LastModifiedDate = LAST_N_DAYS:3]){
+    Assert.fail();
+  }
+}
+
+trigger CTrig on Custom__c (before insert){
+  System.debug('inserting a record');
+  upsert myRecord__c;
+}
+</code></pre>
+	</body>
+</html>

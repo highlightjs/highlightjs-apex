@@ -126,14 +126,6 @@ export default function (hljs) {
     'convertLead'
   ];
 
-  const SYSTEM_INTERFACES = [
-    'schedulable',
-    'batchable',
-    'queueable',
-    'comparable',
-    'callable'
-  ];
-
   const NAMESPACE_LIST = [
     //'ApexPages', // also a System class
     'AppLauncher',
@@ -669,15 +661,6 @@ export default function (hljs) {
     end: /\{/,
     contains: [
       {
-        match: regex.concat(
-          /\b/,
-          regex.either(...SYSTEM_INTERFACES),
-          /\b\s*(?!>)/
-        ),
-        scope: 'title.class.inherited',
-        relevance: 8
-      },
-      {
         match: [APEX_IDENT_WORD_RE, /(?=\.)/],
         scope: { 1: 'built_in' }
       },
@@ -814,14 +797,6 @@ export default function (hljs) {
       match: /as\s+(user|system)\b/,
       scope: 'keyword'
     }
-    /* {
-      match: [
-        regex.concat(/\b/, regex.either(...DMLS)),
-        /\s+(?!\()/,
-        regex.optional(/as\s+(user|system)\b/)
-      ],
-      scope: { 3: 'keyword' }
-    } */
   ];
 
   /**
@@ -831,6 +806,7 @@ export default function (hljs) {
   const SOQL_KEYWORDS = [
     // * orange italic
     'ABOVE_OR_BELOW',
+    'ABOVE',
     'ACTIVE',
     'ADVANCED',
     'ALL',
@@ -838,63 +814,53 @@ export default function (hljs) {
     'ARRAY',
     'AS',
     'ASC',
-    'BY',
+    'BELOW',
     'CATEGORY',
     'CONTAINS',
     'CUSTOM',
     'DATA',
     'DESC',
     'DIVISION',
+    'ELSE',
     'END',
-    'FIELDS',
     'FIND',
     'FROM',
-    'LAST',
     'METADATA',
     'NETWORK',
     'ON',
-    'ORDER',
+    'PricebookId',
     'RETURNING',
     'ROLLUP',
     'ROWS',
     'SEARCH',
+    'SECURITY_ENFORCED',
     'SELECT',
     'SNIPPET',
     'SORT',
     'SPELL_CORRECTION',
     'STANDARD',
+    'THEN',
     'USER_MODE',
-    'WHERE',
-    'PricebookId',
-    'WITH',
-    'SECURITY_ENFORCED',
     'USING',
+    'WHEN',
+    'WHERE',
+    'WITH',
     'SCOPE',
     'Delegated',
     'Everything',
     'Mine',
     'My_Territory',
     'My_Team_Territory',
-    'Team',
-    'TYPEOF',
-    'ELSE',
-    'END',
-    'THEN',
-    'WHEN'
+    'Team'
     /* /USING\s+SCOPE\s*(Delegated|Everything|Mine|My_Territory|My_Team_Territory|Team)/, */
   ];
 
   const SOQL_OPERATORS = [
     // * orange italic
-    'ABOVE',
     'AND',
     'AT',
-    'BY',
-    'CATEGORY',
-    'DATA',
     'FIRST',
     'FOR',
-    'GROUP',
     'HAVING',
     'IN',
     'LAST',
@@ -909,7 +875,6 @@ export default function (hljs) {
     'TRACKING',
     'TYPEOF',
     'UPDATE',
-    'UPDATE',
     'VIEW',
     'VIEWSTAT'
   ];
@@ -923,11 +888,12 @@ export default function (hljs) {
     'COUNT',
     'DISTANCE',
     'EXCLUDES',
+    'FIELDS',
     'FORMAT',
     'GEOLOCATION',
-    'GROUP BY CUBE',
-    'GROUP BY ROLLUP',
     'GROUPING',
+    'ROLLUP',
+    'CUBE',
     'INCLUDES',
     'MAX',
     'MIN',
@@ -935,52 +901,27 @@ export default function (hljs) {
     'toLabel'
   ];
 
-  const SOQL_DATE_FUNCTIONS = [
-    'DAY_IN_MONTH',
-    'HOUR_IN_DAY',
-    'DAY_IN_WEEK',
-    'DAY_IN_YEAR',
-    'DAY_ONLY',
+  const SOQL_DATE_SELECT_FUNCTIONS = [
     'CALENDAR_MONTH',
     'CALENDAR_QUARTER',
     'CALENDAR_YEAR',
+    'DAY_IN_MONTH',
+    'DAY_IN_WEEK',
+    'DAY_IN_YEAR',
+    'DAY_ONLY',
     'FISCAL_MONTH',
     'FISCAL_QUARTER',
     'FISCAL_YEAR',
-    'TODAY',
-    'TOMORROW',
-    'YESTERDAY',
+    'HOUR_IN_DAY',
     'WEEK_IN_MONTH',
     'WEEK_IN_YEAR'
   ];
 
-  const SOQL_SPECIAL_WORDS = {
-    keyword: []
-      .concat(...KEYWORDS.keyword)
-      .concat(...SOQL_KEYWORDS)
-      .concat(...SOQL_OPERATORS), // * orange italic
-    type: SOQL_FUNCTIONS, // * blue italic
-    'title.function': SOQL_DATE_FUNCTIONS, // * blue normal
-    literal: KEYWORDS.literal,
-    built_in: BUILT_INS
+  const SOQL_DATE_LITERALS_SIMPLE = {
+    match: /\b(TODAY|TOMORROW|YESTERDAY)\b/,
+    scope: 'keyword'
   };
-
-  const SOQL_SELECT = {
-    begin: /\bSELECT\b/,
-    beginScope: 'keyword',
-    end: /\bFROM\b/,
-    returnEnd: true,
-    //scope: 'clause: select',
-    keywords: SOQL_SPECIAL_WORDS,
-    contains: [
-      PUNCTUATION_COMMA,
-      {
-        match: [/(?=[\s\,])/, APEX_IDENT_RE, /(?=[\s\,])/],
-        scope: { 2: 'subst' }
-      } // * back to main text color
-    ]
-  };
-  const SOQL_DATE_LITERALS = {
+  const SOQL_DATE_LITERALS_COMPLEX = {
     match:
       /(NEXT|LAST|THIS)_(90_DAY|DAY|FISCAL_QUARTER|FISCAL_YEAR|MONTH|QUARTER|WEEK|YEAR)S?\b/,
     scope: 'keyword',
@@ -999,6 +940,11 @@ export default function (hljs) {
     },
     relevance: 8
   };
+  const SOQL_DATE_LITERALS = [
+    SOQL_DATE_LITERALS_SIMPLE,
+    SOQL_DATE_LITERALS_COMPLEX,
+    SOQL_DATE_LITERALS_W_PARAMS
+  ];
 
   const SOQL_QUERY = {
     begin: [/\[/, /\s*(?=(SELECT|FIND)\b)/],
@@ -1008,9 +954,11 @@ export default function (hljs) {
     scope: 'soql',
     relevance: 10,
     endsWithParent: true,
-    keywords: SOQL_SPECIAL_WORDS,
+    keywords: {
+      literal: KEYWORDS.literal,
+      built_in: BUILT_INS
+    },
     contains: [
-      SOQL_SELECT,
       NUMBERS,
       OPERATORS,
       STRINGS,
@@ -1025,14 +973,39 @@ export default function (hljs) {
         //returnEnd: true,
         contains: [{ match: APEX_IDENT_RE, scope: 'type' }, ...DOT_NOTATION]
       },
-      SOQL_DATE_LITERALS,
-      SOQL_DATE_LITERALS_W_PARAMS,
       {
+        match: regex.concat(
+          /\b/,
+          regex.either(...SOQL_DATE_SELECT_FUNCTIONS, ...SOQL_FUNCTIONS),
+          /\b/
+        ),
+        scope: 'title.function'
+      },
+      {
+        match: /\b(GROUP|ORDER)\s+BY\b/,
+        scope: 'title.function'
+      },
+      ...SOQL_DATE_LITERALS,
+      {
+        match: regex.concat(
+          /\b/,
+          regex.either(
+            ...KEYWORDS.keyword,
+            ...SOQL_KEYWORDS,
+            ...SOQL_OPERATORS
+          ),
+          /\b/
+        ),
+        scope: 'keyword'
+      },
+      {
+        // colon notation
         match: [/(?<=:)/, /\s*/, APEX_IDENT_WORD_RE, /(?!\()/],
         scope: { 3: 'variable' },
         relevance: 0
       },
       {
+        // any non-soql function used in the query
         match: [/(?<=:|\.)/, APEX_IDENT_RE, /(?=\s*\()/],
         scope: { 2: 'title.function.invoke' },
         relevance: 0
