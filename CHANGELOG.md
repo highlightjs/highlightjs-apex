@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.2](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.1...v1.3.2) (2023-11-07)
+
+
+### Code Refactoring
+
+* **apex:** rearrange class for readability ([#29](https://github.com/highlightjs/highlightjs-apex/issues/29)) ([e73a679](https://github.com/highlightjs/highlightjs-apex/commit/e73a679f7b07b819978f49dba7c9cbb299058cdd))
+* rearrange modules to better order for parsing ([#30](https://github.com/highlightjs/highlightjs-apex/issues/30)) ([b8e8a6f](https://github.com/highlightjs/highlightjs-apex/commit/b8e8a6f5700ab53107757fef6f510035cbbec0d5))
+
+
+### Styles
+
+* **monokai-sublime-apex:** update theme subscopes ([#27](https://github.com/highlightjs/highlightjs-apex/issues/27)) ([837b79f](https://github.com/highlightjs/highlightjs-apex/commit/837b79f5cd0ae7db19eaa0436c1884a31e56f95e))
+
 ## [1.3.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.0...v1.3.1) (2023-11-02)
 
 
