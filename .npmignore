@@ -4,3 +4,4 @@
 !package.json
 !src/**/*
 !test/**/*
+!assets/*
