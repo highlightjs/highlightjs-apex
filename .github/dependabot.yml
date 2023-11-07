@@ -6,16 +6,31 @@
 version: 2
 updates:
   - package-ecosystem: 'npm' # See documentation for possible values
+    allow:
+      - dependency-type: 'development'
     directory: '/' # Location of package manifests
     commit-message:
-      prefix: 'build'
+      #prefix: 'build'
+      prefix: 'build(npm)'
+      #include: 'scope'
+    rebase-strategy: 'auto'
+    schedule:
+      interval: 'daily'
+  - package-ecosystem: 'npm' # See documentation for possible values
+    allow:
+      - dependency-type: 'production'
+    directory: '/' # Location of package manifests
+    commit-message:
+      prefix: 'deps(npm)'
     rebase-strategy: 'auto'
     schedule:
       interval: 'daily'
   - package-ecosystem: 'github-actions' # See documentation for possible values
     directory: '/' # Location of package manifests
     commit-message:
-      prefix: 'ci(actions)'
+      #prefix: 'ci'
+      prefix: 'ci(github-actions)'
+      #include: 'scope'
     rebase-strategy: 'auto'
     schedule:
       interval: 'daily'
