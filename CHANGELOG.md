@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.3.3](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.2...v1.3.3) (2023-11-09)
+
+
+### Bug Fixes
+
+* include interface in class declaration ([#34](https://github.com/highlightjs/highlightjs-apex/issues/34)) ([51037bd](https://github.com/highlightjs/highlightjs-apex/commit/51037bd6589ceeb5d4e1887d3c6f0783f98206cb))
+* remove unnecessary system interfaces ([c8e9b25](https://github.com/highlightjs/highlightjs-apex/commit/c8e9b25a438b3f1a8374b9dd07d44c13341ac624))
+
+
+### Reverts
+
+* "docs: add separate changelog section for dependencies" ([4483ee6](https://github.com/highlightjs/highlightjs-apex/commit/4483ee6a7b4d6df9a2354681c7304ec7726319b9))
+
+
+### Code Refactoring
+
+* soql keywords cleanup ([c8e9b25](https://github.com/highlightjs/highlightjs-apex/commit/c8e9b25a438b3f1a8374b9dd07d44c13341ac624))
+
+
+### Documentation
+
+* add separate changelog section for dependencies ([ed13712](https://github.com/highlightjs/highlightjs-apex/commit/ed1371245844e6ad14bb7345016e92ba0b5f9c68))
+* include testing updates in changelog ([9a55c6a](https://github.com/highlightjs/highlightjs-apex/commit/9a55c6a3f8aa044776a51f6334467ca19597118a))
+
+
+### Tests
+
+* add page to view expected markup test code ([c8e9b25](https://github.com/highlightjs/highlightjs-apex/commit/c8e9b25a438b3f1a8374b9dd07d44c13341ac624))
+* add sample soql file ([c8e9b25](https://github.com/highlightjs/highlightjs-apex/commit/c8e9b25a438b3f1a8374b9dd07d44c13341ac624))
+
+
+### Build System
+
+* include cdn-assets in package ([#35](https://github.com/highlightjs/highlightjs-apex/issues/35)) ([87b56a8](https://github.com/highlightjs/highlightjs-apex/commit/87b56a84b4fcb5e10f32ef798068a75760ca7ed5))
+* use default npm registry ([87b56a8](https://github.com/highlightjs/highlightjs-apex/commit/87b56a84b4fcb5e10f32ef798068a75760ca7ed5))
+
+
+### Continuous Integration
+
+* **dependabot:** auto-rename dependabot update PRs ([#33](https://github.com/highlightjs/highlightjs-apex/issues/33)) ([ca9a5ed](https://github.com/highlightjs/highlightjs-apex/commit/ca9a5ed0e005919d3734ad55c9fda4a4106a240f))
+* **dependabot:** update dependabot PRs only if opened by dependabot ([#36](https://github.com/highlightjs/highlightjs-apex/issues/36)) ([5a19c11](https://github.com/highlightjs/highlightjs-apex/commit/5a19c11376efc3e35e4134d85e1790c238d0b84f))
+
 ## [1.3.2](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.1...v1.3.2) (2023-11-07)
 
 
