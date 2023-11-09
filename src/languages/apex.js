@@ -79,7 +79,6 @@ export default function (hljs) {
     'abstract',
     'final',
     'global',
-    'interface',
     'override',
     'private',
     'protected',
@@ -541,7 +540,7 @@ export default function (hljs) {
   const EXCEPTION = {
     // Various Apex Exception types
     match: [/\b[a-zA-Z0-9\.]*Exception/, SPACE, APEX_IDENT_RE],
-    scope: { 1: 'title.class', 3: 'variable' },
+    scope: { 1: 'type', 3: 'variable' },
     relevance: 0
   };
   const VAR_ASSIGN = {
@@ -722,7 +721,7 @@ export default function (hljs) {
   };
   const CLASS_DECLARATION = {
     // class declaration
-    begin: [/(?!\.)/, /\bclass\b(?!\?|\.)/],
+    begin: [/(?!\.)/, /\b(class|interface)\b(?!\?|\.)/],
     beginScope: { 2: 'keyword' },
     end: /(?=\{)/,
     relevance: 1,
