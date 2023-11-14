@@ -440,11 +440,17 @@ export default function (hljs) {
         relevance: 0
       },
       {
-        begin: '`',
+        /* begin: '`',
         end: '`',
-        scope: 'string',
+        scope: 'string', */
+        excludeBegin: true,
+        excludeEnd: true,
         contains: [hljs.BACKSLASH_ESCAPE],
-        relevance: 0
+        relevance: 0,
+        variants: [
+          { begin: '`', end: '`', scope: 'subst' },
+          { begin: /'/, end: /'/, scope: 'string' }
+        ]
       }
     ]
   });
