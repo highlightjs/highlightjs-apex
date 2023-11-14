@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.4](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.3...v1.3.4) (2023-11-14)
+
+
+### Styles
+
+* exclude tick-marks from comment substring highlighting ([#38](https://github.com/highlightjs/highlightjs-apex/issues/38)) ([66936f4](https://github.com/highlightjs/highlightjs-apex/commit/66936f48a856ac0fdf7dec092a6a93cbf42061c8))
+
+
+### Build System
+
+* move scripts cheatsheet ([1e1e4fc](https://github.com/highlightjs/highlightjs-apex/commit/1e1e4fcfbc8e82a6a81007573106b0b1838c7da9))
+* **prettier:** bump prettier from 3.0.3 to 3.1.0 ([#37](https://github.com/highlightjs/highlightjs-apex/issues/37)) ([a3d10f4](https://github.com/highlightjs/highlightjs-apex/commit/a3d10f4d8e81c50a61c9fdbd4b49b37c9e06ba92))
+
 ## [1.3.3](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.2...v1.3.3) (2023-11-09)
 
 
