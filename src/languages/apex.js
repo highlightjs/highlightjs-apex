@@ -160,6 +160,7 @@ export default function (hljs) {
     'Sfdc_Checkout',
     'sfdc_surveys',
     'Site',
+    'Slack',
     'Support',
     'System',
     'TerritoryMgmt',
@@ -182,6 +183,7 @@ export default function (hljs) {
     'BusinessHours',
     'Cases',
     'Collator',
+    'Compression',
     'Continuation',
     'Cookie',
     'Crypto',
@@ -199,6 +201,7 @@ export default function (hljs) {
     'FeatureManagement',
     'FlexQueue',
     'Formula',
+    'FormulaEval',
     'FormulaRecalcFieldError',
     'FormulaRecalcResult',
     'Http',
@@ -244,6 +247,7 @@ export default function (hljs) {
     'URL',
     'UserInfo',
     'UserManagement',
+    'UUID',
     'Version',
     'WebServiceCallout',
     'XmlStreamReader',
@@ -293,6 +297,7 @@ export default function (hljs) {
     /!(?=\w)/, // negator
     /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
     NULLSAFE, // null-safe operator
+    /(?<=\s)(\?\?)(?=\s)/, // null coalescing operator
     /(?<!\?)\?(?!\?|\.|\[)/, // ternary operator or CONDITIONAL_OPERATOR
     /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
     /(?<!\=|!)\=(?!\=|>)/ // assignment
