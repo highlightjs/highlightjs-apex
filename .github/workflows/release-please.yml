@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
-        with:
-          release-type: node
       # The logic below handles the npm publication:
       - name: Checkout Repository
         # these if statements ensure that a publication only occurs when
@@ -26,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         if: ${{ steps.release.outputs.releases_created }}
         with:
-          node-version: 18
+          node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
         run: npm ci
