@@ -15,7 +15,6 @@ jobs:
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
-          command: manifest
           release-type: node
           package-name: highlightjs-apex
       # The logic below handles the npm publication:
