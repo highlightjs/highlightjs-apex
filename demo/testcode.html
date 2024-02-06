@@ -7,7 +7,7 @@
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
 		<link rel="stylesheet" href="./testcode.css" />
 		<!-- <link rel="stylesheet" href="../src/styles/monokai-sublime-apex.css" /> -->
-    <link rel="stylesheet" href="vs.css" />
+		<link rel="stylesheet" href="vs.css" />
 		<script>
 			hljs.debugMode();
 			hljs.highlightAll();
@@ -25,7 +25,7 @@
     Map&lt;Id, CustomObject__c&gt; myMap = new Map&lt;Id, CustomObject__c&gt;([SELECT Id FROM CustomObject__c WHERE Id NOT IN :newRecordsMap.keySet()]);
     Map&lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d};
 
-    delete myAccount;
+    delete thisAccount;
     Account a;
     String s;
     delete [SELECT Id FROM Account];
@@ -51,10 +51,10 @@
 
     public List&lt;SelectOption&gt; recordTypes { get; private set; }
 
-    Database.insert(myAccounts, false, AccessLevel.USER_MODE);
-    delete myAccount;
+    Database.insert(thisAccounts, false, AccessLevel.USER_MODE);
+    delete thisAccount;
     delete [SELECT Id FROM Account];
-    myAcct = (Account)myacct;
+    thisAcct = (Account)thisAcct;
 
     public String myString { get; set; }
 
@@ -517,7 +517,7 @@
       Boolean ai = (Boolean) false;
       System.debug('Should not be called');
       if (1 > 5) { // wtf!?
-        Database.insert(myAccounts);
+        Database.insert(thisAccounts);
       }
     }
 

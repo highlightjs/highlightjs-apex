@@ -306,9 +306,9 @@ export default function (hljs) {
   const BUILT_INS = NAMESPACE_LIST.concat(...SYSTEM_CLASSES);
 
   const KEYWORDS = {
-    $pattern: regex.concat(/(?<!\.)\b/, APEX_IDENT_RE, /(?!\s*\()/),
+    $pattern: regex.concat(/(?<!\.)\b/, APEX_IDENT_RE, /\b/), // /(?!\s*\()/),
     keyword: [...KEYWORD_LIST, ...ACCESS_MODIFIER_LIST, ...DMLS],
-    'variable.language': LANGUAGE_VAR_LIST,
+    // 'variable.language': LANGUAGE_VAR_LIST,
     // built_in: BUILT_INS, // handled in NAMESPACES array
     type: TYPES,
     literal: LITERALS
@@ -358,7 +358,8 @@ export default function (hljs) {
       match: [
         regex.concat(/\b/, regex.either(...NAMESPACE_LIST)),
         /\./,
-        regex.concat(APEX_IDENT_WORD_RE, /\b(?=\.)/)
+        APEX_IDENT_WORD_RE, 
+        /\b(?=\.)/
       ],
       scope: { 1: 'built_in', 2: 'punctuation', 3: 'type' }
     },
