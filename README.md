@@ -18,6 +18,10 @@ The screenshot was captured from a webpage using `apex.min.js` from the `dist` f
 ![Demo](assets/ApexHighlighting.png)
 Feel free to use any css library you'd like!
 
+## Apex code requirements
+
+This library will highlight Apex as used in Apex classes and triggers. To highlight a SOQL query, it MUST be enclosed in square brackets (`[` and `]`). While creating a SOQL parser as a standalone sub-language (like javascript is in html/Visualforce) would be ideal, but this would require users to install both packages in a project and would get too messy.
+
 ## Usage
 
 Simply include the Highlight.js library in your webpage or Node app, then load this module. For more complex usage, see [highlight.js usage](https://github.com/highlightjs/highlight.js#basic-usage).
@@ -31,7 +35,9 @@ Simply load this module after loading Highlight.js. You'll use the minified vers
 <script type="text/javascript" src="/path/to/apex.min.js"></script>
 <!-- <link rel="stylesheet" href="https://unpkg.com/highlightjs/styles/vs.css" /> -->
 <!-- Use any stylesheet you'd like - though Apex developers may want to use the custom theme based on MavensMate's Monokai -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
+<link
+	rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
 
 <script type="text/javascript">
 	hljs.highlightAll();
@@ -54,7 +60,9 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
+<script
+	type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js"></script>
 ```
 
 - More info: <https://www.jsdelivr.com/>
