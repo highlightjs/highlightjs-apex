@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.3.4](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.3...v1.3.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* handle words starting with "this" e.g. thisAccount ([#48](https://github.com/highlightjs/highlightjs-apex/issues/48)) ([85641da](https://github.com/highlightjs/highlightjs-apex/commit/85641dadbcd734d27efbab5349ead12829075f08))
+
+
+### Styles
+
+* exclude tick-marks from comment substring highlighting ([#38](https://github.com/highlightjs/highlightjs-apex/issues/38)) ([66936f4](https://github.com/highlightjs/highlightjs-apex/commit/66936f48a856ac0fdf7dec092a6a93cbf42061c8))
+
+
+### Build System
+
+* move scripts cheatsheet ([1e1e4fc](https://github.com/highlightjs/highlightjs-apex/commit/1e1e4fcfbc8e82a6a81007573106b0b1838c7da9))
+* **prettier:** bump prettier from 3.0.3 to 3.1.0 ([#37](https://github.com/highlightjs/highlightjs-apex/issues/37)) ([a3d10f4](https://github.com/highlightjs/highlightjs-apex/commit/a3d10f4d8e81c50a61c9fdbd4b49b37c9e06ba92))
+* **prettier:** bump prettier from 3.1.0 to 3.1.1 ([#41](https://github.com/highlightjs/highlightjs-apex/issues/41)) ([c0621dd](https://github.com/highlightjs/highlightjs-apex/commit/c0621ddafced6db5f9e6e4d6da9c8e679797f9ed))
+* **prettier:** bump prettier from 3.2.2 to 3.2.3 ([#44](https://github.com/highlightjs/highlightjs-apex/issues/44)) ([2cfc254](https://github.com/highlightjs/highlightjs-apex/commit/2cfc254ed609114d9731837fe131dbcea0f18ae8))
+* **prettier:** bump prettier from 3.2.3 to 3.2.4 ([#45](https://github.com/highlightjs/highlightjs-apex/issues/45)) ([e3138e8](https://github.com/highlightjs/highlightjs-apex/commit/e3138e849ddab70a9fbd8938eca3c53dc2975d9c))
+
+
+### Continuous Integration
+
+* **google-github-actions/release-please-action:** bump google-github-actions/release-please-action from 3 to 4 ([#40](https://github.com/highlightjs/highlightjs-apex/issues/40)) ([bdd93a7](https://github.com/highlightjs/highlightjs-apex/commit/bdd93a7ace578733cc285893123a1b71e9d8aa2b))
+* **release-please:** update release-please action inputs ([e49d3aa](https://github.com/highlightjs/highlightjs-apex/commit/e49d3aab5bb2beae41ea3d70a181844dc4217c89))
+* **release-please:** update release-please action inputs ([3ca1068](https://github.com/highlightjs/highlightjs-apex/commit/3ca10687037926925c4e3c39c7069f53494134f9))
+
 ## [1.3.3](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.2...v1.3.3) (2023-11-09)
 
 
