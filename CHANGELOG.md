@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.4...v1.3.5) (2024-02-06)
+
+
+### Bug Fixes
+
+* rename variable classes from debug temp names ([fa67d05](https://github.com/highlightjs/highlightjs-apex/commit/fa67d055aa2b6b97fccafc9536cbfcfdd521fc75))
+
 ## [1.3.4](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.3...v1.3.4) (2024-02-06)
 
 
