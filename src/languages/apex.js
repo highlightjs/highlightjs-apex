@@ -336,7 +336,7 @@ export default function (hljs) {
         /\b\s*(?![\.\(])/
       ],
       // TODO: Find a better scope for the enum value
-      scope: { 1: 'built_in', 2: 'punctuation', 3: 'variable1' },
+      scope: { 1: 'built_in', 2: 'punctuation', 3: 'variable' },
       relevance: 0
     },
     {
@@ -437,7 +437,7 @@ export default function (hljs) {
       },
       {
         match: [/(?<=@param)\s+/, APEX_IDENT_RE],
-        scope: { 2: 'variable2' },
+        scope: { 2: 'variable' },
         relevance: 0
       },
       {
@@ -554,7 +554,7 @@ export default function (hljs) {
     // mynum =
     // could also be a collection variable
     match: [/(?<!\.)/, APEX_IDENT_WORD_RE, /\s*(?=\=[^\>])/],
-    scope: { 2: 'variable3' },
+    scope: { 2: 'variable' },
     relevance: 0
   };
   const CASTING = {
@@ -628,7 +628,7 @@ export default function (hljs) {
       relevance: 0
     },
     { match: /\(|\,|\./, scope: 'punctuation', relevance: 0 },
-    { match: APEX_IDENT_RE, scope: 'variable4' }
+    { match: APEX_IDENT_RE, scope: 'variable' }
   ];
 
   const PARAMS_DECLARATION = {
@@ -655,7 +655,7 @@ export default function (hljs) {
         // must be followed by comma or paren
         match: [SPACE, APEX_IDENT_RE, /\s*(?=[,)])/],
 
-        scope: { 2: 'variable5' }
+        scope: { 2: 'variable' }
       }
     ]
   };
@@ -1007,7 +1007,7 @@ export default function (hljs) {
       {
         // colon notation
         match: [/(?<=:)/, /\s*/, APEX_IDENT_WORD_RE, /(?!\()/],
-        scope: { 3: 'variable6' },
+        scope: { 3: 'variable' },
         relevance: 0
       },
       {
@@ -1041,7 +1041,7 @@ export default function (hljs) {
 
   const THIS = {
     match: regex.concat('(?<=this\.\b)', APEX_IDENT_RE, '(?!\\()'),
-    scope: 'variable7'
+    scope: 'variable'
   };
 
   const PROPERTY = {
