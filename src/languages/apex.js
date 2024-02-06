@@ -301,9 +301,9 @@ export default function (hljs) {
   const BUILT_INS = NAMESPACE_LIST.concat(...SYSTEM_CLASSES);
 
   const KEYWORDS = {
-    $pattern: regex.concat(/(?<!\.)\b/, APEX_IDENT_RE, /(?!\s*\()/),
+    $pattern: regex.concat(/(?<!\.)\b/, APEX_IDENT_RE, /\b/), // /(?!\s*\()/),
     keyword: [...KEYWORD_LIST, ...ACCESS_MODIFIER_LIST, ...DMLS],
-    'variable.language': LANGUAGE_VAR_LIST,
+    //'variable.language': LANGUAGE_VAR_LIST,
     // built_in: BUILT_INS, // handled in NAMESPACES array
     type: TYPES,
     literal: LITERALS
@@ -336,7 +336,7 @@ export default function (hljs) {
         /\b\s*(?![\.\(])/
       ],
       // TODO: Find a better scope for the enum value
-      scope: { 1: 'built_in', 2: 'punctuation', 3: 'variable' },
+      scope: { 1: 'built_in', 2: 'punctuation', 3: 'variable1' },
       relevance: 0
     },
     {
@@ -353,7 +353,8 @@ export default function (hljs) {
       match: [
         regex.concat(/\b/, regex.either(...NAMESPACE_LIST)),
         /\./,
-        regex.concat(APEX_IDENT_WORD_RE, /\b(?=\.)/)
+        APEX_IDENT_WORD_RE, 
+        /\b(?=\.)/
       ],
       scope: { 1: 'built_in', 2: 'punctuation', 3: 'type' }
     },
@@ -395,7 +396,7 @@ export default function (hljs) {
       relevance: 10
     }
   ];
-  // use this to include comma
+  // use PUNCTUATION to include comma
   // use comma only for situations where parens will break things
   const PUNCTUATION = [
     {
@@ -436,7 +437,7 @@ export default function (hljs) {
       },
       {
         match: [/(?<=@param)\s+/, APEX_IDENT_RE],
-        scope: { 2: 'variable' },
+        scope: { 2: 'variable2' },
         relevance: 0
       },
       {
@@ -553,7 +554,7 @@ export default function (hljs) {
     // mynum =
     // could also be a collection variable
     match: [/(?<!\.)/, APEX_IDENT_WORD_RE, /\s*(?=\=[^\>])/],
-    scope: { 2: 'variable' },
+    scope: { 2: 'variable3' },
     relevance: 0
   };
   const CASTING = {
@@ -627,7 +628,7 @@ export default function (hljs) {
       relevance: 0
     },
     { match: /\(|\,|\./, scope: 'punctuation', relevance: 0 },
-    { match: APEX_IDENT_RE, scope: 'variable' }
+    { match: APEX_IDENT_RE, scope: 'variable4' }
   ];
 
   const PARAMS_DECLARATION = {
@@ -654,7 +655,7 @@ export default function (hljs) {
         // must be followed by comma or paren
         match: [SPACE, APEX_IDENT_RE, /\s*(?=[,)])/],
 
-        scope: { 2: 'variable' }
+        scope: { 2: 'variable5' }
       }
     ]
   };
@@ -1006,7 +1007,7 @@ export default function (hljs) {
       {
         // colon notation
         match: [/(?<=:)/, /\s*/, APEX_IDENT_WORD_RE, /(?!\()/],
-        scope: { 3: 'variable' },
+        scope: { 3: 'variable6' },
         relevance: 0
       },
       {
@@ -1039,8 +1040,8 @@ export default function (hljs) {
   };
 
   const THIS = {
-    match: regex.concat('(?<=this.)', APEX_IDENT_RE, '(?!\\()'),
-    scope: 'variable'
+    match: regex.concat('(?<=this\.\b)', APEX_IDENT_RE, '(?!\\()'),
+    scope: 'variable7'
   };
 
   const PROPERTY = {
