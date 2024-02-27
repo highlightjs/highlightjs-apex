@@ -4,12 +4,16 @@
 
 [![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://www.npmjs.com/package/highlightjs-apex)
 
-[![npm](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
-[![npm](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
+![Salesforce Version](https://img.shields.io/badge/Spring_'24-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20Release)
+[![npm version](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
+[![npm downloads](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 ![install size](https://badgen.net/packagephobia/install/highlightjs-apex)
-[![GitHub](https://img.shields.io/github/license/highlightjs/highlightjs-apex)](https://github.com/highlightjs/highlightjs-apex/blob/main/LICENSE.md)
-![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/highlightjs-apex)
+[![License](https://img.shields.io/github/license/highlightjs/highlightjs-apex)](https://github.com/highlightjs/highlightjs-apex/blob/main/LICENSE.md)
 [![CDN download](https://badgen.net/badge/jsDelivr/download/blue?icon=jsdelivr)](https://cdn.jsdelivr.net/npm/highlightjs-apex/dist/apex.min.js)
+
+<!-- [![jsDelivr CDN downloads](https://badgen.net/jsdelivr/hits/gh/highlightjs/highlightjs-apex?label=jsDelivr+CDN&color=purple)](https://www.jsdelivr.com/package/gh/highlightjs/highlightjs-apex) -->
+
+[![open issues](https://badgen.net/github/open-issues/highlightjs/highlightjs-apex?label=issues)](https://github.com/highlightjs/highlightjs-apex/issues)
 
 ## Demo
 
@@ -20,7 +24,11 @@ Feel free to use any css library you'd like!
 
 ## Apex code requirements
 
-This library will highlight Apex as used in Apex classes and triggers. To highlight a SOQL query, it MUST be enclosed in square brackets (`[` and `]`). While creating a SOQL parser as a standalone sub-language (like javascript is in html/Visualforce) would be ideal, but this would require users to install both packages in a project and would get too messy.
+This library will highlight Apex as used in Apex classes and triggers.
+
+## SOQL requirements
+
+To highlight a SOQL query, it MUST be enclosed in square brackets (`[` and `]`). While creating a SOQL parser as a standalone sub-language (like javascript in html/Visualforce) would be ideal, this would require users to install both packages in a project and would get too messy. Each language can contain the other, so dependencies in the parsing become unwieldy.
 
 ## Usage
 
@@ -29,6 +37,8 @@ Simply include the Highlight.js library in your webpage or Node app, then load t
 ### Static website or simple usage
 
 Simply load this module after loading Highlight.js. You'll use the minified version found in the `dist` directory. This module is just a CDN build of the language, so it will register itself as the Javascript is loaded.
+
+For more details see [Highlight.js main page](https://github.com/highlightjs/highlight.js#highlightjs).
 
 ```html
 <script type="text/javascript" src="/path/to/highlight.min.js"></script>
@@ -54,7 +64,13 @@ This will find and highlight code inside of `<pre><code>` tags; it tries to dete
 </pre>
 ```
 
-For more details see [Highlight.js main page](https://github.com/highlightjs/highlight.js#highlightjs).
+#### Ignoring a Code Block
+
+To skip highlighting of a code block completely, use the `nohighlight` class:
+
+```html
+<pre><code class="nohighlight">...</code></pre>
+```
 
 ### Using directly from jsDelivr
 
@@ -66,6 +82,17 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 ```
 
 - More info: <https://www.jsdelivr.com/>
+
+### Using directly from the unpkg CDN
+
+```html
+<script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+<script
+	type="text/javascript"
+	src="https://unpkg.com/highlightjs-apex/dist/apex.min.js"></script>
+```
+
+- More info: <https://unpkg.com/>
 
 ### With Node or another build system
 

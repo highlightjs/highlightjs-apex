@@ -208,6 +208,7 @@ export default function (hljs) {
     'HttpRequest',
     'HttpResponse',
     'Ideas',
+    'IsvPartners',
     'JSON',
     'JSONGenerator',
     'JSONParser',
