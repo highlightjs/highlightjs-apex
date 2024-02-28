@@ -6,9 +6,6 @@
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"mocha": "mocha test/markup",
-		"npm-beta": "npm version patch && npm publish --tag beta",
-		"npm-minor": "npm version minor && npm publish",
-		"npm-patch": "npm version patch && npm publish",
 		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
 		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
 	},
@@ -27,7 +24,6 @@
 		"assets",
 		"dist",
 		"src",
-		"test",
 		"CHANGELOG.md"
 	],
 	"author": "David Schach (https://github.com/dschach)",
