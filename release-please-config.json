@@ -1,12 +1,12 @@
 {
 	"packages": {
 		".": {
-			"package-name": ""
+			"initial-version": "1.2.1",
+			"package-name": "highlightjs-apex"
 		}
 	},
 	"release-type": "node",
 	"prerelease": false,
-	"initial-version": "1.2.1",
 	"versioning": "default",
 	"bump-minor-pre-major": false,
 	"bump-patch-for-minor-pre-major": false,
