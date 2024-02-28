@@ -1,12 +1,13 @@
 {
 	"name": "highlightjs-apex",
-	"version": "1.3.3",
+	"version": "1.3.5",
 	"description": "Apex Language of Salesforce highlighting plugin for highlight.js",
 	"main": "src/languages/apex.js",
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"mocha": "mocha test/markup",
 		"npm-beta": "npm version patch && npm publish --tag beta",
+		"npm-minor": "npm version minor && npm publish",
 		"npm-patch": "npm version patch && npm publish",
 		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
 		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
@@ -40,8 +41,8 @@
 	},
 	"devDependencies": {
 		"minimist": "^1.2.8",
-		"mocha": "^10.2.0",
-		"prettier": "3.2.4",
+		"mocha": "^10.3.0",
+		"prettier": "3.2.5",
 		"should": "^13.2.3"
 	}
 }
