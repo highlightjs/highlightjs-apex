@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.5...v1.4.0) (2024-02-28)
+
+
+### Features
+
+* spring24 Apex updates ([#51](https://github.com/highlightjs/highlightjs-apex/issues/51)) ([fb5c5e6](https://github.com/highlightjs/highlightjs-apex/commit/fb5c5e6b9a5f7cdda8e60ee630a599adcafd8b5f))
+
+
+### Build System
+
+* **mocha:** bump mocha from 10.2.0 to 10.3.0 ([#50](https://github.com/highlightjs/highlightjs-apex/issues/50)) ([133be56](https://github.com/highlightjs/highlightjs-apex/commit/133be568ae8f96c3cd4161c811c4df3dcf7f08f7))
+
+
+### Continuous Integration
+
+* **release-please:** fix action logic typo ([e6436a8](https://github.com/highlightjs/highlightjs-apex/commit/e6436a8c97a54f9b62bf0ae3524e7e2f833a5df8))
+
 ## [1.3.5](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.4...v1.3.5) (2024-02-06)
 
 
