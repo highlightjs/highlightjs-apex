@@ -3,13 +3,18 @@ on:
   push:
     branches:
       - main
+    #paths:
+    #  - 'src/**'
   workflow_dispatch:
+
 permissions:
   contents: write
   pull-requests: write
   id-token: write
 jobs:
   release-please:
+    # Only run for non-Dependabot PRs
+    # if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v4

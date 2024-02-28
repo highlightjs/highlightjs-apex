@@ -160,6 +160,7 @@ export default function (hljs) {
     'Sfdc_Checkout',
     'sfdc_surveys',
     'Site',
+    'Slack',
     'Support',
     'System',
     'TerritoryMgmt',
@@ -182,6 +183,7 @@ export default function (hljs) {
     'BusinessHours',
     'Cases',
     'Collator',
+    'Compression',
     'Continuation',
     'Cookie',
     'Crypto',
@@ -199,12 +201,14 @@ export default function (hljs) {
     'FeatureManagement',
     'FlexQueue',
     'Formula',
+    'FormulaEval',
     'FormulaRecalcFieldError',
     'FormulaRecalcResult',
     'Http',
     'HttpRequest',
     'HttpResponse',
     'Ideas',
+    'IsvPartners',
     'JSON',
     'JSONGenerator',
     'JSONParser',
@@ -244,6 +248,7 @@ export default function (hljs) {
     'URL',
     'UserInfo',
     'UserManagement',
+    'UUID',
     'Version',
     'WebServiceCallout',
     'XmlStreamReader',
@@ -293,6 +298,7 @@ export default function (hljs) {
     /!(?=\w)/, // negator
     /(?<=\s)(\?|:)(?=\s)/, // standalone ? or : (ternary operator?)
     NULLSAFE, // null-safe operator
+    /(?<=\s)(\?\?)(?=\s)/, // null coalescing operator
     /(?<!\?)\?(?!\?|\.|\[)/, // ternary operator or CONDITIONAL_OPERATOR
     /%[^%]|\*[^\/]|\/[^\/\*]|(?<!\-)\-(?!\-)|(?<!\+)\+(?!\+)/, // arithmetic
     /(?<!\=|!)\=(?!\=|>)/ // assignment
@@ -303,7 +309,7 @@ export default function (hljs) {
   const KEYWORDS = {
     $pattern: regex.concat(/(?<!\.)\b/, APEX_IDENT_RE, /\b/), // /(?!\s*\()/),
     keyword: [...KEYWORD_LIST, ...ACCESS_MODIFIER_LIST, ...DMLS],
-    //'variable.language': LANGUAGE_VAR_LIST,
+    // 'variable.language': LANGUAGE_VAR_LIST,
     // built_in: BUILT_INS, // handled in NAMESPACES array
     type: TYPES,
     literal: LITERALS
@@ -396,7 +402,7 @@ export default function (hljs) {
       relevance: 10
     }
   ];
-  // use PUNCTUATION to include comma
+  // use this to include comma
   // use comma only for situations where parens will break things
   const PUNCTUATION = [
     {
@@ -1040,7 +1046,7 @@ export default function (hljs) {
   };
 
   const THIS = {
-    match: regex.concat('(?<=this\.\b)', APEX_IDENT_RE, '(?!\\()'),
+    match: regex.concat('(?<=this.)', APEX_IDENT_RE, '(?!\\()'),
     scope: 'variable'
   };
 

@@ -1,0 +1,9 @@
+trigger OppLineSyncTrigger on OpportunityLineItem(after insert, after update) { //NOPMD
+	if (Quote_Custom_Sync_Config__mdt.getInstance('Use_Included_Triggers')?.Enabled__c ?? false) {
+		new QuoteSyncHandler().syncOppLines(Trigger.new, Trigger.oldMap);
+	}
+
+	Integer notNullReturnValue = (anInteger != null) ? anInteger : 100;
+
+	Integer notNullReturnValue = anInteger ?? 100;
+}
