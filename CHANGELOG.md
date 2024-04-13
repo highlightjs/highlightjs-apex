@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.4.0...v1.4.1) (2024-04-13)
+
+
+### Build System
+
+* **mocha:** Bump mocha from 10.3.0 to 10.4.0 ([#54](https://github.com/highlightjs/highlightjs-apex/issues/54)) ([25b7f05](https://github.com/highlightjs/highlightjs-apex/commit/25b7f05dc4c112243b6e1d3b08e4bd378f73051d))
+
+
+### Continuous Integration
+
+* **dependabot/fetch-metadata:** Bump dependabot/fetch-metadata from 1 to 2 ([#53](https://github.com/highlightjs/highlightjs-apex/issues/53)) ([c78c675](https://github.com/highlightjs/highlightjs-apex/commit/c78c675050027b8a0b4c701858c02b87629cdb64))
+* **release-please:** Enforce sentence case for changelog entries ([c6db5d0](https://github.com/highlightjs/highlightjs-apex/commit/c6db5d05d94462bb6a15d1837466feca181e62ba))
+
 ## [1.4.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.3.5...v1.4.0) (2024-02-28)
 
 
