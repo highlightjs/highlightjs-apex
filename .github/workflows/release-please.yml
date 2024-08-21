@@ -17,7 +17,7 @@ jobs:
     # if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
       # The logic below handles the npm publication:
       - name: Checkout Repository
