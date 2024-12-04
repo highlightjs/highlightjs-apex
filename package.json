@@ -37,7 +37,7 @@
 	},
 	"devDependencies": {
 		"minimist": "^1.2.8",
-		"mocha": "^10.3.0",
+		"mocha": "^11.0.1",
 		"prettier": "3.4.2",
 		"should": "^13.2.3"
 	}
