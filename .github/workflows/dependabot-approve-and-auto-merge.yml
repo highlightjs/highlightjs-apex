@@ -42,6 +42,9 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
+      - name: 'Do not auto-merge'
+        run: exit 0
+
       - name: 'Fetch Dependabot metadata'
         id: dependabot
         uses: dependabot/fetch-metadata@v2
