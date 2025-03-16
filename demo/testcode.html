@@ -5,9 +5,9 @@
 		<meta charset="UTF-8" />
 		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.js"></script>
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
-		<link rel="stylesheet" href="./testcode.css" />
-		<!-- <link rel="stylesheet" href="../src/styles/monokai-sublime-apex.css" /> -->
-		<link rel="stylesheet" href="vs.css" />
+		<!-- <link rel="stylesheet" href="./testcode.css" /> -->
+		<link rel="stylesheet" href="../src/styles/monokai-sublime-apex.css" />
+		<!-- <link rel="stylesheet" href="vs.css" /> -->
 		<script>
 			hljs.debugMode();
 			hljs.highlightAll();
@@ -76,6 +76,13 @@
      * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/MIT
      * @group Visualforce
      * @since 2022
+     * @example 
+     * for (Dashboard d : dashboards) {
+     *     List<BotField> fields = new List<BotField>();
+     *     fields.add(new BotField('Name', d.Title, '/lightning/r/Dashboard/' + d.Id + '/view'));
+     *     fields.add(new BotField('Folder', d.FolderName));
+     *     records.add(new BotRecord(fields));
+     * }
      */
     public with sharing class ActionPlanDetailController {
 
@@ -325,7 +332,7 @@
 
       Database.insert(new planTaskIndexToTask.values());
 
-      Database.update(dependentTasksToUpdate);
+      Database.update(dependentTasksToUpdate, AccessLevel.USER_MODE);
 
       List&lt;Task&gt; myTasksWithOutEmail = new List&lt;Task&gt;();
 
@@ -406,6 +413,36 @@
   trigger APAccount on Account(before delete, after undelete) {
     ActionPlansTriggerHandlers.triggerhandlerActionPlanAccount(Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap, Trigger.operationType);
       ActionPlansTriggerHandlers.actionPlansSObjectTriggerHandler('Account');
+  }
+
+  public with sharing class GetFirstFromCollection {
+    @InvocableMethod
+    public static List <Results> execute (List<Requests> requestList) {
+      List<SObject> inputCollection = requestList[0].inputCollection;
+      SObject outputMember = inputCollection[0];
+  
+      //Create a Results object to hold the return values
+      Results response = new Results();
+  
+      //Add the return values to the Results object
+      response.outputMember = outputMember;
+  
+      //Wrap the Results object in a List container 
+      //(an extra step added to allow this interface to also support bulkification)
+      List<Results> responseWrapper= new List<Results>();
+      responseWrapper.add(response);
+      return responseWrapper;    
+    }
+  
+  public class Requests {
+    @InvocableVariable(label='Records for Input' description='yourDescription' required=true)
+    public List<SObject> inputCollection;
+    }
+  
+  public class Results {
+    @InvocableVariable(label='Records for Output' description='yourDescription' required=true)
+    public SObject outputMember;
+    }
   }
 
   /**

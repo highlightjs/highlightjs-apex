@@ -33,7 +33,7 @@
 	},
 	"homepage": "https://github.com/highlightjs/highlightjs-apex#readme",
 	"dependencies": {
-		"@highlightjs/cdn-assets": "^11.9.0"
+		"@highlightjs/cdn-assets": "^11.11.1"
 	},
 	"devDependencies": {
 		"minimist": "^1.2.8",

@@ -7,7 +7,7 @@
 		<script charset="UTF-8" src="../dist/apex.min.js"></script>
 		<link rel="stylesheet" href="./testcode.css" />
 		<!-- <link rel="stylesheet" href="../src/styles/monokai-sublime-apex.css" /> -->
-    <link rel="stylesheet" href="vs.css" />
+		<link rel="stylesheet" href="vs.css" />
 		<script>
 			hljs.debugMode();
 			hljs.highlightAll();
@@ -35,7 +35,6 @@ public with sharing class L2Char implements Database.batchable {
     Integer y, 
     Integer z
   ) {
-    
     
     Account a = new Account();
     a.Custom__c = 'stringvalue';
@@ -71,7 +70,7 @@ public with sharing class L2Char implements Database.batchable {
 
 trigger CTrig on Custom__c (before insert){
   System.debug('inserting a record');
-  upsert myRecord__c;
+  upsert as system myRecord__c;
 }
 </code></pre>
 	</body>

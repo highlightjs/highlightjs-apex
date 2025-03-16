@@ -39,7 +39,7 @@ WHERE Id IN
 [SELECT Id FROM Account WHERE CreatedDate = NEXT_N_FISCAL_QUARTERS:6]
 [SELECT Id FROM Opportunity WHERE CloseDate = N_WEEKS_AGO:3]
 [SELECT Id FROM Account WHERE CreatedDate = YESTERDAY]
-[SELECT Id, MSP1__c from CustObj__c WHERE MSP1__c includes ('AAA;BBB','CCC')]
+[SELECT Id, MSP1__c FROM CustObj__c WHERE MSP1__c includes ('AAA;BBB','CCC') WITH SYSTEM_MODE]
 [SELECT Id
 FROM Case
 WHERE Contact.LastName = null]
@@ -57,4 +57,4 @@ GROUP BY Name]
     GROUPING(LeadSource) grpLS, GROUPING(Rating) grpRating,
     COUNT(Name) cnt
 FROM Lead
-GROUP BY ROLLUP(LeadSource, Rating)]
+GROUP BY ROLLUP(LeadSource, Rating) WITH USER_MODE]

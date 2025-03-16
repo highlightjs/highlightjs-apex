@@ -17,3 +17,6 @@ node ./tools/build.js -t browser
 node tools/build.js -t node apex
 node tools/build.js -t cdn :common apex
 node tools/build.js -t browser :common apex
+
+# run tests
+npm run build_and_test
