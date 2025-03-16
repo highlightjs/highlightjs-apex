@@ -4,7 +4,8 @@
 
 [![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://www.npmjs.com/package/highlightjs-apex)
 
-![Salesforce Version](https://img.shields.io/badge/Spring_'24-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20Release)
+![Salesforce Version](https://img.shields.io/badge/Summer_'25-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20Release)
+![Salesforce API](https://img.shields.io/badge/63.0-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20API)
 [![npm version](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 [![npm downloads](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 ![install size](https://badgen.net/packagephobia/install/highlightjs-apex)
