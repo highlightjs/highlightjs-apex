@@ -1,6 +1,9 @@
 {
 	"apexPMD.enableCache": false,
 	"[css]": {
-		  "editor.formatOnSave": false
-	  }
+		"editor.formatOnSave": true
+	},
+	"[js]": {
+		"editor.formatOnSave": true
+	}
 }

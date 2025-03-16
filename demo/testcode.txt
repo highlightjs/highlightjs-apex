@@ -464,7 +464,7 @@ private void method2() {
 @future
 (label = true)
 private void method3() {
-  Contact[] acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH SECURITY_ENFORCED];
+  Contact[] acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH USER_MODE];
   List<Contact> acctContacts2 = [SELECT Id FROM Contact WHERE ID = '012000000' AND CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
   if (Contact.getSObjectType().getDescribe().isUpdateable()) {
 	update as user acctContacts; //NOPMD
