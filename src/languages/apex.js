@@ -181,7 +181,7 @@ export default function (hljs) {
   ];
 
   const SYSTEM_CLASSES = [
-    'AccessLevel',
+    //'AccessLevel',
     'Address',
     'Answers',
     'ApexPages',
@@ -785,7 +785,7 @@ export default function (hljs) {
     scope: { 1: 'keyword', 2: 'variable' }
   };
 
-  const DML_OPERATIONS = [{ match: /as\s+(user|system)\b/, scope: 'keyword' }];
+  const DML_OPERATIONS = [{ match: /as\s+(user|system)\b/, scope: 'keyword', relevance: 5 }];
 
   /**
    * SOQL SECTION
