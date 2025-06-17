@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.5.0...v1.5.1) (2025-06-17)
+
+
+### Build System
+
+* **mocha:** Bump mocha from 11.1.0 to 11.2.2 ([#83](https://github.com/highlightjs/highlightjs-apex/issues/83)) ([a3e1882](https://github.com/highlightjs/highlightjs-apex/commit/a3e18827eafe409ce2f6348c158dfb7bf7fff009))
+* **mocha:** Bump mocha from 11.2.2 to 11.3.0 ([#84](https://github.com/highlightjs/highlightjs-apex/issues/84)) ([9ed6af6](https://github.com/highlightjs/highlightjs-apex/commit/9ed6af6ee373b44dd064714e2212057a3c077573))
+* **mocha:** Bump mocha from 11.3.0 to 11.4.0 ([#85](https://github.com/highlightjs/highlightjs-apex/issues/85)) ([4eb1412](https://github.com/highlightjs/highlightjs-apex/commit/4eb14129f1772817d87829a8cad2f2fd4dc3cd20))
+* **mocha:** Bump mocha from 11.4.0 to 11.5.0 ([#86](https://github.com/highlightjs/highlightjs-apex/issues/86)) ([4491e8c](https://github.com/highlightjs/highlightjs-apex/commit/4491e8c9f19bfbc7d901d353e2afbfc97c989b66))
+* **mocha:** Bump mocha from 11.5.0 to 11.6.0 ([#87](https://github.com/highlightjs/highlightjs-apex/issues/87)) ([424f8db](https://github.com/highlightjs/highlightjs-apex/commit/424f8dbb533d3fbe8b32772e702cf2a8f280a3a2))
+
+
+### Continuous Integration
+
+* **dependabot:** Prevent dependabot auto-merge ([#88](https://github.com/highlightjs/highlightjs-apex/issues/88)) ([3d2ead6](https://github.com/highlightjs/highlightjs-apex/commit/3d2ead6bdb8ced24687f17707f4aa9dfe6b31a25))
+
 ## [1.5.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.4.0...v1.5.0) (2025-03-16)
 
 
