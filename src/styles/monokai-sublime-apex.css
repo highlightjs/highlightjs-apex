@@ -46,7 +46,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	font-style: italic;
 }
 .hljs-bullet,
-
 .hljs-selector-id,
 .hljs-template-variable {
 	color: #e6db74;
@@ -62,6 +61,9 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 }
 .hljs-comment {
 	color: #75715e;
+}
+.hljs-comment .hljs-code {
+	color: inherit;
 }
 .hljs-deletion {
 	color: #f92672;
