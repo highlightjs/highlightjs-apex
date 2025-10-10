@@ -14,6 +14,10 @@ export default function (hljs) {
   const SPACEPARENS_LOOKAHEAD = /(?=\s*\()/;
   //const PARENS_LOOKAHEAD = /(?=\()/;
   const SPACE = /\s+/;
+  const OPENCURLY = /\{/;
+  const CLOSECURLY = /\}/;
+  const OPENPARENS = /\(/;
+  const CLOSEPARENS = /\)/;
 
   const ACCESSOR = /(?<!\?)\./;
   const NULLSAFE = /\?\./;
@@ -203,6 +207,7 @@ export default function (hljs) {
     'Date',
     'Datetime',
     'Decimal',
+    'Dom',
     'Domain',
     'DomainCreator',
     'DomainParser',
@@ -463,10 +468,10 @@ export default function (hljs) {
       {
         // Reference to a method with parameters
         // prettier-ignore
-        begin: [/\{/, /@(?:link|see)/, SPACE , /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE), SPACEPARENS_LOOKAHEAD ],
+        begin: [OPENCURLY, /@(?:link|see)/, SPACE , /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE), SPACEPARENS_LOOKAHEAD ],
         // prettier-ignore
         beginScope: {2: 'doctag', 4: 'title.class', 5: 'title.method'},
-        end: /\}/,
+        end: CLOSECURLY,
         contains: [
           //PUNCTUATION,
           { match: /(?:\(|\))/, scope: 'punctuation' },
@@ -480,37 +485,37 @@ export default function (hljs) {
       {
         // Reference to method without parameters
         // prettier-ignore
-        begin: [/\{/, /@(?:link|see)/, SPACE ,  /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE, /\s*(?=\})/)],
+        begin: [OPENCURLY, /@(?:link|see)/, SPACE ,  /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE, /\s*(?=\})/)],
         // prettier-ignore
         beginScope: {2: 'doctag', 4: 'title.class', 5: 'title.method' },
-        end: /\}/,
+        end: CLOSECURLY,
         returnEnd: true
       },
       {
-        begin: [/\{/, /@(?:link|see)/, SPACE, APEX_IDENT_WORD_RE],
+        begin: [OPENCURLY, /@(?:link|see)/, SPACE, APEX_IDENT_WORD_RE],
         beginScope: { 2: 'doctag', 4: 'title.class' },
-        end: /\}/,
+        end: CLOSECURLY,
         returnEnd: true
       },
       {
-        begin: [/\{/, /@(?:link|see)(?=\s+")/],
+        begin: [OPENCURLY, /@(?:link|see)(?=\s+")/],
         beginScope: { 2: 'doctag' },
-        end: /\}/,
+        end: CLOSECURLY,
         returnEnd: true,
         contains: COMMENT_STRINGS
       },
 
       {
-        begin: [/\{/, /@(?:link|see)/],
+        begin: [OPENCURLY, /@(?:link|see)/],
         beginScope: { 2: 'doctag' },
-        end: /\}/,
+        end: CLOSECURLY,
         returnEnd: true,
         subLanguage: ['markdown', 'xml']
       },
       {
-        begin: [/\{/, /@literal/],
+        begin: [OPENCURLY, /@literal/],
         beginScope: { 2: 'doctag' },
-        end: /\}/,
+        end: CLOSECURLY,
         returnEnd: true,
         subLanguage: ['apex', 'xml', 'javascript']
       },
@@ -538,10 +543,10 @@ export default function (hljs) {
         scope: 'literal'
       },
       {
-        begin: [/\{/, /@code/],
+        begin: [OPENCURLY, /@code/],
         beginScope: { 2: 'doctag' },
         starts: {
-          end: /\}/,
+          end: CLOSECURLY,
           returnEnd: true,
           contains: [
             {
@@ -549,7 +554,7 @@ export default function (hljs) {
               skip: true,
               relevance: 0
             },
-            { begin: /\{/, end: /\}/, skip: true }
+            { begin: OPENCURLY, end: CLOSECURLY, skip: true }
           ],
           subLanguage: ['apex', 'xml', 'javascript']
         }
@@ -610,9 +615,9 @@ export default function (hljs) {
       // @IsTest
       // (Seealldata=true)
       scope: 'meta',
-      begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*/, /\(/],
+      begin: [regex.concat(ANNOTATION_RE, /\b/), /\s*/, OPENPARENS],
       beginScope: { 3: 'punctuation' },
-      end: /\)/,
+      end: CLOSEPARENS,
       endScope: 'punctuation',
       //scope: 'clause: annotation',
       contains: [
@@ -668,9 +673,9 @@ export default function (hljs) {
   };
 
   let PARAMS_CALL = {
-    begin: /\(/,
+    begin: OPENPARENS,
     beginScope: 'punctuation',
-    end: /\)/,
+    end: CLOSEPARENS,
     endScope: 'punctuation',
     relevance: 0,
     keywords: KEYWORDS,
@@ -729,7 +734,7 @@ export default function (hljs) {
   const PARAMS_DECLARATION = {
     scope: 'params', // NOTE: declaration
     // no begin because only started from method declaration
-    end: /\)/,
+    end: CLOSEPARENS,
     endScope: 'punctuation',
     relevance: 1,
     keywords: KEYWORDS,
@@ -759,7 +764,7 @@ export default function (hljs) {
     returnEnd: true,
     endsWithParent: true,
     beginKeywords: 'implements extends',
-    end: /\{/,
+    end: OPENCURLY,
     contains: [
       { match: [APEX_IDENT_WORD_RE, /(?=\.)/], scope: { 1: 'built_in' } },
       { match: regex.concat(APEX_IDENT_WORD_RE, /(?=\>)/), scope: 'type' },
@@ -788,8 +793,8 @@ export default function (hljs) {
     contains: [
       COMMENTS,
       {
-        begin: /\(/,
-        end: /\)/,
+        begin: OPENPARENS,
+        end: CLOSEPARENS,
         contains: [
           {
             match: /\b(before|after)\s+(insert|update|delete|merge|undelete)\b/,
@@ -827,7 +832,7 @@ export default function (hljs) {
     // enum declaration
     begin: [/\benum\s+/, APEX_IDENT_RE, /\s*\{/],
     beginScope: { 2: 'type', 3: 'punctuation' },
-    end: /\}/,
+    end: CLOSECURLY,
     endScope: 'punctuation',
     relevance: 0,
     contains: [
@@ -1074,7 +1079,7 @@ export default function (hljs) {
       },
       {
         // any non-soql function used in the query
-        match: [/(?<=:|\.)/, APEX_IDENT_RE, /(?=\s*\()/],
+        match: [/(?<=:|\.)/, APEX_IDENT_RE, SPACEPARENS_LOOKAHEAD],
         scope: { 2: 'title.function.invoke' },
         relevance: 0
       },
@@ -1087,7 +1092,7 @@ export default function (hljs) {
   const FOR_LOOP = {
     match: [
       /\bfor\b\s*/,
-      /\(/,
+      OPENPARENS,
       APEX_IDENT_RE,
       SPACE,
       APEX_IDENT_RE,
@@ -1152,7 +1157,7 @@ export default function (hljs) {
     /\d\s+\d/, //clojure
     /\w::\w/,
     /\bfloat\b/, // many languages
-    /(SELECT|RETURNING)\s+\*/,
+    /(SELECT|RETURNING)\s+\*/, // SOQL requires explicit fields
     /END\s+LOOP/,
     /CREATE\s+FUNCTION/,
     /\bint\b/,
@@ -1217,6 +1222,7 @@ export default function (hljs) {
     disableAutodetect: false,
     ignoreIllegals: false,
     keywords: KEYWORDS,
+    beginKeywords: 'Id', //TODO: Check this
     illegal: ILLEGALS,
     contains: [...APEX_PARTS]
   };
