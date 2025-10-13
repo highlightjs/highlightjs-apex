@@ -7,12 +7,29 @@
   * This string might contain malicious or unexpected characters,
   * like a {@literal <script>} tag or a backslash {@literal \}.
   * @since 4/11/2000
+  * @see class.method
+  * @see class
+  * @see class#method `should not highlight`
+  * @see class.class.method
+  * {@link class.class.method}
+  * {@link class.method}
+  * @see class.class.method[3]
+  * @see https://github.com
   * {@link class#member}
+  * {@link https://github.com}
+  * {@link #member}
+  * {@link class#Constructor}
   * {@link class}
   * {@link "text-string"}
   * {@link <a href="URL">label</a>}
   * @throws AccountManager.AccountException if 
   * accountName is invalid or if DML operation fails.
+  * @deprecated in 0.2.0. Use {@link #geocodeAddress(
+  * String street,
+  * String city,
+  * String state,
+  * String postalCode,
+  * String country)} instead.
   * {@code
   * try {
   *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
@@ -26,7 +43,6 @@
   * catch (GeolocationService.GeocodingException e) {
   *   // handle failure
   * }
-
   * RecordTypes.getAvailableRecordTypesForSelectList('Account')
   * <br><br>
   * System.SelectOption[value='<SFID>', label='Available', disabled='false']
@@ -46,7 +62,7 @@
   */
 /**
  * Provides services for geolocation and address conversion.
- * @author Dennis Smith
+ * @author [Dennis Smith](http://github.com/dsmith)
  * @version 0.3.0
  * @since 0.1.0
  */
@@ -77,12 +93,12 @@ global with sharing class GeolocationService {
    * @return A `Coordinates` object representing the approximate latitude and longitude.
    * @throws DeprecatedMethodCalledException If this method is invoked,
    * informing the user to migrate to the newer, more robust `geocodeAddress` method.
-   * @deprecated in 0.2.0. Use {@link #geocodeAddress(
+   * @deprecated in 0.2.0. Use @see #geocodeAddress(
    * String street,
    * String city,
    * String state,
    * String postalCode,
-   * String country)} instead.
+   * String country) instead.
    * @since 0.1.0
    */
   @Deprecated
@@ -149,10 +165,144 @@ global with sharing class GeolocationService {
   }
 }
 
+/**
+ * Specifications for the GeolocationService
+ * @author Jane Devington
+ * @version 0.2.0
+ * @see GeolocationService
+ * @since 0.1.0
+ */
+@IsTest
+private class GeolocationServiceTest {
+  /**
+   * Verifies that known addresses are correctly geocoded to their expected coordinates.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   */
+  @IsTest
+  private static void validAddressShouldReturnCorrectCoordinates() {
+    String street = '415 Mission Street';
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = '94105';
+    String country = 'USA';
+
+    GeolocationService.Coordinates coords;
+    Test.startTest();
+    coords = GeolocationService.geocodeAddress(
+      street,
+      city,
+      state,
+      postalCode,
+      country
+    );
+    Test.stopTest();
+
+    Assert.isNotNull(
+      coords,
+      'Coordinates should not be null for a valid address.'
+    );
+    Assert.areEqual(
+      37.785834,
+      coords.latitude,
+      'Latitude should match for Salesforce tower.'
+    );
+    Assert.areEqual(
+      -122.406417,
+      coords.longitude,
+      'Longitude should match for Salesforce tower.'
+    );
+  }
+
+  /**
+   * Verifies that calling the geocodeAddress with missing required parameters
+   * throws a GeocodingException.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   * @see GeolocationService#GeocodingException
+   */
+  @IsTest
+  private static void missingRequiredParametersShouldThrowGeocodingException() {
+    String street = ''; // Missing
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = 94105;
+    String country = 'USA';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.geocodeAddress(
+        street,
+        city,
+        state,
+        postalCode,
+        country
+      );
+    } catch (GeolocationService.GeocodingException e) {
+      caughtException = true;
+      Assert.areEqual(
+        'Street, City, and Postal Code are required for geocoding.',
+        e.getMessage(),
+        'Exception message should indicate missing required fields.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'GeocodingException should have been thrown for missing street.'
+    );
+  }
+
+  /**
+   * Verifies that calling the deprecated method throws a
+   * DeprecatedMethodCalledException.
+   * @see GeolocationService#convertAddressToCoordinates(String address)
+   * @see GeolocationService#DeprecatedMethodCalledException
+   */
+  @IsTest
+  private static void deprecatedMethodCallShouldThrowDeprecatedMethodCalledException() {
+    String oldAddress = '123 Deprecated Lane';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.convertAddressToCoordinates(
+        oldAddress
+      );
+    } catch (GeolocationService.DeprecatedMethodCalledException e) {
+      caughtException = true;
+      Assert.isTrue(
+        e.getMessage().contains('is deprecated'),
+        'Exception message should indicate deprecation.'
+      );
+      Assert.isTrue(
+        e.getMessage().contains('Please use'),
+        'Exception message should suggest new method.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'DeprecatedMethodCalledException should have been thrown.'
+    );
+  }
+}
+
 @InvocableMethod
     (label='Create Action Plan From Template' description='Takes a Template Name/Id and Record Id and makes an Action Plan for that record.' category=77)
     global static List<Id> makeActionPlanFromTemplate(List<CreateActionPlanRequest>; requests) {
-      List<Id> resultIDs = new List&lt;Id&gt;();
+      List<Id> resultIDs = new List<Id>();
 
       Set<String> templateNamesOrIDs = new Set<String>();
       for (CreateActionPlanRequest r : requests) {
@@ -674,5 +824,3 @@ Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
     System.debug('inserting a record');
     upsert myRecord__c;
   }
-
-    

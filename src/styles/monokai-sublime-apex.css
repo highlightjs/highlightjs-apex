@@ -63,7 +63,8 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #75715e;
 }
 .hljs-comment .hljs-code {
-	color: inherit;
+	color: #e6db74;
+	font-family: monospace, monospace;
 }
 .hljs-deletion {
 	color: #f92672;
@@ -88,7 +89,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #fd971f;
 	font-style: italic;
 }
-.hljs-meta .hljs-string,
 .hljs-quote {
 	color: #cfcfc2;
 }
@@ -128,14 +128,10 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #a6e22eff;
 	font-style: italic;
 }
-.hljs-comment .hljs-code {
-	font-family: monospace, monospace;
-}
 .hljs-hidden,
 .hljs-string .hljs-hidden {
 	display: none;
 }
-
 .hljs-soql {
 	color: #66d9ef;
 	font-style: italic;
