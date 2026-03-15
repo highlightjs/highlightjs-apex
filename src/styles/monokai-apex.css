@@ -8,8 +8,8 @@ pre code.hljs {
 code.hljs {
 	padding: 3px 5px;
 }
-/*
 
+/*
 Monokai Sublime Apex style by David Schach https://github.com/dschach
 Derived from Sublime MavensMate Monokai theme by SubC4i https://github.com/SubC4i/Sublime-MavensMate-Monokai
 Monokai-Sublime style derived from Monokai by noformnocontent http://nn.mit-license.org/
@@ -24,6 +24,10 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-addition {
 	color: #a6e22e;
 	background: #66852880;
+}
+.hljs-deletion {
+	color: #f92672;
+	background: #90274a80;
 }
 .hljs-attr,
 .hljs-keyword,
@@ -56,47 +60,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-variable.constant_ {
 	color: #ae81ff;
 }
-.hljs-code {
-	color: #fd971f;
-}
-.hljs-comment {
-	color: #75715e;
-}
-.hljs-comment .hljs-code {
-	color: inherit;
-}
-.hljs-deletion {
-	color: #f92672;
-	background: #90274a80;
-}
-.hljs-doctag {
-	color: #f92672;
-	font-style: bold;
-}
-.hljs-formula {
-	color: #fd971f;
-	font-style: italic;
-}
-.hljs-link {
-	color: #ae81ff;
-	text-decoration: underline;
-}
-.hljs-params .hljs-variable {
-	color: #fd971f;
-}
-.hljs-comment .hljs-variable {
-	color: #fd971f;
-	font-style: italic;
-}
-.hljs-meta .hljs-string,
-.hljs-quote {
-	color: #cfcfc2;
-}
-.hljs-number {
-	color: #ae81ff;
-	font-style: normal;
-}
-.hljs-meta .hljs-keyword,
 .hljs-params,
 .hljs-property,
 .hljs-punctuation,
@@ -105,6 +68,9 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-tag,
 .hljs-variable {
 	color: #f8f8f2;
+}
+.hljs-params .hljs-variable {
+	color: #fd971f;
 }
 .hljs-meta .hljs-string,
 .hljs-string {
@@ -128,13 +94,56 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #a6e22eff;
 	font-style: italic;
 }
+
+/* Comments & ApexDoc */
+
+.hljs-doctag {
+	color: #f92672;
+	font-style: bold;
+}
+.hljs-code {
+	color: #fd971f;
+}
+.hljs-comment {
+	color: #75715e;
+}
 .hljs-comment .hljs-code {
+	color: #e6db74;
 	font-family: monospace, monospace;
+}
+.hljs-comment .hljs-variable {
+	color: #fd971f;
+	font-style: italic;
+}
+.hljs-meta .hljs-keyword {
+	color: #f8f8f2;
+}
+.hljs-meta {
+	color: #66d9ef;
 }
 .hljs-hidden,
 .hljs-string .hljs-hidden {
 	display: none;
 }
+
+.hljs-formula {
+	color: #fd971f;
+	font-style: italic;
+}
+.hljs-link {
+	color: #ae81ff;
+	text-decoration: underline;
+}
+
+.hljs-quote {
+	color: #cfcfc2;
+}
+.hljs-number {
+	color: #ae81ff;
+	font-style: normal;
+}
+
+/* SOQL */
 
 .hljs-soql {
 	color: #66d9ef;

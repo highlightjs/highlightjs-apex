@@ -9,15 +9,24 @@ Website: https://developer.salesforce.com/
 export default function (hljs) {
   const regex = hljs.regex;
   const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
+  const APEX_OPT_RE = '[a-zA-Z_0-9]*';
   const APEX_IDENT_WORD_RE = '\\b' + APEX_IDENT_RE + '\\b';
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
   const SPACEPARENS_LOOKAHEAD = /(?=\s*\()/;
   //const PARENS_LOOKAHEAD = /(?=\()/;
   const SPACE = /\s+/;
   const OPENCURLY = /\{/;
-  const CLOSECURLY = /\}/;
+  const CLOSECURLY = /\s*\}/;
   const OPENPARENS = /\(/;
   const CLOSEPARENS = /\)/;
+  const CURLYORNEWLINE = '\s*(?=\}|\n|$)';
+  const COMMENT_LEADER = {
+    match: /^\s+\*\s+/,
+    scope: 'comment',
+    relevance: 0
+  };
+  const URL_RE =
+    /(https?):\/\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]/;
 
   const ACCESSOR = /(?<!\?)\./;
   const NULLSAFE = /\?\./;
@@ -428,23 +437,186 @@ export default function (hljs) {
 
   const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
     scope: 'string',
-    relevance: 1,
-    contains: [{ match: /\\'/, scope: 'literal', relevance: 1 }]
+    relevance: 0,
+    contains: [{ match: /\\'/, scope: 'literal', relevance: 0 }]
   });
 
   const COMMENT_STRINGS = [
-    { begin: '`', end: '`', scope: 'string' },
-    { begin: /'/, end: /'/, scope: 'string' },
+    { begin: '`', end: '`', scope: 'code' },
+    //{ begin: /'/, end: /'/, scope: 'string' },
     { begin: /"/, end: /"/, scope: 'string' }
   ];
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, { relevance: 0 });
 
+  //const APEX_DOX_LINK = /(?<=\{\s*)@link\s+/;
+  const APEX_DOX_SEE = /(?<!\{\s*)@see\s+/;
+  //const APEX_DOX_LINKSEE = regex.either(APEX_DOX_LINK, APEX_DOX_SEE);
+  const APEX_DOX_OVERLOAD = /(\[\d+\])*/;
+
+  const APEXDOC_LINKSEE = /(?:@link|@see)\s+/;
+  const APEXDOC_DIVIDER = regex.either(/#/, ACCESSOR);
+
+  const APEX_DOX = [
+    // https://github.com/no-stack-dub-sack/apexdox-vs-code
+    {
+      // Class.InnerClass.InnerClassMethod
+      match: [
+        /\{*/,
+        APEXDOC_LINKSEE,
+        regex.concat(APEX_IDENT_RE, APEXDOC_DIVIDER, APEX_IDENT_RE),
+        regex.concat(
+          APEXDOC_DIVIDER,
+          APEX_IDENT_RE,
+          APEX_DOX_OVERLOAD,
+          /(?=[\}\s])/
+        )
+      ],
+      scope: {
+        2: 'doctag',
+        3: 'title.class',
+        4: 'title.method'
+      }
+    },
+    {
+      // @see Class.InnerClassMethod
+      match: [
+        APEX_DOX_SEE,
+        regex.concat(
+          APEX_IDENT_RE,
+          APEXDOC_DIVIDER,
+          APEX_IDENT_RE,
+          APEX_DOX_OVERLOAD,
+          /(?=\s)/
+        )
+      ],
+      scope: {
+        1: 'doctag',
+        2: 'title.function'
+      }
+    },
+    {
+      // URL
+      match: [/(?<!\{\s*)@see\s+/, URL_RE],
+      scope: {
+        1: 'doctag',
+        2: 'link'
+      }
+    },
+    {
+      // Markdown URL
+      begin: /@(see|author)\s+(?=\[)/,
+      beginScope: 'doctag',
+      starts: {
+        end: /\n/,
+        returnEnd: true,
+        subLanguage: ['markdown']
+      }
+    },
+    {
+      // Class
+      match: [/(?<!\{\s*)@see\s+/, regex.concat(APEX_IDENT_WORD_RE, /(?=\s)/)],
+      scope: {
+        1: 'doctag',
+        2: 'title.class'
+      }
+    },
+    {
+      begin: /@example(?!\s+\*\s+\{)/,
+      beginScope: 'doctag',
+      end: /(@|\*\/)/,
+      returnEnd: true,
+      starts: {
+        endsWithParent: true,
+        subLanguage: ['apex', 'xml', 'javascript']
+      }
+    }
+  ];
+
+  const OFFICIAL_APEXDOC = [
+    {
+      // {@link class#method(parameters)}
+      // {@link #method(parameters)}
+      // @see class#method(parameters)
+      // @see #method(parameters)
+      begin: [
+        /\{*/,
+        APEXDOC_LINKSEE,
+        APEX_OPT_RE,
+        regex.concat(APEXDOC_DIVIDER, APEX_IDENT_RE),
+        /\s*\(/
+      ],
+      beginScope: {
+        2: 'doctag',
+        3: 'title.class',
+        4: 'title.function',
+        5: 'punctuation'
+      },
+      end: CLOSEPARENS,
+      endScope: 'punctuation',
+      contains: [
+        COMMENT_LEADER,
+        {
+          match: [SPACE, APEX_IDENT_RE, /\s*(?=[,)])/],
+          scope: { 2: 'variable' }
+        },
+        { match: [APEX_IDENT_RE, /(?=\s)/], scope: { 1: 'type' } },
+        { match: /,/, scope: 'punctuation' },
+        COMMENT_LINE,
+        COMMENT_LEADER
+      ]
+    },
+    {
+      // {@link class#member}
+      // {@link #member}
+      match: [
+        /\{*/,
+        APEXDOC_LINKSEE,
+        regex.concat(APEX_OPT_RE, APEXDOC_DIVIDER, APEX_IDENT_RE),
+        //\s*/,
+        /(?=[\}\s])/
+      ],
+      scope: {
+        2: 'doctag',
+        3: 'title.function'
+      }
+    },
+    {
+      // {@link class}
+      match: [OPENCURLY, APEXDOC_LINKSEE, APEX_IDENT_RE, CLOSECURLY],
+      scope: {
+        2: 'doctag',
+        3: 'title.class'
+      }
+    },
+    {
+      // @see "text-string"
+      begin: [OPENCURLY, APEXDOC_LINKSEE, /(?=")/],
+      beginScope: { 2: 'doctag' },
+      end: CLOSECURLY,
+      contains: COMMENT_STRINGS
+    },
+    {
+      begin: [OPENCURLY, APEXDOC_LINKSEE],
+      beginScope: { 2: 'doctag' },
+      end: CLOSECURLY,
+      returnEnd: true,
+      subLanguage: ['markdown', 'xml'],
+      contains: [
+        {
+          // URL
+          match: URL_RE,
+          scope: 'link'
+        }
+      ]
+    }
+  ];
+
   const COMMENT_BLOCK = hljs.COMMENT('/\\*', '\\*/', {
     relevance: 0,
     contains: [
       {
-        // eat up @'s in emails to prevent them to be recognized as doctags
+        // eat up @'s in emails to prevent them being recognized as doctags
         begin: /\w+@/,
         relevance: 0
       },
@@ -465,70 +637,28 @@ export default function (hljs) {
         scope: { 1: 'doctag', 3: 'title.class' },
         relevance: 0
       },
+      /******* LINK and SEE ***********/
+      APEX_DOX,
+      OFFICIAL_APEXDOC,
       {
-        // Reference to a method with parameters
-        // prettier-ignore
-        begin: [OPENCURLY, /@(?:link|see)/, SPACE , /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE), SPACEPARENS_LOOKAHEAD ],
-        // prettier-ignore
-        beginScope: {2: 'doctag', 4: 'title.class', 5: 'title.method'},
-        end: CLOSECURLY,
-        contains: [
-          //PUNCTUATION,
-          { match: /(?:\(|\))/, scope: 'punctuation' },
-          {
-            match: [SPACE, APEX_IDENT_RE, /\s*(?=[,)])/],
-            scope: { 2: 'variable' }
-          },
-          { match: [APEX_IDENT_RE, /(?=\s)/], scope: { 1: 'type' } }
-        ]
-      },
-      {
-        // Reference to method without parameters
-        // prettier-ignore
-        begin: [OPENCURLY, /@(?:link|see)/, SPACE ,  /[a-zA-Z_0-9]*/, regex.concat(/(?:#|\.)/, APEX_IDENT_RE, /\s*(?=\})/)],
-        // prettier-ignore
-        beginScope: {2: 'doctag', 4: 'title.class', 5: 'title.method' },
-        end: CLOSECURLY,
-        returnEnd: true
-      },
-      {
-        begin: [OPENCURLY, /@(?:link|see)/, SPACE, APEX_IDENT_WORD_RE],
-        beginScope: { 2: 'doctag', 4: 'title.class' },
-        end: CLOSECURLY,
-        returnEnd: true
-      },
-      {
-        begin: [OPENCURLY, /@(?:link|see)(?=\s+")/],
-        beginScope: { 2: 'doctag' },
-        end: CLOSECURLY,
-        returnEnd: true,
-        contains: COMMENT_STRINGS
-      },
-
-      {
-        begin: [OPENCURLY, /@(?:link|see)/],
-        beginScope: { 2: 'doctag' },
-        end: CLOSECURLY,
-        returnEnd: true,
-        subLanguage: ['markdown', 'xml']
-      },
-      {
+        // literal
         begin: [OPENCURLY, /@literal/],
         beginScope: { 2: 'doctag' },
         end: CLOSECURLY,
         returnEnd: true,
-        subLanguage: ['apex', 'xml', 'javascript']
+        subLanguage: ['apex', 'xml', 'javascript', 'bash']
       },
-      { match: ANNOTATION_RE, scope: 'doctag', relevance: 0 },
+
       {
         match: [/(?<=@param)\s+/, APEX_IDENT_RE],
         scope: { 2: 'variable' },
         relevance: 0
       },
       {
+        // various strings
+        variants: COMMENT_STRINGS,
         contains: [hljs.BACKSLASH_ESCAPE],
-        relevance: 0,
-        variants: COMMENT_STRINGS
+        relevance: 0
       },
       {
         // version numbers
@@ -547,18 +677,14 @@ export default function (hljs) {
         beginScope: { 2: 'doctag' },
         starts: {
           end: CLOSECURLY,
-          returnEnd: true,
           contains: [
-            {
-              match: /^\s+\*\s+/,
-              skip: true,
-              relevance: 0
-            },
+            COMMENT_LEADER,
             { begin: OPENCURLY, end: CLOSECURLY, skip: true }
           ],
           subLanguage: ['apex', 'xml', 'javascript']
         }
-      }
+      },
+      { match: ANNOTATION_RE, scope: 'doctag', relevance: 0 }
     ]
   });
 
@@ -818,7 +944,6 @@ export default function (hljs) {
     beginScope: { 2: 'keyword' },
     end: /(?=\{)/,
     relevance: 1,
-    //scope: 'clause: class_declaration',
     keywords: { type: TYPES, keyword: KEYWORD_LIST },
     contains: [
       {
@@ -1111,8 +1236,7 @@ export default function (hljs) {
     match: [
       regex.concat(/\b/, noneOf(...RESERVED_WORDS)),
       APEX_IDENT_RE,
-      SPACE,
-      /(?=\{)/
+      /(?=\s*\{)/
     ],
     scope: { 2: 'property' },
     relevance: 0
