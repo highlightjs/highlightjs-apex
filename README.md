@@ -48,7 +48,7 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 <!-- Use any stylesheet you'd like - though Apex developers may want to use the custom theme based on MavensMate's Monokai -->
 <link
 	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
+	href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-apex.css" />
 
 <script type="text/javascript">
 	hljs.highlightAll();
