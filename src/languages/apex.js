@@ -650,9 +650,10 @@ export default function (hljs) {
       {
         // literal
         begin: [OPENCURLY, /@literal/],
-        beginScope: { 2: 'doctag' },
+        beginScope: { 1: 'punctuation', 2: 'doctag' },
         end: CLOSECURLY,
-        returnEnd: true,
+        //returnEnd: true,
+        endScope: 'punctuation',
         subLanguage: ['apex', 'xml', 'javascript', 'bash']
       },
       {
