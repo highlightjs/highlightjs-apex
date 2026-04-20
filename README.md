@@ -4,8 +4,8 @@
 
 [![NPM](https://nodei.co/npm/highlightjs-apex.png)](https://www.npmjs.com/package/highlightjs-apex)
 
-![Salesforce Version](https://img.shields.io/badge/Summer_'25-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20Release)
-![Salesforce API](https://img.shields.io/badge/63.0-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20API)
+![Salesforce Version](https://img.shields.io/badge/Spring_'26-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20Release)
+![Salesforce API](https://img.shields.io/badge/66.0-0d9dda?style=flat&logo=salesforce&logoColor=white&label=Salesforce%20API)
 [![npm version](https://img.shields.io/npm/v/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 [![npm downloads](https://img.shields.io/npm/dt/highlightjs-apex)](https://www.npmjs.com/package/highlightjs-apex)
 ![install size](https://badgen.net/packagephobia/install/highlightjs-apex)
@@ -48,7 +48,7 @@ For more details see [Highlight.js main page](https://github.com/highlightjs/hig
 <!-- Use any stylesheet you'd like - though Apex developers may want to use the custom theme based on MavensMate's Monokai -->
 <link
 	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-sublime-apex.css" />
+	href="https://cdn.jsdelivr.net/npm/highlightjs-apex/src/styles/monokai-apex.css" />
 
 <script type="text/javascript">
 	hljs.highlightAll();

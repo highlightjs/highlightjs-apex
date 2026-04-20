@@ -1,0 +1,189 @@
+/* monokai-apex.css */
+
+:host,
+.hljs {
+	--hljs-color-black: #272822;
+	--hljs-color-white: #f8f8f2;
+	--hljs-color-gray: #75715e;
+	--hljs-color-silver: #cfcfc2;
+	--hljs-color-pink: #f92672;
+	--hljs-color-maroon: #90274a80;
+	--hljs-color-green: #a6e22e;
+	--hljs-color-darkgreen: #66852880;
+	--hljs-color-cyan: #66d9ef;
+	--hljs-color-yellow: #e6db74;
+	--hljs-color-purple: #ae81ff;
+	--hljs-color-orange: #fd971f;
+}
+
+pre code.hljs {
+	display: block;
+	overflow-x: auto;
+	padding: 1em;
+}
+code.hljs {
+	padding: 3px 5px;
+}
+
+/*
+Monokai Sublime Apex style by David Schach https://github.com/dschach
+Derived from Sublime MavensMate Monokai theme by SubC4i https://github.com/SubC4i/Sublime-MavensMate-Monokai
+Monokai-Sublime style derived from Monokai by noformnocontent http://nn.mit-license.org/
+Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
+*/
+
+.hljs {
+	background-color: var(--hljs-color-black) !important;
+	background: var(--hljs-color-black);
+	color: var(--hljs-color-white);
+}
+.hljs-addition {
+	color: var(--hljs-color-green);
+	background: var(--hljs-color-darkgreen);
+}
+.hljs-deletion {
+	color: var(--hljs-color-pink);
+	background: var(--hljs-color-maroon);
+}
+.hljs-attr,
+.hljs-keyword,
+.hljs-name,
+.hljs-operator,
+.hljs-selector-tag,
+.hljs-variable.language_ {
+	color: var(--hljs-color-pink);
+}
+.hljs-attribute,
+.hljs-meta,
+.hljs-selector-attr,
+.hljs-symbol {
+	color: var(--hljs-color-cyan);
+}
+.hljs-built_in,
+.hljs-emphasis,
+.hljs-type {
+	color: var(--hljs-color-cyan);
+	font-style: italic;
+}
+.hljs-bullet,
+.hljs-selector-id,
+.hljs-template-variable {
+	color: var(--hljs-color-yellow);
+}
+.hljs-char.escape_,
+.hljs-literal,
+.hljs-regexp,
+.hljs-variable.constant_ {
+	color: var(--hljs-color-purple);
+}
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-selector-pseudo,
+.hljs-subst,
+.hljs-tag,
+.hljs-variable {
+	color: var(--hljs-color-white);
+}
+.hljs-params .hljs-variable {
+	color: var(--hljs-color-orange);
+}
+.hljs-meta .hljs-string,
+.hljs-string {
+	color: var(--hljs-color-yellow);
+	font-style: normal;
+}
+.hljs-strong {
+	color: var(--hljs-color-cyan);
+	font-style: bold;
+}
+.hljs-template-tag,
+.hljs-section,
+.hljs-selector-class,
+.hljs-title.class_,
+.hljs-title.function_,
+.hljs-title.function_.invoke__,
+.hljs-title {
+	color: var(--hljs-color-green);
+}
+.hljs-title.class_.inherited__ {
+	color: var(--hljs-color-green);
+	font-style: italic;
+}
+
+/* Comments & ApexDoc */
+
+.hljs-comment .hljs-doctag,
+.hljs-doctag {
+	color: var(--hljs-color-cyan);
+	font-style: bold;
+}
+.hljs-code {
+	color: var(--hljs-color-orange);
+}
+.hljs-comment {
+	/* color: var(--hljs-color-white); */
+	color: var(--hljs-color-gray);
+}
+.hljs-comment .hljs-meta {
+	color: var(--hljs-color-cyan);
+}
+.hljs-comment .hljs-code {
+	color: var(--hljs-color-yellow);
+	font-family: monospace, monospace;
+}
+.hljs-comment .hljs-variable {
+	color: var(--hljs-color-orange);
+	font-style: italic;
+}
+.hljs-meta .hljs-keyword {
+	color: var(--hljs-color-white);
+}
+.hljs-hidden,
+.hljs-string .hljs-hidden {
+	display: none;
+}
+.hljs-formula {
+	color: var(--hljs-color-orange);
+	font-style: italic;
+}
+.hljs-link {
+	color: var(--hljs-color-purple);
+	text-decoration: underline;
+}
+.hljs-quote {
+	color: var(--hljs-color-silver);
+}
+.hljs-number {
+	color: var(--hljs-color-purple);
+	font-style: normal;
+}
+
+/* SOQL */
+
+.hljs-soql {
+	color: var(--hljs-color-cyan);
+	font-style: italic;
+}
+.hljs-soql .hljs-params,
+.hljs-soql .hljs-variable {
+	color: var(--hljs-color-white);
+	font-style: normal;
+}
+.hljs-soql .hljs-keyword {
+	color: var(--hljs-color-orange);
+}
+.hljs-soql .hljs-punctuation {
+	font-style: normal;
+}
+.hljs-soql .hljs-title.function_.invoke__ {
+	color: var(--hljs-color-green);
+	font-style: normal;
+}
+.hljs-soql .hljs-operator {
+	font-style: normal;
+}
+.hljs-soql .hljs-title.function_ {
+	color: var(--hljs-color-cyan);
+	font-style: italic;
+}

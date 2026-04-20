@@ -1,40 +1,335 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<title>TEST APEX CODE</title>
-		<meta charset="UTF-8" />
-		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.js"></script>
-		<script charset="UTF-8" src="../dist/apex.min.js"></script>
-		<!-- <link rel="stylesheet" href="./testcode.css" /> -->
-		<link rel="stylesheet" href="../src/styles/monokai-apex.css" />
-		<!-- <link rel="stylesheet" href="vs.css" /> -->
-		<script>
-			hljs.debugMode();
-			hljs.highlightAll();
-		</script>
-		<style>
-			pre code {
-				white-space: pre-wrap;
-				font-size: 120%;
-			}
-		</style>
-	</head>
+/**
+  * Provides services for geolocation and address conversion.
+  * @author Dennis Smith
+  * @version 0.3.0-beta4
+  * <br>
+  * {@hidden this is a 
+  * hidden comment}
+  * This string might contain malicious or unexpected characters,
+  * like a {@literal <script>} tag or a backslash {@literal \}.
+  * @since 4/11/2000
+  * @see class.method
+  * @see class
+  * @see class#method `should not highlight`
+  * @see class.class.method
+  * {@link class.class.method}
+  * {@link class.method}
+  * @see class.class.method[3]
+  * @see https://github.com
+  * {@link class#member}
+  * {@link https://github.com}
+  * {@link #member}
+  * {@link class#Constructor}
+  * {@link class}
+  * {@link "text-string"}
+  * {@link <a href="URL">label</a>}
+  * @throws AccountManager.AccountException if 
+  * accountName is invalid or if DML operation fails.
+  * @deprecated in 0.2.0. Use {@link #geocodeAddress(
+  * String street,
+  * String city,
+  * String state,
+  * String postalCode,
+  * String country)} instead.
+  * {@code
+  * try {
+  *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
+  *     '415 Mission St',
+  *     'San Francisco',
+  *     'CA',
+  *     '94105',
+  *     'USA'
+  *   );
+  * } 
+  * catch (GeolocationService.GeocodingException e) {
+  *   // handle failure
+  * }
+  * RecordTypes.getAvailableRecordTypesForSelectList('Account')
+  * <br><br>
+  * System.SelectOption[value='<SFID>', label='Available', disabled='false']
+  * System.SelectOption[value='<SFID>', label='Default', disabled='false']
+  * System.SelectOption[value='<SFID>', label='Inactive', disabled='true']
+  * }
+  * @example
+  * {@code
+  * Account a;
+  * try {
+  *  a = new AccountManager().createAccount('Acme', 'Agriculture');
+  * } catch (AccountManager.AccountException caught) {
+  *   LOGGER.log(caught);
+  *   // further exception handling
+  * }
+  * }
+  */
+global with sharing class GeolocationService {
+  /**
+   * Represents geographic coordinates (latitude and longitude).
+   */
+  global class Coordinates {
+    @AuraEnabled
+    public Decimal latitude;
+    @AuraEnabled
+    public Decimal longitude;
 
-	<body>
-		<pre><code class="language-apex">
-    Map&lt;Id, CustomObject__c&gt; myMap = new Map&lt;Id, CustomObject__c&gt;([SELECT Id FROM CustomObject__c WHERE Id NOT IN :newRecordsMap.keySet()]);
-    Map&lt;Id, String&gt; myMap = new Map&lt;Id, String&gt;{a =&gt; b, c =&gt; d};
+    global Coordinates(Decimal lat, Decimal lon) {
+      this.latitude = lat;
+      this.longitude = lon;
+    }
+  }
 
-    delete thisAccount;
+  /**
+   * Converts a full address string to approximate latitude
+   * and longitude coordinates. This method is deprecated and should no
+   * longer be used due to its reliance on an older, less accurate geocoding 
+   * service and simpler parsing logic. It may not handle all address formats
+   * correctly and has a lower success rate.
+   * @param fullAddress The complete address string
+   * (e.g., "123 Main St, Anytown, CA 90210, USA").
+   * @return A `Coordinates` object representing the approximate latitude and longitude.
+   * @throws DeprecatedMethodCalledException If this method is invoked,
+   * informing the user to migrate to the newer, more robust `geocodeAddress` method.
+   * @deprecated in 0.2.0. Use @see #geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country) instead.
+   * @since 0.1.0
+   */
+  @Deprecated
+  global static Coordinates convertAddressToCoordinates(String fullAddress) {
+    throw new DeprecatedMethodCalledException(
+      'The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. ' +
+        'Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` ' +
+        'for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'
+    );
+  }
+
+  /**
+   * Geocodes a structured address into precise latitude and longitude coordinates
+   * using a robust external geocoding service.
+   * This method provides higher accuracy and better handling of diverse address formats.
+   * @param street The street address (e.g., "123 Main St").
+   * @param city The city (e.g., "Anytown").
+   * @param state The state or province abbreviation (e.g., "CA").
+   * @param postalCode The postal or ZIP code (e.g., "90210").
+   * @param country The country name or code (e.g., "USA").
+   * @return A Coordinates object containing the latitude and longitude.
+   * @throws GeocodingException If the address cannot be geocoded, 
+   * if the external service is unavailable, or if required address
+   * components are missing.
+   * @example
+   * {@code
+   * try {
+   *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
+   *     '415 Mission St',
+   *     'San Francisco',
+   *     'CA',
+   *     '94105',
+   *     'USA'
+   *   );
+   * } catch (GeolocationService.GeocodingException e) {
+   *   // handle failure
+   * }
+   * }
+   * @since 0.2.0
+   */
+  global static Coordinates geocodeAddress(
+    String street,
+    String city,
+    String state,
+    String postalCode,
+    String country
+  ) {
+    // Implement actual geocoding logic
+    return new Coordinates(0, 0);
+  }
+
+  /**
+   * Exception thrown when a deprecated method is called.
+   * This indicates that the caller should migrate to the recommended alternative.
+   */
+  global class DeprecatedMethodCalledException extends Exception {
+  }
+
+  /**
+   * Exception thrown when a geocoding operation fails.
+   * This provides specific context for issues during address-to-coordinate conversion.
+   */
+  global class GeocodingException extends Exception {
+  }
+}
+
+/**
+ * Specifications for the GeolocationService
+ * @author Jane Devington
+ * @version 0.2.0
+ * @see GeolocationService
+ * @since 0.1.0
+ */
+@IsTest
+private class GeolocationServiceTest {
+  /**
+   * Verifies that known addresses are correctly geocoded to their expected coordinates.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   */
+  @IsTest
+  private static void validAddressShouldReturnCorrectCoordinates() {
+    String street = '415 Mission Street';
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = '94105';
+    String country = 'USA';
+
+    GeolocationService.Coordinates coords;
+    Test.startTest();
+    coords = GeolocationService.geocodeAddress(
+      street,
+      city,
+      state,
+      postalCode,
+      country
+    );
+    Test.stopTest();
+
+    Assert.isNotNull(
+      coords,
+      'Coordinates should not be null for a valid address.'
+    );
+    Assert.areEqual(
+      37.785834,
+      coords.latitude,
+      'Latitude should match for Salesforce tower.'
+    );
+    Assert.areEqual(
+      -122.406417,
+      coords.longitude,
+      'Longitude should match for Salesforce tower.'
+    );
+  }
+
+  /**
+   * Verifies that calling the geocodeAddress with missing required parameters
+   * throws a GeocodingException.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   * @see GeolocationService#GeocodingException
+   */
+  @IsTest
+  private static void missingRequiredParametersShouldThrowGeocodingException() {
+    String street = ''; // Missing
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = 94105;
+    String country = 'USA';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.geocodeAddress(
+        street,
+        city,
+        state,
+        postalCode,
+        country
+      );
+    } catch (GeolocationService.GeocodingException e) {
+      caughtException = true;
+      Assert.areEqual(
+        'Street, City, and Postal Code are required for geocoding.',
+        e.getMessage(),
+        'Exception message should indicate missing required fields.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'GeocodingException should have been thrown for missing street.'
+    );
+  }
+
+  /**
+   * Verifies that calling the deprecated method throws a
+   * DeprecatedMethodCalledException.
+   * @see GeolocationService#convertAddressToCoordinates(String address)
+   * @see GeolocationService#DeprecatedMethodCalledException
+   */
+  @IsTest
+  private static void deprecatedMethodCallShouldThrowDeprecatedMethodCalledException() {
+    String oldAddress = '123 Deprecated Lane';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.convertAddressToCoordinates(
+        oldAddress
+      );
+    } catch (GeolocationService.DeprecatedMethodCalledException e) {
+      caughtException = true;
+      Assert.isTrue(
+        e.getMessage().contains('is deprecated'),
+        'Exception message should indicate deprecation.'
+      );
+      Assert.isTrue(
+        e.getMessage().contains('Please use'),
+        'Exception message should suggest new method.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'DeprecatedMethodCalledException should have been thrown.'
+    );
+  }
+}
+
+@InvocableMethod
+    (label='Create Action Plan From Template' description='Takes a Template Name/Id and Record Id and makes an Action Plan for that record.' category=77)
+    global static List<Id> makeActionPlanFromTemplate(List<CreateActionPlanRequest>; requests) {
+      List<Id> resultIDs = new List<Id>();
+
+      Set<String> templateNamesOrIDs = new Set<String>();
+      for (CreateActionPlanRequest r : requests) {
+        templateNamesOrIDs.add(r.templateNameOrID);
+      }
+
+    }
+}
+/**
+	 * @description Given an sObject and `RecordType` DeveloperName, return the `RecordType` Name
+	 * @author {@link [David Schach](https://github.com/dschach)}
+	 * @param  objectName     SObject name (with __c if custom, etc)
+	 * @param  recordTypeDevName `RecordType.DeveloperName` (cannot include spaces)
+	 * @return                RecordType Name
+	 * @example
+	 * RecordTypes.getRecordTypeNameFromDevName('Account','Person_Account')
+	 */
+Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
+[SELECT Id, AccountId, MAX(Amount) FROM CustomObject__c WHERE Id NOT IN :newRecordsMap?.keySet()]);
+    Map<Id, String> myMap = new Map<Id, String>{a => b, c => d};
+
+    delete myAccount;
     Account a;
     String s;
     delete [SELECT Id FROM Account];
 
     Integer myInt = 8 - 7++;
 
-    public List&lt;String&gt; myString { get; set; }
+    public List<String> myString { get; set; }
 
-    List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
+    List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :newRecordsMap.keySet()];
+    List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE Id NOT IN :myMethod()];
 
     
     String queryText = 'SELECT Id, Name, ';
@@ -49,16 +344,16 @@
     System.URL.getCurrentRequestUrl();
     URL.getCurrentRequestUrl();
 
-    public List&lt;SelectOption&gt; recordTypes { get; private set; }
+    public List<SelectOption> recordTypes { get; private set; }
 
-    Database.insert(thisAccounts, false, AccessLevel.USER_MODE);
-    delete thisAccount;
+    Database.insert(myAccounts, false, AccessLevel.USER_MODE);
+    delete myAccount;
     delete [SELECT Id FROM Account];
-    thisAcct = (Account)thisAcct;
+    myAcct = (Account)myacct;
 
     public String myString { get; set; }
 
-    List&lt;SObject&gt; mylist = [SELECT Name, StreetAddress__c, COUNT(),
+    List<SObject> mylist = [SELECT Name, StreetAddress__c, COUNT(),
       (SELECT Id FROM Contacts)
       FROM Warehouse__c.Contacts__r
       WHERE DISTANCE(Location__c, GEOLOCATION(37.775,-122.418), 'mi') < 20 
@@ -76,20 +371,13 @@
      * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/MIT
      * @group Visualforce
      * @since 2022
-     * @example 
-     * for (Dashboard d : dashboards) {
-     *     List<BotField> fields = new List<BotField>();
-     *     fields.add(new BotField('Name', d.Title, '/lightning/r/Dashboard/' + d.Id + '/view'));
-     *     fields.add(new BotField('Folder', d.FolderName));
-     *     records.add(new BotRecord(fields));
-     * }
      */
     public with sharing class ActionPlanDetailController {
 
       public enum Season {WINTER, SPRING, SUMMER, FALL}
      
       public ActionPlanDetailController(ApexPages.StandardController stdController, Integer x, Double y) {
-        Map&ltId, Map&ltString, Wrapper&gt&gt renew = new Map&ltId, Map&ltString, SObject&gt&gt();
+        Map<Id, Map<String, Wrapper>> renew = new Map<Id, Map<String, SObject>>();
         if (!Test.isRunningTest() && false) {
           stdController.addFields(ActionPlansUtilities.getCustomRelationshipFields());
         }
@@ -101,12 +389,12 @@
     
       /**
       * @description Constructor using passed-in class name constructor for faster performance
-      * &lt;br&gt;We cast all four trigger collections
+      * <br>We cast all four trigger collections
       * @param className The name of this class. Pass in the string to make the handler run faster
-      * @return `PageReference` Page to go to after deleting `ActionPlan__c`
+      * @return PageReference Page to go to after deleting ActionPlan__c
       * Display ControllingTasks column only if there are controlling tasks
       * @author {@link [David Schach](https://github.com/dschach)}
-      * @return   `Boolean` is the Controller__c field populated for any Action Plan Tasks?
+      * @return   Boolean is the Controller__c field populated for any Action Plan Tasks?
       */
       public PageReference onLoad() {
         ActionPlansUtilities.onPageLoad();
@@ -149,15 +437,15 @@
       /**
        * Memoized TaskWrappers for display on the page
        */
-      private List&lt;TaskWrapper&gt; apTaskWrapperList;
+      private List<TaskWrapper> apTaskWrapperList;
       /**
        * Collect and return all TaskWrappers
-       * @return `List&lt;TaskWrapper&gt;` List of `TaskWrapper` for this Action Plan
+       * @return List<TaskWrapper> List of TaskWrapper for this Action Plan
        */
-      public List&lt;TaskWrapper&gt; getActionPlanTasks() {
+      public List<TaskWrapper> getActionPlanTasks() {
         if (apTaskWrapperList == null) {
-          apTaskWrapperList = new List&lt;TaskWrapper&gt;();
-          Map&lt;Id, APTask__c&gt; apTaskMap = new Map&lt;Id, APTask__c&gt;(
+          apTaskWrapperList = new List<TaskWrapper>();
+          Map<Id, APTask__c> apTaskMap = new Map<Id, APTask__c>(
             [
               SELECT
                 Id,
@@ -167,7 +455,7 @@
               ORDER BY TaskIndex__c ASC
             ]
           );
-          Map&lt;Id, Id&gt; taskTaskMap = new Map&lt;Id, Id&gt;();
+          Map<Id, Id> taskTaskMap = new Map<Id, Id>();
           for (Task t : [SELECT 
             Id, 
             TaskAPTask__c 
@@ -186,7 +474,7 @@
     
       public class TaskWrapper {
         /**
-         * The (standard) `Task` Id
+         * The (standard) Task Id
          */
         public Id taskId { get; private set; }
     
@@ -199,7 +487,7 @@
       public Boolean getVersion() {
         if (actionPlan.Action_Plan_Template__c != null) {
           ActionPlanTemplate__c tempApt = [SELECT LastModifiedDate FROM ActionPlanTemplate__c WHERE Id = :actionPlan.Action_Plan_Template__c];
-          if (tempApt.LastModifiedDate &gt; actionPlan.createdDate) {
+          if (tempApt.LastModifiedDate > actionPlan.createdDate) {
             return true;
           }
         }
@@ -208,7 +496,7 @@
     
       /**
        * The name of the parent record - show a different field based on SObject Type
-       * @return  `String` name of the object related to this Action Plan
+       * @return  String name of the object related to this Action Plan
        */
       public String getrelatedRecordName() {
         String objName = '';
@@ -247,7 +535,7 @@
       public String getRecordTypeName() {
         String toReturn = '';
         if (ActionPlansUtilities.taskUsesRecordTypes) {
-          Map&lt;Id, Schema.RecordTypeInfo&gt; rtMapById = Task.SObjectType.getDescribe().getRecordTypeInfosById();
+          Map<Id, Schema.RecordTypeInfo> rtMapById = Task.SObjectType.getDescribe().getRecordTypeInfosById();
           if (!rtMapById.isEmpty() && rtMapById.containsKey(actionPlan.TaskRecordTypeID__c)) {
             return rtMapById.get(actionPlan.TaskRecordTypeID__c).getName();
           }
@@ -262,17 +550,17 @@
   global without sharing class ActionPlanCreateInvocable {
     @InvocableMethod
     (label='Create Action Plan From Template' description='Takes a Template Name/Id and Record Id and makes an Action Plan for that record.' category=77)
-    global static List&lt;Id&gt; makeActionPlanFromTemplate(List&lt;CreateActionPlanRequest&gt; requests) {
-      List&lt;Id&gt; resultIDs = new List&lt;Id&gt;();
+    global static List<Id> makeActionPlanFromTemplate(List<CreateActionPlanRequest> requests) {
+      List<Id> resultIDs = new List<Id>();
 
-      Set&lt;String&gt; templateNamesOrIDs = new Set&lt;String&gt;();
+      Set<String> templateNamesOrIDs = new Set<String>();
       for (CreateActionPlanRequest r : requests) {
         templateNamesOrIDs.add(r.templateNameOrID);
       }
 
-      Map&lt;String, ActionPlanTemplate__c&gt; templateNameOrIdToTemplate = new Map&lt;String, ActionPlanTemplate__c&gt;();
+      Map<String, ActionPlanTemplate__c> templateNameOrIdToTemplate = new Map<String, ActionPlanTemplate__c>();
 
-      List&lt;ActionPlanTemplate__c&gt; possibleTemplates = [
+      List<ActionPlanTemplate__c> possibleTemplates = [
         SELECT
           Id,
           Description__c,
@@ -300,11 +588,11 @@
         relatedIDs.add(r.relatedRecordID);
       }
 
-      Map&lt;Id, ActionPlan__c&gt; actionPlansToInsert = new Map&lt;Id, ActionPlan__c&gt;();
+      Map<Id, ActionPlan__c> actionPlansToInsert = new Map<Id, ActionPlan__c>();
 
       insert actionPlansToInsert.values();
 
-      Map&lt;String, APTask__c&gt; planTaskIndexToTask = new Map&lt;String, APTask__c&gt;();
+      Map<String, APTask__c> planTaskIndexToTask = new Map<String, APTask__c>();
 
       for (CreateActionPlanRequest r : requests) {
         if (!actionPlansToInsert.containsKey(r.relatedRecordID)) {
@@ -332,16 +620,16 @@
 
       Database.insert(new planTaskIndexToTask.values());
 
-      Database.update(dependentTasksToUpdate, AccessLevel.USER_MODE);
+      Database.update(dependentTasksToUpdate);
 
-      List&lt;Task&gt; myTasksWithOutEmail = new List&lt;Task&gt;();
+      List<Task> myTasksWithOutEmail = new List<Task>();
 
-      Map&lt;Id, APTask__c&gt; mapAP = new Map&lt;Id, APTask__c&gt;();
+      Map<Id, APTask__c> mapAP = new Map<Id, APTask__c>();
       for (APTask__c a : planTaskIndexToTask.values()) {
         mapAP.put(a.Id, a);
       }
 
-      Map&lt;Id, ActionPlan__c&gt; insertedActionPlans = new Map&lt;Id, ActionPlan__c&gt;();
+      Map<Id, ActionPlan__c> insertedActionPlans = new Map<Id, ActionPlan__c>();
       for (ActionPlan__c ap : actionPlansToInsert.values()) {
         insertedActionPlans.put(ap.Id, ap);
       }
@@ -388,7 +676,7 @@
       Database.DMLOptions dmlo1 = new Database.DMLOptions();
       dmlo1.EmailHeader.triggerUserEmail = true;
 
-      Set&lt;Id&gt; relObjectIDs = new Set&lt;Id&gt;();
+      Set<Id> relObjectIDs = new Set<Id>();
       for (ActionPlan__c ap : actionPlansToInsert.values()) {
         relObjectIDs.add(ap.Id);
       }
@@ -415,59 +703,12 @@
       ActionPlansTriggerHandlers.actionPlansSObjectTriggerHandler('Account');
   }
 
-  public with sharing class GetFirstFromCollection {
-    @InvocableMethod
-    public static List <Results> execute (List<Requests> requestList) {
-      List<SObject> inputCollection = requestList[0].inputCollection;
-      SObject outputMember = inputCollection[0];
-  
-      //Create a Results object to hold the return values
-      Results response = new Results();
-  
-      //Add the return values to the Results object
-      response.outputMember = outputMember;
-  
-      //Wrap the Results object in a List container 
-      //(an extra step added to allow this interface to also support bulkification)
-      List<Results> responseWrapper= new List<Results>();
-      responseWrapper.add(response);
-      return responseWrapper;    
-    }
-  
-  public class Requests {
-    @InvocableVariable(label='Records for Input' description='yourDescription' required=true)
-    public List<SObject> inputCollection;
-    }
-  
-  public class Results {
-    @InvocableVariable(label='Records for Output' description='yourDescription' required=true)
-    public SObject outputMember;
-    }
-  }
 
-  /**
-  * SHOULD BE RECOGNIZED AS JAVA
-  * @author John Smith 
-  */
-  package l2f.gameserver.model;
-
-  public abstract strictfp class L2Char extends L2Object {
-    public static final Short ERROR = 0x0001;
-
-    public void _moveTo(int x, int y, int z, customtype a) {
-      _ai = null;
-      log("Should not be called");
-      if (1 &gt; 5) { // wtf!?
-        return;
-      }
-    }
-  }
-
-  public without sharing class AccountSampleTriggerHandler extends TriggerHandler, Database.schedulable, Batchable&lt;SObject&gt; {
-    private List&lt;Account&gt; newRecords;
-    private List&lt;Account&gt; oldRecords;
-    private Map&lt;Id, Account&gt; newRecordsMap;
-    private Map&lt;Id, Account&gt; oldRecordsMap;
+  public without sharing class AccountSampleTriggerHandler extends TriggerHandler, Database.schedulable, Batchable<SObject> {
+    private List<Account> newRecords;
+    private List<Account> oldRecords;
+    private Map<Id, Account> newRecordsMap;
+    private Map<Id, Account> oldRecordsMap;
 
     switch on context {
       when 'BEFORE_INSERT' {
@@ -480,8 +721,8 @@
     }
 
     public AccountSampleTriggerHandler(CustomType a, String className) {
-      this.newRecords = (List&lt;Account&gt;) Trigger.new;
-      this.newRecordsMap = (Map&lt;Id, Account&gt;) Trigger.newMap;
+      this.newRecords = (List<Account>) Trigger.new;
+      this.newRecordsMap = (Map<Id, Account>) Trigger.newMap;
     }
 
     public override sobject beforeInsert() {
@@ -509,7 +750,7 @@
     (label = true)
     private void method3() {
       Contact[] acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH SECURITY_ENFORCED];
-      List&lt;Contact&gt; acctContacts2 = [SELECT Id FROM Contact WHERE ID = '012000000' AND CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
+      List<Contact> acctContacts2 = [SELECT Id FROM Contact WHERE ID = '012000000' AND CreatedDate = :LAST_N_DAYS:90 WITH SECURITY_ENFORCED];
       if (Contact.getSObjectType().getDescribe().isUpdateable()) {
         update as user acctContacts; //NOPMD
       }
@@ -517,14 +758,14 @@
     }
   }
 
-  public without sharing class AccountSampleTriggerHandler extends Database.schedulable, Batchable&lt;SObject&gt; {
+  public without sharing class AccountSampleTriggerHandler extends Database.schedulable, Batchable<SObject> {
     @isTest
     private testMethod void testme(){
       Assert.isTrue(true);
     }
 
     @testVisible2
-    private List&lt;SelectOption&gt; recordTypes { get; private set; }
+    private List<SelectOption> recordTypes { get; private set; }
   }
 
   public virtual class Marker {
@@ -554,7 +795,7 @@
       Boolean ai = (Boolean) false;
       System.debug('Should not be called');
       if (1 > 5) { // wtf!?
-        Database.insert(thisAccounts);
+        Database.insert(myAccounts);
       }
     }
 
@@ -578,72 +819,3 @@
     System.debug('inserting a record');
     upsert myRecord__c;
   }
-
-    </code></pre>
-		<!-- <pre><code>
-  /**
-  * @description Account Sample handler
-  * @author [David Schach](https://github.com/dschach)
-  * @since 2021
-  */
-  public without sharing class AccountSampleTriggerHandler extends TriggerHandler {
-    private List&lt;Account&gt; newRecords;
-    private List&lt;Account&gt; oldRecords;
-    private Map&lt;Id, Account&gt; newRecordsMap;
-    private Map&lt;Id, Account&gt; oldRecordsMap;
-
-    /**
-    * @description Constructor using passed-in class name constructor for faster performance
-    * &lt;br&gt;We cast all four trigger collections
-    * @param className The name of this class. Pass in the string to make the handler run faster
-    */
-    public AccountSampleTriggerHandler(String className) {
-      this.newRecords = (List&lt;Account&gt;) Trigger.new;
-      this.oldRecords = (List&lt;Account&gt;) Trigger.old;
-      this.newRecordsMap = (Map&lt;Id, Account&gt;) Trigger.newMap;
-      this.oldRecordsMap = (Map&lt;Id, Account&gt;) Trigger.oldMap;
-    }
-
-    public override void beforeInsert() {
-      method1();
-    }
-
-    public override void beforeUpdate() {
-      method2();
-    }
-
-    //public override void beforeDelete(){}
-
-    public override void afterInsert() {
-      method3();
-    }
-
-    //public override void afterUpdate(){}
-
-    //public override void afterDelete(){}
-
-    //public override void afterUndelete(){}
-
-    private void method1() {
-      for (Account a : newRecords) {
-        a.Name = a.Name.toUpperCase();
-      }
-    }
-
-    private void method2() {
-      for (Account a : newRecords) {
-        a.Name = a.Name.toLowerCase();
-      }
-    }
-
-    private void method3() {
-      List&lt;Contact&gt; acctContacts = [SELECT Id FROM Contact WHERE AccountId IN :newRecordsMap.keyset() WITH SECURITY_ENFORCED];
-      if (Contact.getSObjectType().getDescribe().isUpdateable()) {
-        update acctContacts; //NOPMD
-      }
-      // do things here
-    }
-  }
-</code></pre> -->
-	</body>
-</html>

@@ -7,7 +7,8 @@
 		"test": "mocha --reporter spec",
 		"mocha": "mocha test/markup",
 		"prettier:verify": "prettier --list-different \"{test,src,demo,scripts}/**/*\"",
-		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\""
+		"prettier": "prettier --write \"{test,src,demo,scripts}/**/*\"",
+		"release:preview": "release-please release-pr --token=$GITHUB_TOKEN --repo-url=highlightjs/highlightjs-apex --debug --target-branch=main --dry-run"
 	},
 	"repository": {
 		"type": "git",
@@ -37,8 +38,9 @@
 	},
 	"devDependencies": {
 		"minimist": "^1.2.8",
-		"mocha": "^11.1.0",
+		"mocha": "^11.7.5",
 		"prettier": "3.8.1",
+		"release-please": "^17.6.0",
 		"should": "^13.2.3"
 	}
 }
