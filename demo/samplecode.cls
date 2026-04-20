@@ -2,6 +2,7 @@
   * Provides services for geolocation and address conversion.
   * @author Dennis Smith
   * @version 0.3.0-beta4
+  * <br>
   * {@hidden this is a 
   * hidden comment}
   * This string might contain malicious or unexpected characters,
@@ -60,12 +61,6 @@
   * }
   * }
   */
-/**
- * Provides services for geolocation and address conversion.
- * @author [Dennis Smith](http://github.com/dsmith)
- * @version 0.3.0
- * @since 0.1.0
- */
 global with sharing class GeolocationService {
   /**
    * Represents geographic coordinates (latitude and longitude).
