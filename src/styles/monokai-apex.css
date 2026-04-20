@@ -97,15 +97,21 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 
 /* Comments & ApexDoc */
 
+.hljs-comment .hljs-doctag,
 .hljs-doctag {
-	color: #f92672;
+	/*color: #f92672;*/
+	color: #66d9ef;
 	font-style: bold;
 }
 .hljs-code {
 	color: #fd971f;
 }
 .hljs-comment {
-	color: #75715e;
+	/* color: #75715e; */
+	color: #f8f8f2;
+}
+.hljs-comment .hljs-meta {
+	color: #66d9ef;
 }
 .hljs-comment .hljs-code {
 	color: #e6db74;
@@ -118,14 +124,10 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 .hljs-meta .hljs-keyword {
 	color: #f8f8f2;
 }
-.hljs-meta {
-	color: #66d9ef;
-}
 .hljs-hidden,
 .hljs-string .hljs-hidden {
 	display: none;
 }
-
 .hljs-formula {
 	color: #fd971f;
 	font-style: italic;
@@ -134,7 +136,6 @@ Monokai color scheme by Wimer Hazenberg 2006 https://monokai.nl/
 	color: #ae81ff;
 	text-decoration: underline;
 }
-
 .hljs-quote {
 	color: #cfcfc2;
 }
