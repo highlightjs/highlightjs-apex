@@ -9,6 +9,7 @@ Website: https://developer.salesforce.com/
 export default function (hljs) {
   const regex = hljs.regex;
   const APEX_IDENT_RE = '[a-zA-Z][a-zA-Z_0-9]*';
+  //const METHOD_RE = '[a-z][a-zA-Z_0-9]*';
   const APEX_OPT_RE = '[a-zA-Z_0-9]*';
   const APEX_IDENT_WORD_RE = '\\b' + APEX_IDENT_RE + '\\b';
   const ANNOTATION_RE = '@' + APEX_IDENT_RE;
@@ -292,7 +293,8 @@ export default function (hljs) {
     'operationType'
   ];
 
-  const LITERALS = ['false', 'true', 'null'];
+  const LITERALS_LIST = ['false', 'true', 'null'];
+  //const LITERALS_MATCH = { match: [/(?<!\.)(?:false|true|null)\b/], scope: 'literal' };
 
   const PUNCTUATION_LIST = [
     ',',
@@ -334,11 +336,11 @@ export default function (hljs) {
     // 'variable.language': LANGUAGE_VAR_LIST,
     // built_in: BUILT_INS, // handled in NAMESPACES array
     type: TYPES,
-    literal: LITERALS
+    literal: LITERALS_LIST
   };
 
   const RESERVED_WORDS = [
-    ...LITERALS,
+    ...LITERALS_LIST,
     ...KEYWORD_LIST,
     ...ACCESS_MODIFIER_LIST,
     ...NAMESPACE_LIST,
@@ -379,12 +381,21 @@ export default function (hljs) {
     },
     {
       match: [
-        regex.concat(/\b/, regex.either(...NAMESPACE_LIST)),
+        regex.concat(/(?<!\.)/, regex.either(...NAMESPACE_LIST)),
         /\./,
         APEX_IDENT_WORD_RE,
         /\b(?=\.)/
       ],
       scope: { 1: 'built_in', 2: 'punctuation', 3: 'type' }
+    },
+    {
+      match: [
+        regex.concat(/\b/, regex.either(...SYSTEM_CLASSES), /\b/),
+        /\./,
+        APEX_IDENT_WORD_RE,
+        SPACEPARENS_LOOKAHEAD
+      ],
+      scope: { 1: 'built_in', 2: 'punctuation', 3: 'title.function.invoke' }
     },
     {
       match: [
@@ -619,7 +630,7 @@ export default function (hljs) {
       {
         // Use up <br> tags in ApexDox
         match: '<br>',
-         relevance: 0
+        relevance: 0
       },
       {
         // eat up @'s in emails to prevent them being recognized as doctags
@@ -778,7 +789,7 @@ export default function (hljs) {
         STRINGS,
         NUMBERS
       ],
-      keywords: { literal: LITERALS }
+      keywords: { literal: LITERALS_LIST }
     }
   ];
 
@@ -868,7 +879,7 @@ export default function (hljs) {
       // must be followed by comma or paren
       match: regex.concat(
         /(?<=\s|\(|,)/,
-        noneOf(...LITERALS),
+        noneOf(...LITERALS_LIST),
         APEX_IDENT_RE,
         /\b/,
         /(?!\.)/
@@ -1353,6 +1364,7 @@ export default function (hljs) {
     DOT_NOTATION,
     THIS,
     PROPERTY
+    //hljs.UPPER_CASE_CONSTANT
     // the last coloring to do is to eat the unclaimed variables
     /* {
         match: [regex.concat(/\b/, noneOf(...RESERVED_WORDS).concat([/\./]),/\b/),  APEX_IDENT_WORD_RE, ';'],

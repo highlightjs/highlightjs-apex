@@ -824,3 +824,5 @@ Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
     System.debug('inserting a record');
     upsert myRecord__c;
   }
+  
+  }
