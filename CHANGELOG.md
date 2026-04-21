@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.5.1](https://github.com/highlightjs/highlightjs-apex/compare/v1.5.0...v1.5.1) (2026-04-21)
+
+
+### Build System
+
+* Bump prettier from 3.8.1 to 3.8.3 ([a8565a3](https://github.com/highlightjs/highlightjs-apex/commit/a8565a308920ecb168f48f3ca538f4d7df9658bb))
+* **mocha:** Bump mocha from 11.1.0 to 11.2.2 ([#83](https://github.com/highlightjs/highlightjs-apex/issues/83)) ([a3e1882](https://github.com/highlightjs/highlightjs-apex/commit/a3e18827eafe409ce2f6348c158dfb7bf7fff009))
+* **mocha:** Bump mocha from 11.2.2 to 11.3.0 ([#84](https://github.com/highlightjs/highlightjs-apex/issues/84)) ([9ed6af6](https://github.com/highlightjs/highlightjs-apex/commit/9ed6af6ee373b44dd064714e2212057a3c077573))
+* **mocha:** Bump mocha from 11.3.0 to 11.4.0 ([#85](https://github.com/highlightjs/highlightjs-apex/issues/85)) ([4eb1412](https://github.com/highlightjs/highlightjs-apex/commit/4eb14129f1772817d87829a8cad2f2fd4dc3cd20))
+* **mocha:** Bump mocha from 11.4.0 to 11.5.0 ([#86](https://github.com/highlightjs/highlightjs-apex/issues/86)) ([4491e8c](https://github.com/highlightjs/highlightjs-apex/commit/4491e8c9f19bfbc7d901d353e2afbfc97c989b66))
+* **mocha:** Bump mocha from 11.5.0 to 11.6.0 ([#87](https://github.com/highlightjs/highlightjs-apex/issues/87)) ([424f8db](https://github.com/highlightjs/highlightjs-apex/commit/424f8dbb533d3fbe8b32772e702cf2a8f280a3a2))
+* **mocha:** Bump mocha from 11.6.0 to 11.7.2 ([#96](https://github.com/highlightjs/highlightjs-apex/issues/96)) ([120741b](https://github.com/highlightjs/highlightjs-apex/commit/120741bf2fdd3752e16d360e08202798f076106b))
+* **mocha:** Bump mocha from 11.7.2 to 11.7.5 ([#104](https://github.com/highlightjs/highlightjs-apex/issues/104)) ([6cec274](https://github.com/highlightjs/highlightjs-apex/commit/6cec274fe9e65b634973d13193ad542ce5a3aa66))
+* **prettier:** Bump prettier from 3.5.3 to 3.6.2 ([#94](https://github.com/highlightjs/highlightjs-apex/issues/94)) ([6ba2916](https://github.com/highlightjs/highlightjs-apex/commit/6ba2916f1a304c1df612614ce83d682bc81fce20))
+* **prettier:** Bump prettier from 3.6.2 to 3.8.1 ([#110](https://github.com/highlightjs/highlightjs-apex/issues/110)) ([0d41fd3](https://github.com/highlightjs/highlightjs-apex/commit/0d41fd32f22db9b79344268f8a5f4aa810e34d42))
+* **prettier:** Bump prettier from 3.8.1 to 3.8.3 ([#114](https://github.com/highlightjs/highlightjs-apex/issues/114)) ([a8565a3](https://github.com/highlightjs/highlightjs-apex/commit/a8565a308920ecb168f48f3ca538f4d7df9658bb))
+* **prettier:** Install prettier-plugin-apex for sample files ([#115](https://github.com/highlightjs/highlightjs-apex/issues/115)) ([2667c5c](https://github.com/highlightjs/highlightjs-apex/commit/2667c5c15a5b1deea55127935cc6ef566a7301c1))
+
+
+### Continuous Integration
+
+* **actions/checkout:** Bump actions/checkout from 4 to 5 ([#95](https://github.com/highlightjs/highlightjs-apex/issues/95)) ([52c5926](https://github.com/highlightjs/highlightjs-apex/commit/52c5926ad81e93d8991fdc9a0ce0b6cb2384b678))
+* **actions/checkout:** Bump actions/checkout from 5 to 6 ([#105](https://github.com/highlightjs/highlightjs-apex/issues/105)) ([7706661](https://github.com/highlightjs/highlightjs-apex/commit/770666163171a5f26c18ca406b987d30c46837a2))
+* **actions/setup-node:** Bump actions/setup-node from 4 to 5 ([#97](https://github.com/highlightjs/highlightjs-apex/issues/97)) ([4ee0487](https://github.com/highlightjs/highlightjs-apex/commit/4ee0487e556b1bc8f7cbde0c6b9f5570fc0cb8f1))
+* **actions/setup-node:** Bump actions/setup-node from 5 to 6 ([#103](https://github.com/highlightjs/highlightjs-apex/issues/103)) ([127d285](https://github.com/highlightjs/highlightjs-apex/commit/127d285a6c888be64d382cb153b223c6cd79dcc8))
+* Bump dependabot/fetch-metadata from 2 to 3 ([2b236cd](https://github.com/highlightjs/highlightjs-apex/commit/2b236cd30ac0f88f614a262569394a637f0974e0))
+* **dependabot/fetch-metadata:** Bump dependabot/fetch-metadata from 2 to 3 ([#112](https://github.com/highlightjs/highlightjs-apex/issues/112)) ([2b236cd](https://github.com/highlightjs/highlightjs-apex/commit/2b236cd30ac0f88f614a262569394a637f0974e0))
+* **dependabot:** Prevent dependabot auto-merge ([#88](https://github.com/highlightjs/highlightjs-apex/issues/88)) ([3d2ead6](https://github.com/highlightjs/highlightjs-apex/commit/3d2ead6bdb8ced24687f17707f4aa9dfe6b31a25))
+* **github/codeql-action:** Bump github/codeql-action from 3 to 4 ([#100](https://github.com/highlightjs/highlightjs-apex/issues/100)) ([fca943d](https://github.com/highlightjs/highlightjs-apex/commit/fca943d5551f5ee0fbbaf9bc89cf4b5b167e2501))
+
 ## [1.5.0](https://github.com/highlightjs/highlightjs-apex/compare/v1.4.0...v1.5.0) (2025-03-16)
 
 
