@@ -1,11 +1,35 @@
 {
-	"trailingComma": "none",
-	"useTabs": true,
+	"apexInsertFinalNewline": false,
 	"bracketSameLine": true,
 	"bracketSpacing": true,
-	"tabWidth": 2,
+	"endOfLine": "lf",
+	"experimentalTernaries": true,
+	"printWidth": 180,
 	"singleQuote": true,
+	"tabWidth": 2,
+	"trailingComma": "none",
+	"useTabs": true,
 	"overrides": [
+		{
+			"files": "*.{cls,trigger}",
+			"options": {
+				"parser": "apex",
+				"tabWidth": 2,
+				"useTabs": true
+			}
+		},
+		{
+			"files": "*.trigger",
+			"options": {
+				"printWidth": 200
+			}
+		},
+		{
+			"files": "*.{apex,soql}",
+			"options": {
+				"parser": "apex-anonymous"
+			}
+		},
 		{
 			"files": ".prettierrc",
 			"options": { "parser": "json", "printWidth": 80 }
@@ -26,5 +50,6 @@
 			}
 		}
 	],
+	"plugins": ["prettier-plugin-apex"],
 	"$schema": "https://json.schemastore.org/prettierrc"
 }

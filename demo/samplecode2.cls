@@ -1,63 +1,58 @@
 /**
-  * Provides services for geolocation and address conversion.
-  * @author Dennis Smith
-  * @version 0.3.0-beta4
-  * {@hidden this is a 
-  * hidden comment}
-  * This string might contain malicious or unexpected characters,
-  * like a {@literal <script>} tag or a backslash {@literal \}.
-  * @since 4/11/2000
-  * @see class.method
-  * @see class
-  * @see class#method `should not highlight`
-  * @see class.class.method
-  * {@link class.class.method}
-  * {@link class.method}
-  * @see class.class.method[3]
-  * @see https://github.com
-  * {@link class#member}
-  * {@link https://github.com}
-  * {@link #member}
-  * {@link class#Constructor}
-  * {@link class}
-  * {@link "text-string"}
-  * {@link <a href="URL">label</a>}
-  * @deprecated in 0.2.0. Use {@link #geocodeAddress(
-  * String street,
-  * String city,
-  * String state,
-  * String postalCode,
-  * String country)} instead.
-  * {@code
-  * try {
-  *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
-  *     '415 Mission St',
-  *     'San Francisco',
-  *     'CA',
-  *     '94105',
-  *     'USA'
-  *   );
-  * } 
-  * catch (GeolocationService.GeocodingException e) {
-  *   // handle failure
-  * }
-  * RecordTypes.getAvailableRecordTypesForSelectList('Account')
-  * <br><br>
-  * System.SelectOption[value='<SFID>', label='Available', disabled='false']
-  * System.SelectOption[value='<SFID>', label='Default', disabled='false']
-  * System.SelectOption[value='<SFID>', label='Inactive', disabled='true']
-  * }
-  * @example
-  * {@code
-  * Account a;
-  * try {
-  *  a = new AccountManager().createAccount('Acme', 'Agriculture');
-  * } catch (AccountManager.AccountException caught) {
-  *   LOGGER.log(caught);
-  *   // further exception handling
-  * }
-  * }
-  */
+ * Provides services for geolocation and address conversion.
+ * @author Dennis Smith
+ * @version 0.3.0-beta4
+ * {@hidden this is a
+ * hidden comment}
+ * This string might contain malicious or unexpected characters,
+ * like a {@literal <script>} tag or a backslash {@literal \}.
+ * @since 4/11/2000
+ * @see class.method
+ * @see class
+ * @see class#method `should not highlight`
+ * @see class.class.method
+ * {@link class.class.method}
+ * {@link class.method}
+ * @see class.class.method[3]
+ * @see https://github.com
+ * {@link class#member}
+ * {@link https://github.com}
+ * {@link #member}
+ * {@link class#Constructor}
+ * {@link class}
+ * {@link "text-string"}
+ * {@link <a href="URL">label</a>}
+ * @deprecated in 0.2.0. Use {@link #geocodeAddress(
+ * String street,
+ * String city,
+ * String state,
+ * String postalCode,
+ * String country)} instead.
+ * {@code
+ * try {
+ *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
+ *     '415 Mission St',
+ *     'USA'
+ *   );
+ * }
+ * catch (GeolocationService.GeocodingException e) {
+ *   // handle failure
+ * }
+ * RecordTypes.getAvailableRecordTypesForSelectList('Account')
+ * <br><br>
+ * System.SelectOption[value='<SFID>', label='Available', disabled='false']
+ * }
+ * @example
+ * {@code
+ * Account a;
+ * try {
+ *  a = new AccountManager().createAccount('Acme', 'Agriculture');
+ * } catch (AccountManager.AccountException caught) {
+ *   LOGGER.log(caught);
+ *   // further exception handling
+ * }
+ * }
+ */
 /**
  * Provides services for geolocation and address conversion.
  * @author [Dennis Smith](http://github.com/dsmith)
@@ -65,20 +60,26 @@
  * @since 0.1.0
  */
 global with sharing class GeolocationService {
-  /**
-   * Represents geographic coordinates (latitude and longitude).
-   */
-  global class Coordinates {
-    @AuraEnabled
-    public Decimal latitude;
-    @AuraEnabled
-    public Decimal longitude;
+	public void method() {
+		ChatterAnswers.Decimal.run();
+		Decimal.run();
+	}
 
-    global Coordinates(Decimal lat, Decimal lon) {
-      this.latitude = lat;
-      this.longitude = lon;
-    }
-  }
+	/**
+	 * Represents geographic coordinates (latitude and longitude).
+	 */
+	global class Coordinates {
+		@AuraEnabled
+		public Decimal latitude;
+		@AuraEnabled
+		public Decimal longitude;
+
+		global Coordinates(Decimal lat, Decimal lon) {
+			this.latitude = lat;
+			this.longitude = lon;
+		}
+	}
+
 
   /**
    * Converts a full address string to approximate latitude
@@ -103,11 +104,15 @@ global with sharing class GeolocationService {
    */
   @Deprecated
   global static Coordinates convertAddressToCoordinates(String fullAddress) {
+   /*  String thrownMessage = '''The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. 
+        Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` 
+        for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'''; */
     throw new DeprecatedMethodCalledException(
       'The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. ' +
         'Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` ' +
         'for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'
     );
+    
   }
 
   /**
@@ -156,13 +161,6 @@ global with sharing class GeolocationService {
    */
   global class DeprecatedMethodCalledException extends Exception {
   }
-
-  /**
-   * Exception thrown when a geocoding operation fails.
-   * This provides specific context for issues during address-to-coordinate conversion.
-   */
-  global class GeocodingException extends Exception {
-  }
 }
 
 /**
@@ -178,18 +176,12 @@ private class GeolocationServiceTest {
    * Verifies that known addresses are correctly geocoded to their expected coordinates.
    * @see GeolocationService#geocodeAddress(
    * String street,
-   * String city,
-   * String state,
-   * String postalCode,
-   * String country)
+   * String city)
    */
   @IsTest
   private static void validAddressShouldReturnCorrectCoordinates() {
     String street = '415 Mission Street';
     String city = 'San Francisco';
-    String state = 'CA';
-    String postalCode = '94105';
-    String country = 'USA';
 
     GeolocationService.Coordinates coords;
     Test.startTest();
@@ -285,10 +277,6 @@ private class GeolocationServiceTest {
         e.getMessage().contains('is deprecated'),
         'Exception message should indicate deprecation.'
       );
-      Assert.isTrue(
-        e.getMessage().contains('Please use'),
-        'Exception message should suggest new method.'
-      );
     }
     Test.stopTest();
 
@@ -310,16 +298,16 @@ private class GeolocationServiceTest {
       }
 
     }
-}
+
 /**
-	 * @description Given an sObject and `RecordType` DeveloperName, return the `RecordType` Name
-	 * @author {@link [David Schach](https://github.com/dschach)}
-	 * @param  objectName     SObject name (with __c if custom, etc)
-	 * @param  recordTypeDevName `RecordType.DeveloperName` (cannot include spaces)
-	 * @return                RecordType Name
-	 * @example
-	 * RecordTypes.getRecordTypeNameFromDevName('Account','Person_Account')
-	 */
+ * @description Given an sObject and `RecordType` DeveloperName, return the `RecordType` Name
+ * @author {@link [David Schach](https://github.com/dschach)}
+ * @param  objectName     SObject name (with __c if custom, etc)
+ * @param  recordTypeDevName `RecordType.DeveloperName` (cannot include spaces)
+ * @return                RecordType Name
+ * @example
+ * RecordTypes.getRecordTypeNameFromDevName('Account','Person_Account')
+ */
 Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
 [SELECT Id, AccountId, MAX(Amount) FROM CustomObject__c WHERE Id NOT IN :newRecordsMap?.keySet()]);
     Map<Id, String> myMap = new Map<Id, String>{a => b, c => d};
@@ -808,9 +796,7 @@ Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
     (label='my invocable')
     public void doThis(){
     }
-  }
-
-    @TestSetup
+      @TestSetup
     (TRUEKING=trueking)
     private static void makeData(Boolean a){
       Custom__c c = new Custom__c();
@@ -819,10 +805,13 @@ Map<Id, CustomObject__c> myMap = new Map<Id, CustomObject__c>(
         ConnectApi.insert a;
       }
     }
-
+  
   trigger CTrig on Custom__c (before insert){
     System.debug('inserting a record');
     upsert myRecord__c;
   }
-  
   }
+
+  
+  
+  

@@ -187,9 +187,9 @@ export default function (hljs) {
     'Sfdc_Enablement',
     'Sfdc_surveys',
     'Site',
-    'Slack',
+    'Slack|8',
     'Support',
-    'System',
+    'System|0',
     'TerritoryMgmt',
     'TxnSecurity',
     'UserProvisioning',
@@ -262,7 +262,7 @@ export default function (hljs) {
     //'Schema',
     'Search',
     'Security',
-    'SelectOption',
+    'SelectOption|8',
     'Site',
     'SObject',
     'SObjectAccessDecision',
@@ -288,7 +288,7 @@ export default function (hljs) {
     'DomainType',
     'JSONToken',
     'LoggingLevel',
-    'Quiddity',
+    'Quiddity|10',
     'TriggerOperation',
     'operationType'
   ];
@@ -466,27 +466,82 @@ export default function (hljs) {
   const APEX_DOX_OVERLOAD = /(\[\d+\])*/;
 
   const APEXDOC_LINKSEE = /(?:@link|@see)\s+/;
-  const APEXDOC_DIVIDER = regex.either(/#/, ACCESSOR);
+  const APEXDOC_DIVIDER = regex.either('#', ACCESSOR);
+
+  // TODO: Rebuild ApexDoc for Summer 26 relesae
+  /* const APEX_CLASS_RE = '[A-Z][a-zA-Z_0-9]*';
+  const APEX_METHOD_RE = '[a-z][a-zA-Z_0-9]*';
+
+  const APEXDOC_REFERENCE = [
+    // Class#member(parameters)
+    {
+
+    },
+    // member(parameters)
+    {
+
+    },
+    // Class#member
+    // Class.member
+      {
+
+    },
+    // Class#Class
+    {},
+    // class.class#.member
+  {
+
+    },
+     // class
+  {
+
+    },
+    // method(
+  {
+
+    },
+    // string
+  {
+
+    },
+    // url
+  {
+
+    },
+    // markdown
+  ]; */
 
   const APEX_DOX = [
     // https://github.com/no-stack-dub-sack/apexdox-vs-code
+    // TODO: Merge ApexDox and ApexDoc for Summer 26
+    /* {
+      // Markdown URL
+      begin: /@(see|author)\s+(?=\[)/,
+      beginScope: 'doctag',
+      starts: {
+        end: /\n/,
+        returnEnd: true,
+        subLanguage: ['markdown', 'html']
+      }
+    }, */
     {
       // Class.InnerClass.InnerClassMethod
       match: [
         /\{*/,
         APEXDOC_LINKSEE,
-        regex.concat(APEX_IDENT_RE, APEXDOC_DIVIDER, APEX_IDENT_RE),
         regex.concat(
-          APEXDOC_DIVIDER,
           APEX_IDENT_RE,
-          APEX_DOX_OVERLOAD,
-          /(?=[\}\s])/
-        )
+          ACCESSOR,
+          APEX_IDENT_RE,
+          ACCESSOR,
+          APEX_IDENT_RE,
+          APEX_DOX_OVERLOAD
+        ),
+        /(?=[\}\s])/
       ],
       scope: {
         2: 'doctag',
-        3: 'title.class',
-        4: 'title.function'
+        3: 'title.function'
       }
     },
     {
@@ -515,16 +570,7 @@ export default function (hljs) {
         2: 'link'
       }
     },
-    {
-      // Markdown URL
-      begin: /@(see|author)\s+(?=\[)/,
-      beginScope: 'doctag',
-      starts: {
-        end: /\n/,
-        returnEnd: true,
-        subLanguage: ['markdown']
-      }
-    },
+
     {
       // Class
       match: [/(?<!\{\s*)@see\s+/, regex.concat(APEX_IDENT_WORD_RE, /(?=\s)/)],
@@ -561,11 +607,11 @@ export default function (hljs) {
       beginScope: {
         2: 'doctag',
         3: 'title.class',
-        4: 'title.function',
-        5: 'punctuation'
+        4: 'title.function'
+        //5: 'punctuation'
       },
       end: CLOSEPARENS,
-      endScope: 'punctuation',
+      //endScope: 'punctuation',
       contains: [
         COMMENT_LEADER,
         {
@@ -594,6 +640,19 @@ export default function (hljs) {
       }
     },
     {
+      // {@link class.method}
+      match: [
+        OPENCURLY,
+        APEXDOC_LINKSEE,
+        regex.concat(APEX_IDENT_RE, APEXDOC_DIVIDER, APEX_IDENT_RE),
+        CLOSECURLY
+      ],
+      scope: {
+        2: 'doctag',
+        3: 'title.function'
+      }
+    },
+    {
       // {@link class}
       match: [OPENCURLY, APEXDOC_LINKSEE, APEX_IDENT_RE, CLOSECURLY],
       scope: {
@@ -601,6 +660,7 @@ export default function (hljs) {
         3: 'title.class'
       }
     },
+
     {
       // @see "text-string"
       begin: [OPENCURLY, APEXDOC_LINKSEE, /(?=")/],
@@ -637,7 +697,7 @@ export default function (hljs) {
         begin: /\w+@/,
         relevance: 0
       },
-      {
+      /* {
         match: [
           /@(?:exception|throws)/,
           SPACE,
@@ -649,7 +709,7 @@ export default function (hljs) {
           3: 'title.class'
         },
         relevance: 0
-      },
+      }, */
       {
         match: [/@(?:exception|throws)/, SPACE, APEX_IDENT_RE],
         scope: { 1: 'doctag', 3: 'title.class' },
@@ -658,15 +718,7 @@ export default function (hljs) {
       /******* LINK and SEE ***********/
       APEX_DOX,
       OFFICIAL_APEXDOC,
-      {
-        // literal
-        begin: [OPENCURLY, /@literal/],
-        beginScope: { 1: 'punctuation', 2: 'doctag' },
-        end: CLOSECURLY,
-        //returnEnd: true,
-        endScope: 'punctuation',
-        subLanguage: ['apex', 'xml', 'javascript', 'bash']
-      },
+
       {
         // Handle `@param` to highlight the parameter name following
         // after.
@@ -681,11 +733,7 @@ export default function (hljs) {
           }
         ]
       },
-      /* {
-        match: [/(?<=@param)\s+/, APEX_IDENT_RE],
-        scope: { 2: 'variable' },
-        relevance: 0
-      }, */
+
       {
         // various strings
         variants: COMMENT_STRINGS,
@@ -705,11 +753,11 @@ export default function (hljs) {
         scope: 'literal'
       },
       {
-        begin: [OPENCURLY, /@code/],
-        beginScope: { 1: 'punctuation', 2: 'doctag' },
+        begin: [OPENCURLY, '@code'],
+        beginScope: { 2: 'doctag' },
         starts: {
           end: CLOSECURLY,
-          endScope: 'punctuation',
+          //endScope: 'punctuation',
           contains: [
             COMMENT_LEADER,
             { begin: OPENCURLY, end: CLOSECURLY, skip: true }
@@ -717,7 +765,23 @@ export default function (hljs) {
           subLanguage: ['apex', 'xml', 'javascript']
         }
       },
-      { match: ANNOTATION_RE, scope: 'doctag', relevance: 0 },
+      {
+        // any other doctag with a curly brace
+        begin: [OPENCURLY, ANNOTATION_RE],
+        beginScope: { 2: 'doctag' },
+        end: CLOSECURLY
+        //endScope: 'punctuation'
+        //contains: [{scope: 'code', endsWithParent: true}],
+        //returnEnd: true,
+        //scope: 'code'
+        //subLanguage: ['apex', 'xml', 'javascript', 'bash']
+      },
+      {
+        // remaining doctags
+        match: ANNOTATION_RE,
+        scope: 'doctag',
+        relevance: 0
+      },
       COMMENT_LEADER
     ]
   });
