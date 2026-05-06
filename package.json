@@ -39,7 +39,7 @@
 	"devDependencies": {
 		"minimist": "^1.2.8",
 		"mocha": "^11.7.5",
-		"prettier": "3.8.1",
+		"prettier": "3.8.3",
 		"prettier-plugin-apex": "^2.2.6",
 		"release-please": "^17.6.0",
 		"should": "^13.2.3"
