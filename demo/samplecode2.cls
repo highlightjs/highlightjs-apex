@@ -104,9 +104,20 @@ global with sharing class GeolocationService {
    */
   @Deprecated
   global static Coordinates convertAddressToCoordinates(String fullAddress) {
-   /*  String thrownMessage = '''The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. 
+    String newCustomerJson = '''
+      {
+          "Name" : "John Doe",
+          "Type" : "New Customer",
+          "Interests": 
+              [
+                  {"id": "101", "sportName: "biking"},
+                  {"id": "102", "sportName: "running"},
+                  {"id": "103", "sportName: "football"}
+              ]
+      }''';
+     String thrownMessage = '''The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. 
         Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` 
-        for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'''; */
+        for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'''; 
     throw new DeprecatedMethodCalledException(
       'The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. ' +
         'Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` ' +

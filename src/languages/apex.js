@@ -57,11 +57,12 @@ export default function (hljs) {
       /\b(\d{4}\-\d{2}\-\d{2})\b/, //date
       /\b0(x|X)[0-9a-fA-F_]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //hex
       /\b0(b|B)[01_]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //binary
-      /\b([0-9]+)?\.[0-9]+((e|E)[0-9]+)?(F|f|D|d|M|m)?\b/, //decimal
+      /(-?)\b([0-9]+)?\.[0-9]+((e|E)[0-9]+)?(F|f|D|d|M|m)?\b/, //decimal
       /(-?)\b[0-9]+(e|E)[0-9]+(F|f|D|d|M|m)?\b/, //decimal
       /(-?)\b[0-9]+(F|f|D|d|M|m)\b/, //decimal
       /(-?)\b[0-9]+(U|u|L|l|UL|Ul|uL|ul|LU|Lu|lU|lu)?\b/, //decimal
-      /(-?)(\b0[0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/ // C_NUMBER_MODE
+      /(-?)(\b0[0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/, // C_NUMBER_MODE
+      /(-?)(\b0[xX][a-fA-F0-9]+|(\b\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)/ // C_NUMBER_RE
     ),
     relevance: 0
   };
@@ -446,16 +447,35 @@ export default function (hljs) {
     PUNCTUATION_COMMA
   ];
 
+  const STRINGS_ARRAY = [APOS_STRING
+  //  , MULTI_LINE_STRING
+  ];
+
   const STRINGS = hljs.inherit(hljs.APOS_STRING_MODE, {
     scope: 'string',
-    relevance: 0,
-    contains: [{ match: /\\'/, scope: 'literal', relevance: 0 }]
+    relevance: 0
   });
+
+  const MULTI_LINE_STRING = {
+    scope: 'string',
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      { match: /\\'/, scope: 'literal', relevance: 0 }
+    ],
+    variants: [
+      {
+        begin: "'''",
+        end: "'''",
+        relevance: 8
+      }
+    ]
+  };
 
   const COMMENT_STRINGS = [
     { begin: '`', end: '`', scope: 'string' },
     { begin: /'/, end: /'/, scope: 'string' },
-    { begin: /"/, end: /"/, scope: 'string' }
+    { begin: /"/, end: /"/, scope: 'string' },
+    { begin: /'''/, end: /'''/, scope: 'string' }
   ];
 
   const COMMENT_LINE = hljs.COMMENT('//', /[$\n]/, { relevance: 0 });
@@ -586,7 +606,7 @@ export default function (hljs) {
       returnEnd: true,
       starts: {
         endsWithParent: true,
-        subLanguage: ['apex', 'xml', 'javascript']
+        subLanguage: ['apex', 'xml', 'javascript', 'html']
       }
     }
   ];
@@ -673,7 +693,7 @@ export default function (hljs) {
       beginScope: { 2: 'doctag' },
       end: CLOSECURLY,
       returnEnd: true,
-      subLanguage: ['markdown', 'xml'],
+      subLanguage: ['markdown', 'xml', 'html'],
       contains: [
         {
           // URL
@@ -762,7 +782,7 @@ export default function (hljs) {
             COMMENT_LEADER,
             { begin: OPENCURLY, end: CLOSECURLY, skip: true }
           ],
-          subLanguage: ['apex', 'xml', 'javascript']
+          subLanguage: ['apex', 'xml', 'javascript', 'html']
         }
       },
       {
